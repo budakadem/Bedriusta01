@@ -12,7 +12,7 @@ import {
 const brandImage = "/images/bedri-usta-brand.png";
 const logoImage = "/images/bedriusta-logo.png";
 const portraitImage = "/images/bedri-portrait.png";
-const footerTransparentLogoImage = "/images/bedri-footer-logo-transparent.png";
+const footerTransparentLogoImage = "/images/bedri-footer-logo-cutout.png";
 const instagramIconImage = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5.2" stroke="#ffffff" stroke-width="2.2"/><circle cx="12" cy="12" r="4.2" stroke="#ffffff" stroke-width="2.2"/><circle cx="17.3" cy="6.7" r="1.25" fill="#ffffff"/></svg>`
 )}`;
@@ -1617,9 +1617,11 @@ const styles = StyleSheet.create({
   },
   footerBrandFigure: {
     width: "100%",
-    maxWidth: 380,
-    height: 300
-  },
+    maxWidth: 340,
+    height: 420,
+    objectFit: "contain",
+    backgroundColor: "transparent"
+  } as any,
   footerText: {
     color: "#ffffff",
     fontFamily: "Heebo, sans-serif",

@@ -29,6 +29,8 @@ Bu proje her değişiklikte mobil, tablet ve desktop için güvenli kalmalıdır
 - Uzun metinlerde `overflowWrap` veya kontrollü satır kırma kullanılmalıdır.
 - `100vw` layout kullanılmamalıdır; yatay scroll oluşturan sabit genişliklerden kaçınılmalıdır.
 - Görseller her zaman `max-width: 100%` ve stabil aspect/height ile kullanılmalıdır.
+- Arka plansız logo/figür istenen alanlarda dama desenli ekran görüntüsü kullanılmaz; görsel dosyası gerçek alpha transparan PNG/WebP olmalı, mümkünse kırpılmış yeni asset adıyla kullanılmalıdır.
+- Footer marka görseli kare boş alan veya beyaz/dama arka plan göstermemeli; dosya değiştirilirse mobil ve desktop footer üzerinde tekrar kontrol edilmelidir.
 
 ## Değişiklikten Sonra Çalıştır
 
@@ -42,4 +44,3 @@ Sonra tarayıcıda en az şu görünümleri kontrol et:
 - 768 x 1024
 - 1024 x 1366
 - 1280 x 800
-
