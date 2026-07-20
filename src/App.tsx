@@ -1712,28 +1712,27 @@ const styles = StyleSheet.create({
   footerLinkRow: {
     flexDirection: "row",
     flexWrap: "wrap",
-    alignItems: "center",
-    gap: 0,
-    marginBottom: 8
+    alignItems: "flex-start",
+    gap: 8,
+    marginBottom: 22,
+    position: "relative",
+    zIndex: 2
   },
   footerLinkItem: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 4
+    marginBottom: 8,
+    minHeight: 26
   },
   footerLink: {
     color: "#ffffff",
     fontFamily: "Heebo, sans-serif",
     fontSize: 15,
     lineHeight: 24,
-    fontWeight: "500"
+    fontWeight: "700"
   },
   footerDot: {
-    color: "rgba(255,255,255,0.48)",
-    fontFamily: "Heebo, sans-serif",
-    fontSize: 16,
-    lineHeight: 24,
-    paddingHorizontal: 7
+    display: "none"
   },
   copyright: {
     maxWidth: 1180,
@@ -1743,12 +1742,16 @@ const styles = StyleSheet.create({
     fontFamily: "Karla, sans-serif",
     fontSize: 12,
     letterSpacing: 1.1,
-    marginTop: 26,
-    paddingTop: 16,
+    marginTop: 12,
+    paddingTop: 18,
     borderTopWidth: 1,
     borderTopColor: "rgba(255,255,255,0.12)",
-    lineHeight: 20
-  }
+    lineHeight: 20,
+    position: "relative",
+    zIndex: 1,
+    display: "block",
+    clear: "both"
+  } as any
 });
 
 export default App;
