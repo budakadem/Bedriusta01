@@ -23,6 +23,8 @@ const menuKebabImage = "https://commons.wikimedia.org/wiki/Special:FilePath/Adan
 const menuLahmacunImage = "https://commons.wikimedia.org/wiki/Special:FilePath/Ac%C4%B1l%C4%B1_Lahmacun.jpg?width=900";
 const menuMezeImage = "https://commons.wikimedia.org/wiki/Special:FilePath/Turkish_meze_plate.jpg?width=900";
 const menuDessertImage = "https://commons.wikimedia.org/wiki/Special:FilePath/F%C4%B1st%C4%B1kl%C4%B1_Baklava.jpg?width=900";
+const restaurantAddress = "K1 1-4, 68159 Mannheim, Almanya";
+const mapLink = "https://www.google.com/maps/search/?api=1&query=K1%201-4%2C%2068159%20Mannheim%2C%20Almanya";
 
 const navItems = [
   { label: "Anasayfa", href: "#home" },
@@ -177,11 +179,17 @@ function openNavigationTarget(href: string) {
   Linking.openURL(href);
 }
 
+async function copyAddress() {
+  if (navigator?.clipboard?.writeText) {
+    await navigator.clipboard.writeText(restaurantAddress);
+  }
+}
+
 function App() {
   const { width } = useWindowDimensions();
   const layout = useMemo(
     () => ({
-      isMobile: width < 760
+      isMobile: width < 940
     }),
     [width]
   );
@@ -319,8 +327,10 @@ function App() {
 }
 
 function Header({ isMobile }: { isMobile: boolean }) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const leftNavItems = navItems.slice(0, 2);
   const rightNavItems = navItems.slice(2);
+  const closeMobileMenu = () => setMobileMenuOpen(false);
 
   return (
     <View style={styles.header}>
@@ -334,10 +344,14 @@ function Header({ isMobile }: { isMobile: boolean }) {
         )}
 
         {isMobile && (
-          <View style={styles.mobileNavMini}>
-            <NavItem item={navItems[0]} compact />
-            <NavItem item={navItems[3]} compact />
-          </View>
+          <Pressable
+            onPress={() => setMobileMenuOpen((open) => !open)}
+            style={({ pressed }: any) => [styles.mobileMenuButton, pressed && styles.mobileMenuButtonActive]}
+          >
+            <View style={styles.menuLine} />
+            <View style={styles.menuLine} />
+            <View style={styles.menuLine} />
+          </Pressable>
         )}
 
         <Pressable style={styles.logoButton} onPress={() => scrollToHash("#home")}>
@@ -351,9 +365,51 @@ function Header({ isMobile }: { isMobile: boolean }) {
             ))}
           </View>
         ) : (
-          <NavItem item={navItems[4]} compact />
+          <Pressable style={styles.mobileReserveButton} onPress={() => openNavigationTarget("tel:+902160000000")}>
+            <Text style={styles.mobileReserveText}>Rezervasyon</Text>
+          </Pressable>
         )}
       </View>
+      {isMobile && mobileMenuOpen && (
+        <View style={styles.mobileMenuPanel}>
+          {navItems.map((item) => {
+            const dropdownItems = "items" in item ? item.items : undefined;
+            if (dropdownItems) {
+              return (
+                <View key={item.label} style={styles.mobileMenuGroup}>
+                  <Text style={styles.mobileMenuGroupTitle}>{item.label}</Text>
+                  {dropdownItems.map((child) => (
+                    <Pressable
+                      key={child.label}
+                      onPress={() => {
+                        openNavigationTarget(child.href);
+                        closeMobileMenu();
+                      }}
+                      style={styles.mobileMenuChild}
+                    >
+                      <Text style={styles.mobileMenuChildText}>{child.label}</Text>
+                    </Pressable>
+                  ))}
+                </View>
+              );
+            }
+
+            const href = "href" in item && item.href ? item.href : "#home";
+            return (
+              <Pressable
+                key={item.label}
+                onPress={() => {
+                  openNavigationTarget(href);
+                  closeMobileMenu();
+                }}
+                style={styles.mobileMenuItem}
+              >
+                <Text style={styles.mobileMenuText}>{item.label}</Text>
+              </Pressable>
+            );
+          })}
+        </View>
+      )}
     </View>
   );
 }
@@ -562,15 +618,44 @@ function Footer({ isMobile }: { isMobile: boolean }) {
           </View>
 
           <View style={[styles.footerMetaGrid, isMobile && styles.footerMetaGridMobile]}>
-            <View nativeID="jobs" style={styles.footerInfoBlock}>
+            <View style={styles.footerInfoBlock}>
               <Text style={styles.footerHeading}>Açılış Saatleri</Text>
               <Text style={styles.footerInfoText}>Pazartesi - Pazar</Text>
               <Text style={styles.footerInfoStrong}>12:00 - 23:30</Text>
             </View>
-            <View style={styles.footerInfoBlock}>
+            <View nativeID="jobs" style={styles.footerInfoBlock}>
               <Text style={styles.footerHeading}>Kariyer</Text>
               <Text style={styles.footerInfoText}>Ekibimize katılın.</Text>
               <Text style={styles.footerInfoStrong}>Jobs</Text>
+            </View>
+            <View style={[styles.footerInfoBlock, styles.footerAddressBlock]}>
+              <Text style={styles.footerHeading}>Adres</Text>
+              <Pressable onPress={copyAddress}>
+                <Text style={[styles.footerInfoStrong, styles.footerAddressText]}>{restaurantAddress}</Text>
+              </Pressable>
+              <View style={styles.footerAddressActions}>
+                <Pressable
+                  onPress={copyAddress}
+                  style={({ hovered, pressed }: any) => [
+                    styles.footerSmallButton,
+                    (hovered || pressed) && styles.footerSmallButtonActive
+                  ]}
+                >
+                  <Text style={styles.footerSmallButtonText}>Adresi Kopyala</Text>
+                </Pressable>
+                <Pressable
+                  onPress={() => Linking.openURL(mapLink)}
+                  style={({ hovered, pressed }: any) => [
+                    styles.footerSmallButton,
+                    styles.footerSmallButtonPrimary,
+                    (hovered || pressed) && styles.footerSmallButtonActive
+                  ]}
+                >
+                  <Text style={[styles.footerSmallButtonText, styles.footerSmallButtonTextPrimary]}>
+                    Haritada Aç
+                  </Text>
+                </Pressable>
+              </View>
             </View>
           </View>
 
@@ -724,6 +809,94 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     fontWeight: "700"
   },
+  mobileMenuButton: {
+    width: 48,
+    height: 44,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: "rgba(255,247,223,0.26)",
+    backgroundColor: "rgba(23,10,8,0.2)",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 5
+  },
+  mobileMenuButtonActive: {
+    backgroundColor: "rgba(255,247,223,0.12)"
+  },
+  menuLine: {
+    width: 22,
+    height: 2,
+    borderRadius: 999,
+    backgroundColor: "#ffffff"
+  },
+  mobileReserveButton: {
+    minHeight: 40,
+    borderRadius: 999,
+    backgroundColor: "#ffffff",
+    paddingHorizontal: 13,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  mobileReserveText: {
+    color: colors.red,
+    fontFamily: "Karla, sans-serif",
+    fontSize: 11,
+    letterSpacing: 1,
+    fontWeight: "800"
+  },
+  mobileMenuPanel: {
+    maxWidth: 560,
+    width: "calc(100% - 40px)",
+    marginHorizontal: "auto",
+    marginTop: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "rgba(255,247,223,0.22)",
+    backgroundColor: "rgba(23,10,8,0.96)",
+    padding: 10,
+    boxShadow: "0 22px 52px rgba(0,0,0,0.36)"
+  } as any,
+  mobileMenuItem: {
+    minHeight: 44,
+    borderRadius: 8,
+    justifyContent: "center",
+    paddingHorizontal: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(255,247,223,0.08)"
+  },
+  mobileMenuText: {
+    color: "#ffffff",
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 16,
+    lineHeight: 22,
+    fontWeight: "800"
+  },
+  mobileMenuGroup: {
+    borderRadius: 8,
+    backgroundColor: "rgba(116,27,21,0.28)",
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    marginVertical: 6
+  },
+  mobileMenuGroupTitle: {
+    color: colors.sand,
+    fontFamily: "Karla, sans-serif",
+    fontSize: 12,
+    letterSpacing: 2,
+    fontWeight: "800",
+    marginBottom: 8
+  },
+  mobileMenuChild: {
+    minHeight: 38,
+    justifyContent: "center"
+  },
+  mobileMenuChildText: {
+    color: "#ffffff",
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 15,
+    lineHeight: 21,
+    fontWeight: "700"
+  },
   logoButton: {
     width: 92,
     height: 64,
@@ -734,12 +907,6 @@ const styles = StyleSheet.create({
     width: 88,
     height: 108,
     transform: [{ translateY: 12 }]
-  },
-  mobileNavMini: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 2,
-    flex: 1
   },
   hero: {
     minHeight: "100vh",
@@ -1441,7 +1608,8 @@ const styles = StyleSheet.create({
     marginBottom: 28
   } as any,
   footerMetaGridMobile: {
-    gridTemplateColumns: "1fr"
+    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+    gap: 10
   } as any,
   footerInfoBlock: {
     minHeight: 128,
@@ -1452,6 +1620,10 @@ const styles = StyleSheet.create({
     paddingVertical: 18,
     paddingHorizontal: 18
   },
+  footerAddressBlock: {
+    gridColumn: "1 / -1",
+    minHeight: 0
+  } as any,
   footerInfoText: {
     color: "rgba(255,255,255,0.72)",
     fontFamily: "Heebo, sans-serif",
@@ -1468,6 +1640,46 @@ const styles = StyleSheet.create({
     marginTop: 7,
     whiteSpace: "nowrap"
   } as any,
+  footerAddressText: {
+    whiteSpace: "normal",
+    overflowWrap: "anywhere"
+  } as any,
+  footerAddressActions: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
+    marginTop: 16
+  },
+  footerSmallButton: {
+    minHeight: 40,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.26)",
+    backgroundColor: "rgba(255,255,255,0.06)",
+    paddingHorizontal: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    transitionDuration: "180ms",
+    transitionProperty: "transform, border-color, background-color"
+  } as any,
+  footerSmallButtonPrimary: {
+    backgroundColor: "#ffffff",
+    borderColor: "#ffffff"
+  },
+  footerSmallButtonActive: {
+    transform: [{ translateY: -2 }],
+    borderColor: "rgba(255,255,255,0.78)"
+  },
+  footerSmallButtonText: {
+    color: "#ffffff",
+    fontFamily: "Karla, sans-serif",
+    fontSize: 12,
+    letterSpacing: 1.2,
+    fontWeight: "800"
+  },
+  footerSmallButtonTextPrimary: {
+    color: colors.red
+  },
   footerHeading: {
     color: "rgba(255,255,255,0.72)",
     fontFamily: "Karla, sans-serif",
