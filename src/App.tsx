@@ -211,17 +211,17 @@ function App() {
       <View nativeID="home" style={[styles.hero, layout.isMobile && styles.heroMobile]}>
         <View style={styles.heroBackdrop} />
         <View style={[styles.heroCopy, layout.isMobile && styles.heroCopyMobile]}>
-          <Text style={styles.eyebrow}>ADANA KEBAPÇISI</Text>
+          <Text style={styles.eyebrow}>ADANA Ocakbaşı</Text>
           <Text style={[styles.heroTitle, layout.isMobile && styles.heroTitleMobile]}>
             Bedri Usta Mannheim
           </Text>
           <Text style={[styles.heroSubtitle, layout.isMobile && styles.heroSubtitleMobile]}>
-            Ocakbaşı Grill Restaurant
+            Kebap & Grill Restaurant
           </Text>
           <Text style={[styles.heroText, layout.isMobile && styles.heroTextMobile]}>
-            Bordo imzanin altinda; kebap, meze ve misafirlik ayni olcude ciddiye
-            alinir. Yeni sayfa, markanin klasik durusunu daha premium ve akici bir
-            web deneyimine tasir.
+            Mannheim şehir merkezinde köz ateşinin kokusu, Adana kebabının ustalığı
+            ve sıcak Türk misafirliği aynı sofrada buluşur. Bedri Usta, ocakbaşı
+            kültürünü premium ama samimi bir restoran deneyimine taşır.
           </Text>
           <View style={[styles.heroActions, layout.isMobile && styles.actionsMobile]}>
             <Button label="Rezervasyon" href="tel:+902160000000" primary />
@@ -643,7 +643,7 @@ function Footer({ isMobile }: { isMobile: boolean }) {
         <View style={[styles.footerBrand, isMobile && styles.footerBrandMobile]}>
           <Image
             source={{ uri: footerTransparentLogoImage }}
-            style={styles.footerBrandFigure as any}
+            style={[styles.footerBrandFigure, isMobile && styles.footerBrandFigureMobile] as any}
             resizeMode="contain"
           />
           <Text style={[styles.footerText, isMobile && styles.footerTextMobile]}>
@@ -1603,7 +1603,7 @@ const styles = StyleSheet.create({
   footerInnerMobile: {
     flexDirection: "column",
     alignItems: "stretch",
-    gap: 30
+    gap: 32
   },
   footerBrand: {
     flexGrow: 1,
@@ -1612,8 +1612,13 @@ const styles = StyleSheet.create({
     maxWidth: 430
   },
   footerBrandMobile: {
+    flexGrow: 0,
+    flexShrink: 1,
+    flexBasis: "auto",
+    width: "100%",
     maxWidth: "100%",
-    alignItems: "center"
+    alignItems: "center",
+    paddingBottom: 4
   },
   footerBrandFigure: {
     width: "100%",
@@ -1621,6 +1626,14 @@ const styles = StyleSheet.create({
     height: 420,
     objectFit: "contain",
     backgroundColor: "transparent"
+  } as any,
+  footerBrandFigureMobile: {
+    width: "min(72vw, 320px)",
+    maxWidth: 320,
+    height: "min(96vw, 420px)",
+    maxHeight: 420,
+    flexShrink: 0,
+    marginBottom: 14
   } as any,
   footerText: {
     color: "#ffffff",
@@ -1632,7 +1645,10 @@ const styles = StyleSheet.create({
     maxWidth: 360
   },
   footerTextMobile: {
-    textAlign: "center"
+    textAlign: "center",
+    maxWidth: 520,
+    marginTop: 0,
+    marginBottom: 4
   },
   footerContent: {
     flexGrow: 2,
@@ -1644,8 +1660,10 @@ const styles = StyleSheet.create({
   },
   footerContentMobile: {
     minWidth: 0,
+    width: "100%",
     maxWidth: "100%",
-    alignItems: "stretch"
+    alignItems: "stretch",
+    marginTop: 0
   },
   footerActionRow: {
     flexDirection: "row",
@@ -1668,6 +1686,7 @@ const styles = StyleSheet.create({
   } as any,
   footerButtonMobile: {
     flexGrow: 1,
+    flexBasis: "48%",
     minWidth: 150
   },
   footerButtonPrimary: {

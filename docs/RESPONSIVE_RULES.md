@@ -31,6 +31,8 @@ Bu proje her değişiklikte mobil, tablet ve desktop için güvenli kalmalıdır
 - Görseller her zaman `max-width: 100%` ve stabil aspect/height ile kullanılmalıdır.
 - Arka plansız logo/figür istenen alanlarda dama desenli ekran görüntüsü kullanılmaz; görsel dosyası gerçek alpha transparan PNG/WebP olmalı, mümkünse kırpılmış yeni asset adıyla kullanılmalıdır.
 - Footer marka görseli kare boş alan veya beyaz/dama arka plan göstermemeli; dosya değiştirilirse mobil ve desktop footer üzerinde tekrar kontrol edilmelidir.
+- Footer marka görseli, slogan, aksiyon butonları ve bilgi kartları aynı dikey akışta kalmalıdır; mobil/tablet görünümde görselin yüksekliği kontrollü olmalı ve sonraki footer içeriklerinin üstüne binmemelidir.
+- Ara genişliklerde (`768px`-`1180px`) footer desktop gibi iki kolon davranmamalı; marka bloğu tam genişlikte, ardından butonlar ve bilgi kartları gelmelidir.
 
 ## Değişiklikten Sonra Çalıştır
 
