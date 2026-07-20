@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Image,
   Linking,
@@ -24,7 +24,8 @@ const menuLahmacunImage = "https://commons.wikimedia.org/wiki/Special:FilePath/A
 const menuMezeImage = "https://commons.wikimedia.org/wiki/Special:FilePath/Turkish_meze_plate.jpg?width=900";
 const menuDessertImage = "https://commons.wikimedia.org/wiki/Special:FilePath/F%C4%B1st%C4%B1kl%C4%B1_Baklava.jpg?width=900";
 const restaurantAddress = "K1 1-4, 68159 Mannheim, Almanya";
-const mapLink = "https://www.google.com/maps/search/?api=1&query=K1%201-4%2C%2068159%20Mannheim%2C%20Almanya";
+const encodedRestaurantAddress = encodeURIComponent(restaurantAddress);
+const googleMapsLink = `https://www.google.com/maps/search/?api=1&query=${encodedRestaurantAddress}`;
 
 const navItems = [
   { label: "Anasayfa", href: "#home" },
@@ -188,10 +189,44 @@ function openNavigationTarget(href: string) {
   Linking.openURL(href);
 }
 
-async function copyAddress() {
+async function copyAddress(onCopied?: () => void) {
   if (navigator?.clipboard?.writeText) {
     await navigator.clipboard.writeText(restaurantAddress);
-    window.alert("Kopyalandı");
+    onCopied?.();
+    return;
+  }
+
+  const textArea = document.createElement("textarea");
+  textArea.value = restaurantAddress;
+  textArea.setAttribute("readonly", "");
+  textArea.style.position = "fixed";
+  textArea.style.left = "-9999px";
+  document.body.appendChild(textArea);
+  textArea.select();
+  document.execCommand("copy");
+  document.body.removeChild(textArea);
+  onCopied?.();
+}
+
+async function openMapForAddress() {
+  const userAgent = navigator.userAgent.toLowerCase();
+  const isAndroid = userAgent.includes("android");
+  const isIOS =
+    /iphone|ipad|ipod/.test(userAgent) ||
+    (userAgent.includes("macintosh") && navigator.maxTouchPoints > 1);
+  const mapUrls = isIOS
+    ? [`maps://?q=${encodedRestaurantAddress}`, googleMapsLink]
+    : isAndroid
+      ? [`geo:0,0?q=${encodedRestaurantAddress}`, googleMapsLink]
+      : [googleMapsLink];
+
+  for (const url of mapUrls) {
+    try {
+      await Linking.openURL(url);
+      return;
+    } catch {
+      continue;
+    }
   }
 }
 
@@ -623,6 +658,8 @@ function MenuBoard() {
 }
 
 function Footer({ isMobile }: { isMobile: boolean }) {
+  const [addressCopied, setAddressCopied] = useState(false);
+  const copyToastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const legalLinks = [
     { label: "Impressum", href: "#policies" },
     { label: "Datenschutz", href: "#policies" },
@@ -637,6 +674,24 @@ function Footer({ isMobile }: { isMobile: boolean }) {
     { label: "Instagram", action: () => Linking.openURL("https://www.instagram.com/bedriustaa"), icon: "instagram" },
     { label: "YouTube", action: () => Linking.openURL("https://www.youtube.com/c/BedriUsta"), icon: "youtube" }
   ];
+
+  useEffect(() => {
+    return () => {
+      if (copyToastTimer.current) {
+        clearTimeout(copyToastTimer.current);
+      }
+    };
+  }, []);
+
+  const handleCopyAddress = async () => {
+    await copyAddress(() => {
+      setAddressCopied(true);
+      if (copyToastTimer.current) {
+        clearTimeout(copyToastTimer.current);
+      }
+      copyToastTimer.current = setTimeout(() => setAddressCopied(false), 2600);
+    });
+  };
 
   return (
     <View style={styles.footer}>
@@ -686,12 +741,12 @@ function Footer({ isMobile }: { isMobile: boolean }) {
             </View>
             <View style={[styles.footerInfoBlock, styles.footerAddressBlock]}>
               <Text style={styles.footerHeading}>Adres</Text>
-              <Pressable onPress={copyAddress}>
+              <Pressable onPress={handleCopyAddress}>
                 <Text style={[styles.footerInfoStrong, styles.footerAddressText]}>{restaurantAddress}</Text>
               </Pressable>
               <View style={styles.footerAddressActions}>
                 <Pressable
-                  onPress={copyAddress}
+                  onPress={handleCopyAddress}
                   style={({ hovered, pressed }: any) => [
                     styles.footerSmallButton,
                     (hovered || pressed) && styles.footerSmallButtonActive
@@ -700,7 +755,7 @@ function Footer({ isMobile }: { isMobile: boolean }) {
                   <Text style={styles.footerSmallButtonText}>Adresi Kopyala</Text>
                 </Pressable>
                 <Pressable
-                  onPress={() => Linking.openURL(mapLink)}
+                  onPress={openMapForAddress}
                   style={({ hovered, pressed }: any) => [
                     styles.footerSmallButton,
                     styles.footerSmallButtonPrimary,
@@ -712,6 +767,11 @@ function Footer({ isMobile }: { isMobile: boolean }) {
                   </Text>
                 </Pressable>
               </View>
+              {addressCopied && (
+                <View style={styles.copyToast}>
+                  <Text style={styles.copyToastText}>Kopyalandı</Text>
+                </View>
+              )}
             </View>
           </View>
 
@@ -1796,6 +1856,24 @@ const styles = StyleSheet.create({
   },
   footerSmallButtonTextPrimary: {
     color: colors.red
+  },
+  copyToast: {
+    alignSelf: "flex-start",
+    marginTop: 12,
+    borderRadius: 999,
+    backgroundColor: "rgba(255,255,255,0.12)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.24)",
+    paddingHorizontal: 14,
+    paddingVertical: 8
+  },
+  copyToastText: {
+    color: "#ffffff",
+    fontFamily: "Karla, sans-serif",
+    fontSize: 12,
+    lineHeight: 16,
+    letterSpacing: 1.2,
+    fontWeight: "800"
   },
   footerHeading: {
     color: "rgba(255,255,255,0.72)",
