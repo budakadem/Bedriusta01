@@ -222,8 +222,7 @@ function App() {
             <Image source={{ uri: brandImage }} style={styles.brandImage as any} resizeMode="cover" />
           </View>
           <View style={styles.signatureCard}>
-            <Text style={styles.signatureLabel}>IMZA LEZZET</Text>
-            <Text style={styles.signatureText}>Zirh, kor, sabir.</Text>
+            <Text style={styles.signatureText}>MANNHEIM</Text>
           </View>
         </View>
       </View>
@@ -1048,34 +1047,34 @@ const styles = StyleSheet.create({
     boxShadow: "0 26px 80px rgba(0,0,0,.34)"
   } as any,
   brandImage: {
-    width: "100%",
-    height: "100%"
+    width: "112%",
+    height: "100%",
+    transform: [{ translateX: -18 }]
   },
   signatureCard: {
-    alignSelf: "flex-end",
-    marginTop: -58,
-    marginRight: 22,
-    backgroundColor: colors.red,
+    alignSelf: "center",
+    marginTop: -54,
+    backgroundColor: "#050202",
     borderWidth: 1,
-    borderColor: "rgba(255,247,223,0.26)",
-    borderRadius: 18,
-    paddingVertical: 18,
-    paddingHorizontal: 22
-  },
+    borderColor: "rgba(255,247,223,0.24)",
+    borderRadius: 8,
+    paddingVertical: 14,
+    paddingHorizontal: 28,
+    minWidth: 196,
+    alignItems: "center",
+    boxShadow: "0 18px 42px rgba(0,0,0,.34)"
+  } as any,
   signatureLabel: {
-    color: colors.sand,
-    fontFamily: "Karla, sans-serif",
-    fontSize: 10,
-    letterSpacing: 3,
-    fontWeight: "700"
+    display: "none"
   },
   signatureText: {
-    color: colors.cream,
-    fontFamily: "Heebo, sans-serif",
-    fontSize: 24,
-    lineHeight: 30,
+    color: "#ffffff",
+    fontFamily: "Karla, sans-serif",
+    fontSize: 18,
+    lineHeight: 24,
     fontWeight: "800",
-    marginTop: 4
+    letterSpacing: 3,
+    textAlign: "center"
   },
   section: {
     paddingVertical: 96,
@@ -1705,25 +1704,27 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     alignItems: "center",
-    gap: 0
+    gap: 0,
+    marginBottom: 8
   },
   footerLinkItem: {
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
+    marginBottom: 4
   },
   footerLink: {
     color: "#ffffff",
     fontFamily: "Heebo, sans-serif",
-    fontSize: 16,
-    lineHeight: 28,
+    fontSize: 15,
+    lineHeight: 24,
     fontWeight: "500"
   },
   footerDot: {
     color: "rgba(255,255,255,0.48)",
     fontFamily: "Heebo, sans-serif",
-    fontSize: 18,
-    lineHeight: 28,
-    paddingHorizontal: 9
+    fontSize: 16,
+    lineHeight: 24,
+    paddingHorizontal: 7
   },
   copyright: {
     maxWidth: 1180,
@@ -1732,11 +1733,12 @@ const styles = StyleSheet.create({
     color: "rgba(255,255,255,0.58)",
     fontFamily: "Karla, sans-serif",
     fontSize: 12,
-    letterSpacing: 1.5,
+    letterSpacing: 1.1,
     marginTop: 26,
     paddingTop: 16,
     borderTopWidth: 1,
-    borderTopColor: "rgba(255,255,255,0.12)"
+    borderTopColor: "rgba(255,255,255,0.12)",
+    lineHeight: 20
   }
 });
 
