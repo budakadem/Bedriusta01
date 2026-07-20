@@ -190,7 +190,7 @@ function App() {
   const { width } = useWindowDimensions();
   const layout = useMemo(
     () => ({
-      isMobile: width < 940
+      isMobile: width < 1180
     }),
     [width]
   );
@@ -927,7 +927,8 @@ const styles = StyleSheet.create({
     paddingTop: 126,
     paddingHorizontal: 18,
     flexDirection: "column",
-    gap: 30
+    gap: 30,
+    alignItems: "center"
   },
   heroBackdrop: {
     position: "absolute",
@@ -941,7 +942,8 @@ const styles = StyleSheet.create({
   },
   heroCopyMobile: {
     maxWidth: 520,
-    width: "100%"
+    width: "100%",
+    alignItems: "center"
   },
   eyebrow: {
     color: colors.sand,
@@ -969,7 +971,8 @@ const styles = StyleSheet.create({
   },
   heroTitleMobile: {
     fontSize: 44,
-    lineHeight: 48
+    lineHeight: 48,
+    textAlign: "center"
   },
   heroText: {
     color: "rgba(255,247,223,0.76)",
@@ -981,7 +984,8 @@ const styles = StyleSheet.create({
   },
   heroTextMobile: {
     fontSize: 16,
-    lineHeight: 27
+    lineHeight: 27,
+    textAlign: "center"
   },
   heroActions: {
     flexDirection: "row",
@@ -990,7 +994,8 @@ const styles = StyleSheet.create({
     marginTop: 34
   },
   actionsMobile: {
-    width: "100%"
+    width: "100%",
+    justifyContent: "center"
   },
   button: {
     minHeight: 50,
@@ -1034,6 +1039,7 @@ const styles = StyleSheet.create({
   } as any,
   heroVisualMobile: {
     width: "100%",
+    maxWidth: 520,
     minWidth: 0
   },
   imagePlate: {

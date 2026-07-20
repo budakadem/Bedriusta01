@@ -32,3 +32,10 @@ Recommended settings for Vercel or Netlify:
 - Output directory: `dist`
 - Node package manager: npm
 
+## Responsive Rules
+
+Responsive kurallar ve kontrol listesi için:
+
+```text
+docs/RESPONSIVE_RULES.md
+```
