@@ -219,9 +219,9 @@ function App() {
             Kebap & Grill Restaurant
           </Text>
           <Text style={[styles.heroText, layout.isMobile && styles.heroTextMobile]}>
-            Mannheim şehir merkezinde köz ateşinin kokusu, Adana kebabının ustalığı
-            ve sıcak Türk misafirliği aynı sofrada buluşur. Bedri Usta, ocakbaşı
-            kültürünü premium ama samimi bir restoran deneyimine taşır.
+            Mannheim şehir merkezinde, 50 yılı aşkın tecrübe ile Adana kebabının
+            ustalığı ve sıcak Türk misafirliği aynı sofrada buluşur. Bedri Usta,
+            ocakbaşı kültürünü premium ama samimi bir restoran deneyimine taşır.
           </Text>
           <View style={[styles.heroActions, layout.isMobile && styles.actionsMobile]}>
             <Button label="Rezervasyon" href="tel:+902160000000" primary />
@@ -323,12 +323,12 @@ function App() {
             Sofraniz hazir.
           </Text>
           <Text style={styles.contactText}>
-            Aile yemegi, is bulusmasi ya da sakin bir aksam icin Bedri Usta
+            Aile yemeği, iş buluşması ya da sakin bir akşam için Bedri Usta
             deneyimini rezerve edin.
           </Text>
           <View style={[styles.heroActions, layout.isMobile && styles.actionsMobile]}>
             <Button label="Ara" href="tel:+902160000000" primary />
-            <Button label="Instagram" href="https://www.instagram.com/bedriustaa" />
+            <Button label="Online Rezervasyon" href="tel:+902160000000" />
           </View>
         </View>
       </View>
