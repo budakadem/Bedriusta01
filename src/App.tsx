@@ -697,13 +697,15 @@ function Footer({ isMobile }: { isMobile: boolean }) {
     <View style={styles.footer}>
       <View style={[styles.footerInner, isMobile && styles.footerInnerMobile]}>
         <View style={[styles.footerBrand, isMobile && styles.footerBrandMobile]}>
-          <Image
-            source={{ uri: footerTransparentLogoImage }}
-            style={[styles.footerBrandFigure, isMobile && styles.footerBrandFigureMobile] as any}
-            resizeMode="contain"
-          />
-          <View style={[styles.footerCityBadge, isMobile && styles.footerCityBadgeMobile]}>
-            <Text style={styles.footerCityBadgeText}>MANNHEIM</Text>
+          <View style={[styles.footerBrandMark, isMobile && styles.footerBrandMarkMobile]}>
+            <Image
+              source={{ uri: footerTransparentLogoImage }}
+              style={[styles.footerBrandFigure, isMobile && styles.footerBrandFigureMobile] as any}
+              resizeMode="contain"
+            />
+            <View style={[styles.footerCityBadge, isMobile && styles.footerCityBadgeMobile]}>
+              <Text style={styles.footerCityBadgeText}>MANNHEIM</Text>
+            </View>
           </View>
           <Text style={[styles.footerText, isMobile && styles.footerTextMobile]}>
             Premium kebap deneyimi, Bedri Usta imzası ve sıcak misafirlik.
@@ -1684,6 +1686,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingBottom: 4
   },
+  footerBrandMark: {
+    width: "100%",
+    maxWidth: 340,
+    alignSelf: "center",
+    position: "relative",
+    alignItems: "center",
+    paddingBottom: 34
+  } as any,
+  footerBrandMarkMobile: {
+    width: "min(72vw, 320px)",
+    maxWidth: 320,
+    paddingBottom: 32
+  } as any,
   footerBrandFigure: {
     width: "100%",
     maxWidth: 340,
@@ -1701,7 +1716,10 @@ const styles = StyleSheet.create({
     marginBottom: 0
   } as any,
   footerCityBadge: {
-    alignSelf: "center",
+    position: "absolute",
+    left: "50%",
+    bottom: 0,
+    transform: [{ translateX: -95 }],
     minWidth: 190,
     minHeight: 54,
     borderRadius: 8,
@@ -1711,15 +1729,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 26,
-    marginTop: -18,
-    marginBottom: 24,
     boxShadow: "0 12px 28px rgba(0,0,0,0.34)"
   } as any,
   footerCityBadgeMobile: {
     minWidth: 168,
     minHeight: 48,
-    marginTop: -14,
-    marginBottom: 22
+    transform: [{ translateX: -84 }]
   },
   footerCityBadgeText: {
     color: "#ffffff",
@@ -1734,14 +1749,14 @@ const styles = StyleSheet.create({
     fontFamily: "Heebo, sans-serif",
     fontSize: 18,
     lineHeight: 29,
-    marginTop: 0,
+    marginTop: 24,
     fontWeight: "700",
     maxWidth: 360
   },
   footerTextMobile: {
     textAlign: "center",
     maxWidth: 520,
-    marginTop: 0,
+    marginTop: 22,
     marginBottom: 4
   },
   footerContent: {
