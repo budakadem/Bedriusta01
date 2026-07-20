@@ -46,7 +46,6 @@ const mobileFooterNavItems = [
   { label: "Impressum", href: "#policies" },
   { label: "Datenschutz", href: "#policies" },
   { label: "Cookie-Einstellungen", href: "#policies" },
-  { label: "İletişim", href: "#contact" },
   { label: "Instagram", href: "https://www.instagram.com/bedriustaa" },
   { label: "YouTube", href: "https://www.youtube.com/c/BedriUsta" }
 ];
@@ -212,9 +211,12 @@ function App() {
       <View nativeID="home" style={[styles.hero, layout.isMobile && styles.heroMobile]}>
         <View style={styles.heroBackdrop} />
         <View style={[styles.heroCopy, layout.isMobile && styles.heroCopyMobile]}>
-          <Text style={styles.eyebrow}>ADANA KEBAPCISI</Text>
+          <Text style={styles.eyebrow}>ADANA KEBAPÇISI</Text>
           <Text style={[styles.heroTitle, layout.isMobile && styles.heroTitleMobile]}>
-            Bedri Usta sofrasi, atesin en sade halidir.
+            Bedri Usta Mannheim
+          </Text>
+          <Text style={[styles.heroSubtitle, layout.isMobile && styles.heroSubtitleMobile]}>
+            Ocakbaşı Grill Restaurant
           </Text>
           <Text style={[styles.heroText, layout.isMobile && styles.heroTextMobile]}>
             Bordo imzanin altinda; kebap, meze ve misafirlik ayni olcude ciddiye
@@ -1024,11 +1026,27 @@ const styles = StyleSheet.create({
     fontSize: 76,
     lineHeight: 80,
     fontWeight: "800",
-    letterSpacing: -1
+    letterSpacing: 0
   },
   heroTitleMobile: {
     fontSize: 44,
     lineHeight: 48,
+    textAlign: "center"
+  },
+  heroSubtitle: {
+    color: "#ffffff",
+    fontFamily: "Karla, sans-serif",
+    fontSize: 30,
+    lineHeight: 38,
+    fontWeight: "800",
+    letterSpacing: 2.2,
+    marginTop: 8,
+    textTransform: "uppercase"
+  } as any,
+  heroSubtitleMobile: {
+    fontSize: 18,
+    lineHeight: 25,
+    letterSpacing: 1.2,
     textAlign: "center"
   },
   heroText: {
