@@ -25,10 +25,18 @@ const menuMezeImage = "https://commons.wikimedia.org/wiki/Special:FilePath/Turki
 const menuDessertImage = "https://commons.wikimedia.org/wiki/Special:FilePath/F%C4%B1st%C4%B1kl%C4%B1_Baklava.jpg?width=900";
 
 const navItems = [
-  { label: "ANA SAYFA", href: "#home" },
-  { label: "HIKAYE", href: "#story" },
-  { label: "MENU", href: "#menu" },
-  { label: "ILETISIM", href: "#contact" }
+  { label: "Anasayfa", href: "#home" },
+  {
+    label: "Kurumsal",
+    items: [
+      { label: "Hakkımızda", href: "#about" },
+      { label: "Jobs", href: "#jobs" },
+      { label: "Politikalarımız", href: "#policies" }
+    ]
+  },
+  { label: "İletişim", href: "#contact" },
+  { label: "Menü", href: "#menu" },
+  { label: "Rezervasyon", href: "tel:+902160000000" }
 ];
 
 const menuItems = [
@@ -160,6 +168,15 @@ function scrollToHash(hash: string) {
   element?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+function openNavigationTarget(href: string) {
+  if (href.startsWith("#")) {
+    scrollToHash(href);
+    return;
+  }
+
+  Linking.openURL(href);
+}
+
 function App() {
   const { width } = useWindowDimensions();
   const layout = useMemo(
@@ -202,7 +219,7 @@ function App() {
         </View>
       </View>
 
-      <View nativeID="story" style={[styles.section, styles.storySection]}>
+      <View nativeID="about" style={[styles.section, styles.storySection]}>
         <View style={[styles.storyGrid, layout.isMobile && styles.stack]}>
           <View style={styles.portraitFrame}>
             <Image source={{ uri: portraitImage }} style={styles.portrait as any} resizeMode="contain" />
@@ -302,23 +319,25 @@ function App() {
 }
 
 function Header({ isMobile }: { isMobile: boolean }) {
+  const leftNavItems = navItems.slice(0, 2);
+  const rightNavItems = navItems.slice(2);
+
   return (
     <View style={styles.header}>
       <View style={styles.headerRail}>
         {!isMobile && (
           <View style={styles.navSide}>
-            {navItems.slice(0, 2).map((item) => (
-              <NavLink key={item.label} {...item} />
+            {leftNavItems.map((item) => (
+              <NavItem key={item.label} item={item} />
             ))}
           </View>
         )}
 
         {isMobile && (
-          <Pressable style={styles.menuMark} onPress={() => scrollToHash("#menu")}>
-            <View style={styles.menuLine} />
-            <View style={styles.menuLine} />
-            <View style={styles.menuLine} />
-          </Pressable>
+          <View style={styles.mobileNavMini}>
+            <NavItem item={navItems[0]} compact />
+            <NavItem item={navItems[3]} compact />
+          </View>
         )}
 
         <Pressable style={styles.logoButton} onPress={() => scrollToHash("#home")}>
@@ -327,27 +346,73 @@ function Header({ isMobile }: { isMobile: boolean }) {
 
         {!isMobile ? (
           <View style={styles.navSide}>
-            {navItems.slice(2).map((item) => (
-              <NavLink key={item.label} {...item} />
+            {rightNavItems.map((item) => (
+              <NavItem key={item.label} item={item} />
             ))}
           </View>
         ) : (
-          <Pressable onPress={() => Linking.openURL("https://www.instagram.com/bedriustaa")}>
-            <Text style={styles.mobileSocial}>IG</Text>
-          </Pressable>
+          <NavItem item={navItems[4]} compact />
         )}
       </View>
     </View>
   );
 }
 
-function NavLink({ label, href }: { label: string; href: string }) {
+function NavItem({
+  item,
+  compact = false
+}: {
+  item: (typeof navItems)[number];
+  compact?: boolean;
+}) {
+  const dropdownItems = "items" in item ? item.items : undefined;
+
+  if (dropdownItems) {
+    return (
+      <Pressable style={styles.navDropdown}>
+        {({ hovered, pressed }: any) => {
+          const open = hovered || pressed;
+          return (
+            <>
+              <View style={[styles.navLink, compact && styles.navLinkCompact, open && styles.navLinkHover]}>
+                <Text style={[styles.navText, compact && styles.navTextCompact]}>{item.label}</Text>
+                <Text style={styles.navChevron}>⌄</Text>
+              </View>
+              {open && (
+                <View style={styles.navDropdownPanel}>
+                  {dropdownItems.map((child) => (
+                    <Pressable
+                      key={child.label}
+                      onPress={() => openNavigationTarget(child.href)}
+                      style={({ hovered: childHovered }: any) => [
+                        styles.navDropdownItem,
+                        childHovered && styles.navDropdownItemHover
+                      ]}
+                    >
+                      <Text style={styles.navDropdownText}>{child.label}</Text>
+                    </Pressable>
+                  ))}
+                </View>
+              )}
+            </>
+          );
+        }}
+      </Pressable>
+    );
+  }
+
+  const href = "href" in item && item.href ? item.href : "#home";
+
   return (
     <Pressable
-      onPress={() => scrollToHash(href)}
-      style={({ hovered }: any) => [styles.navLink, hovered && styles.navLinkHover]}
+      onPress={() => openNavigationTarget(href)}
+      style={({ hovered }: any) => [
+        styles.navLink,
+        compact && styles.navLinkCompact,
+        hovered && styles.navLinkHover
+      ]}
     >
-      <Text style={styles.navText}>{label}</Text>
+      <Text style={[styles.navText, compact && styles.navTextCompact]}>{item.label}</Text>
     </Pressable>
   );
 }
@@ -497,7 +562,7 @@ function Footer({ isMobile }: { isMobile: boolean }) {
           </View>
 
           <View style={[styles.footerMetaGrid, isMobile && styles.footerMetaGridMobile]}>
-            <View style={styles.footerInfoBlock}>
+            <View nativeID="jobs" style={styles.footerInfoBlock}>
               <Text style={styles.footerHeading}>Açılış Saatleri</Text>
               <Text style={styles.footerInfoText}>Pazartesi - Pazar</Text>
               <Text style={styles.footerInfoStrong}>12:00 - 23:30</Text>
@@ -509,7 +574,7 @@ function Footer({ isMobile }: { isMobile: boolean }) {
             </View>
           </View>
 
-          <Text style={styles.footerHeading}>Yasal Bilgiler</Text>
+          <Text nativeID="policies" style={styles.footerHeading}>Yasal Bilgiler</Text>
           <View style={styles.footerLinkRow}>
             {legalLinks.map((label, index) => (
               <View key={label} style={styles.footerLinkItem}>
@@ -573,36 +638,90 @@ const styles = StyleSheet.create({
     marginHorizontal: "auto",
     borderRadius: 999,
     borderWidth: 1,
-    borderColor: "rgba(255, 247, 223, 0.2)",
-    backgroundColor: "rgba(23, 10, 8, 0.76)",
+    borderColor: "rgba(255, 247, 223, 0.28)",
+    backgroundColor: "rgba(116, 27, 21, 0.92)",
     backdropFilter: "blur(18px)",
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 18,
-    boxShadow: "0 18px 50px rgba(0,0,0,0.26)"
+    boxShadow: "0 18px 50px rgba(0,0,0,0.3)"
   } as any,
   navSide: {
     width: "38%",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-evenly",
-    gap: 12
+    gap: 8
   },
   navLink: {
     borderRadius: 999,
     paddingVertical: 10,
-    paddingHorizontal: 14
+    paddingHorizontal: 14,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 6,
+    transitionDuration: "180ms",
+    transitionProperty: "background-color, transform"
+  } as any,
+  navLinkCompact: {
+    paddingHorizontal: 8,
+    paddingVertical: 8
   },
   navLinkHover: {
-    backgroundColor: "rgba(255, 247, 223, 0.12)"
+    backgroundColor: "rgba(255, 247, 223, 0.14)",
+    transform: [{ translateY: -1 }]
   },
   navText: {
-    color: colors.cream,
+    color: "#ffffff",
     fontFamily: "Karla, sans-serif",
-    fontSize: 12,
-    letterSpacing: 3,
+    fontSize: 13,
+    letterSpacing: 1.8,
+    fontWeight: "700"
+  },
+  navTextCompact: {
+    fontSize: 11,
+    letterSpacing: 1.1
+  },
+  navChevron: {
+    color: "#ffffff",
+    fontFamily: "Karla, sans-serif",
+    fontSize: 14,
+    lineHeight: 18,
+    fontWeight: "700",
+    transform: [{ translateY: -1 }]
+  },
+  navDropdown: {
+    position: "relative",
+    zIndex: 30
+  } as any,
+  navDropdownPanel: {
+    position: "absolute",
+    top: 44,
+    left: "50%",
+    transform: [{ translateX: -96 }],
+    width: 192,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "rgba(255,247,223,0.24)",
+    backgroundColor: "rgba(23, 10, 8, 0.96)",
+    paddingVertical: 8,
+    boxShadow: "0 20px 48px rgba(0,0,0,0.36)"
+  } as any,
+  navDropdownItem: {
+    paddingVertical: 11,
+    paddingHorizontal: 14
+  },
+  navDropdownItemHover: {
+    backgroundColor: "rgba(255,247,223,0.1)"
+  },
+  navDropdownText: {
+    color: "#ffffff",
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 14,
+    lineHeight: 20,
     fontWeight: "700"
   },
   logoButton: {
@@ -616,23 +735,11 @@ const styles = StyleSheet.create({
     height: 108,
     transform: [{ translateY: 12 }]
   },
-  menuMark: {
-    width: 48,
-    height: 42,
-    justifyContent: "center",
-    gap: 6
-  },
-  menuLine: {
-    height: 1,
-    width: 32,
-    backgroundColor: colors.cream
-  },
-  mobileSocial: {
-    color: colors.cream,
-    fontFamily: "Karla, sans-serif",
-    fontSize: 14,
-    fontWeight: "700",
-    letterSpacing: 2
+  mobileNavMini: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 2,
+    flex: 1
   },
   hero: {
     minHeight: "100vh",
