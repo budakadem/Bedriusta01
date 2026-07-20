@@ -1,0 +1,585 @@
+{
+  "backgrounds": [],
+  "colors": [
+    "rgb(0, 0, 0)",
+    "rgb(255, 255, 255)",
+    "rgba(255, 255, 255, 0.95)",
+    "rgba(0, 0, 0, 0)",
+    "rgb(17, 17, 17)",
+    "rgb(130, 130, 130)",
+    "rgb(161, 161, 161)"
+  ],
+  "fonts": [
+    "Heebo, sans-serif",
+    "Karla, sans-serif"
+  ],
+  "images": [
+    {
+      "alt": "logo",
+      "cls": "mkdf-normal-logo",
+      "height": 946,
+      "src": "https://bedriusta.com/wp-content/uploads/2022/07/bedriusta-1.png",
+      "width": 772
+    },
+    {
+      "alt": "dark logo",
+      "cls": "mkdf-dark-logo",
+      "height": 946,
+      "src": "https://bedriusta.com/wp-content/uploads/2022/07/bedriusta-1.png",
+      "width": 772
+    },
+    {
+      "alt": "light logo",
+      "cls": "mkdf-light-logo",
+      "height": 946,
+      "src": "https://bedriusta.com/wp-content/uploads/2022/07/bedriusta-1.png",
+      "width": 772
+    },
+    {
+      "alt": "logo",
+      "cls": "mkdf-normal-logo",
+      "height": 946,
+      "src": "https://bedriusta.com/wp-content/uploads/2022/07/bedriusta-1.png",
+      "width": 772
+    },
+    {
+      "alt": "dark logo",
+      "cls": "mkdf-dark-logo",
+      "height": 946,
+      "src": "https://bedriusta.com/wp-content/uploads/2022/07/bedriusta-1.png",
+      "width": 772
+    },
+    {
+      "alt": "light logo",
+      "cls": "mkdf-light-logo",
+      "height": 946,
+      "src": "https://bedriusta.com/wp-content/uploads/2022/07/bedriusta-1.png",
+      "width": 772
+    },
+    {
+      "alt": "Mobile Logo",
+      "cls": "",
+      "height": 229,
+      "src": "https://bedriusta.com/wp-content/uploads/2022/08/mobillogobedriusta.png",
+      "width": 187
+    },
+    {
+      "alt": "",
+      "cls": "attachment-full size-full",
+      "height": 304,
+      "src": "https://bedriusta.com/wp-content/uploads/2022/07/h1-img-3-166.png",
+      "width": 272
+    },
+    {
+      "alt": "",
+      "cls": "mkdf-cc-image",
+      "height": 544,
+      "src": "https://bedriusta.com/wp-content/uploads/2022/07/sube1-kopya-1.png",
+      "width": 852
+    },
+    {
+      "alt": "",
+      "cls": "mkdf-cc-hover-image",
+      "height": 544,
+      "src": "https://bedriusta.com/wp-content/uploads/2022/08/incele.png",
+      "width": 852
+    },
+    {
+      "alt": "",
+      "cls": "mkdf-cc-image",
+      "height": 544,
+      "src": "https://bedriusta.com/wp-content/uploads/2022/07/sube2-kopya.png",
+      "width": 852
+    },
+    {
+      "alt": "",
+      "cls": "mkdf-cc-hover-image",
+      "height": 544,
+      "src": "https://bedriusta.com/wp-content/uploads/2022/08/incele.png",
+      "width": 852
+    },
+    {
+      "alt": "",
+      "cls": "mkdf-cc-image",
+      "height": 544,
+      "src": "https://bedriusta.com/wp-content/uploads/2022/07/sube3-kopya.png",
+      "width": 852
+    },
+    {
+      "alt": "",
+      "cls": "mkdf-cc-hover-image",
+      "height": 544,
+      "src": "https://bedriusta.com/wp-content/uploads/2022/08/incele.png",
+      "width": 852
+    },
+    {
+      "alt": "",
+      "cls": "mkdf-cc-image",
+      "height": 544,
+      "src": "https://bedriusta.com/wp-content/uploads/2022/09/ciftehavuzlar.png",
+      "width": 852
+    },
+    {
+      "alt": "",
+      "cls": "mkdf-cc-hover-image",
+      "height": 544,
+      "src": "https://bedriusta.com/wp-content/uploads/2022/08/incele.png",
+      "width": 852
+    },
+    {
+      "alt": "",
+      "cls": "mkdf-cc-image",
+      "height": 544,
+      "src": "https://bedriusta.com/wp-content/uploads/2022/07/sub5.png",
+      "width": 852
+    },
+    {
+      "alt": "",
+      "cls": "mkdf-cc-hover-image",
+      "height": 544,
+      "src": "https://bedriusta.com/wp-content/uploads/2022/08/incele.png",
+      "width": 852
+    },
+    {
+      "alt": "",
+      "cls": "mkdf-cc-image",
+      "height": 544,
+      "src": "https://bedriusta.com/wp-content/uploads/2022/07/sub6.png",
+      "width": 852
+    },
+    {
+      "alt": "",
+      "cls": "mkdf-cc-hover-image",
+      "height": 544,
+      "src": "https://bedriusta.com/wp-content/uploads/2022/08/incele.png",
+      "width": 852
+    },
+    {
+      "alt": "Left Parallax Background Element",
+      "cls": "mkdf-row-parallax-element",
+      "height": 2,
+      "src": "https://bedriusta.com/wp-content/uploads/2018/08/h1-img-3-1.jpg",
+      "width": 2
+    }
+  ],
+  "links": [
+    {
+      "href": "https://bedriusta.com/#",
+      "text": ""
+    },
+    {
+      "href": "https://www.instagram.com/bedriustaa",
+      "text": ""
+    },
+    {
+      "href": "https://www.youtube.com/c/BedriUsta",
+      "text": ""
+    },
+    {
+      "href": "https://bedriusta.com/",
+      "text": "ANA SAYFA"
+    },
+    {
+      "href": "https://bedriusta.com/#",
+      "text": "KURUMSAL"
+    },
+    {
+      "href": "https://bedriusta.com/hakkimizda/",
+      "text": "HAKKIMIZDA"
+    },
+    {
+      "href": "https://bedriusta.com/bedri-usta-guncel/",
+      "text": "BEDRİ USTA GÜNCEL"
+    },
+    {
+      "href": "https://bedriusta.com/politikalarimiz/",
+      "text": "POLİTİKALARIMIZ"
+    },
+    {
+      "href": "https://bedriusta.com/",
+      "text": ""
+    },
+    {
+      "href": "https://bedriusta.com/tum-subeler/",
+      "text": "ŞUBELER"
+    },
+    {
+      "href": "https://bedriusta.com/bursa/",
+      "text": "BURSA"
+    },
+    {
+      "href": "https://bedriusta.com/ciftehavuzlar/",
+      "text": "ÇİFTEHAVUZLAR"
+    },
+    {
+      "href": "https://bedriusta.com/emaar/",
+      "text": "EMAAR"
+    },
+    {
+      "href": "https://bedriusta.com/kalamis/",
+      "text": "KALAMIŞ"
+    },
+    {
+      "href": "https://bedriusta.com/kiziltoprak/",
+      "text": "KIZILTOPRAK"
+    },
+    {
+      "href": "https://bedriusta.com/suadiye/",
+      "text": "SUADİYE"
+    },
+    {
+      "href": "https://bedriusta.com/tuzla/",
+      "text": "TUZLA"
+    },
+    {
+      "href": "https://bedriusta.com/diger-subeler/",
+      "text": "DİĞER ŞUBELER"
+    },
+    {
+      "href": "https://bedriusta.com/menumuz/",
+      "text": "MENÜMÜZ"
+    },
+    {
+      "href": "https://bedriusta.com/iletisim/",
+      "text": "İLETİŞİM"
+    },
+    {
+      "href": "https://bedriusta.com/",
+      "text": "ANA SAYFA"
+    },
+    {
+      "href": "https://bedriusta.com/#",
+      "text": "KURUMSAL"
+    },
+    {
+      "href": "https://bedriusta.com/hakkimizda/",
+      "text": "HAKKIMIZDA"
+    },
+    {
+      "href": "https://bedriusta.com/bedri-usta-guncel/",
+      "text": "BEDRİ USTA GÜNCEL"
+    },
+    {
+      "href": "https://bedriusta.com/politikalarimiz/",
+      "text": "POLİTİKALARIMIZ"
+    },
+    {
+      "href": "https://bedriusta.com/",
+      "text": ""
+    },
+    {
+      "href": "https://bedriusta.com/tum-subeler/",
+      "text": "ŞUBELER"
+    },
+    {
+      "href": "https://bedriusta.com/bursa/",
+      "text": "BURSA"
+    },
+    {
+      "href": "https://bedriusta.com/ciftehavuzlar/",
+      "text": "ÇİFTEHAVUZLAR"
+    },
+    {
+      "href": "https://bedriusta.com/emaar/",
+      "text": "EMAAR"
+    },
+    {
+      "href": "https://bedriusta.com/kalamis/",
+      "text": "KALAMIŞ"
+    },
+    {
+      "href": "https://bedriusta.com/kiziltoprak/",
+      "text": "KIZILTOPRAK"
+    },
+    {
+      "href": "https://bedriusta.com/suadiye/",
+      "text": "SUADİYE"
+    },
+    {
+      "href": "https://bedriusta.com/tuzla/",
+      "text": "TUZLA"
+    },
+    {
+      "href": "https://bedriusta.com/diger-subeler/",
+      "text": "DİĞER ŞUBELER"
+    },
+    {
+      "href": "https://bedriusta.com/menumuz/",
+      "text": "MENÜMÜZ"
+    },
+    {
+      "href": "https://bedriusta.com/iletisim/",
+      "text": "İLETİŞİM"
+    },
+    {
+      "href": "javascript:void(0)",
+      "text": ""
+    },
+    {
+      "href": "https://bedriusta.com/",
+      "text": ""
+    },
+    {
+      "href": "https://www.instagram.com/bedriustaa",
+      "text": ""
+    },
+    {
+      "href": "https://www.youtube.com/c/BedriUsta",
+      "text": ""
+    },
+    {
+      "href": "https://bedriusta.com/",
+      "text": "Ana Sayfa"
+    },
+    {
+      "href": "https://bedriusta.com/#",
+      "text": "Kurum al"
+    },
+    {
+      "href": "https://bedriusta.com/hakkimizda/",
+      "text": "Hakkımızda"
+    },
+    {
+      "href": "https://bedriusta.com/bedri-usta-guncel/",
+      "text": "Bedri U ta’ dan"
+    },
+    {
+      "href": "https://bedriusta.com/tum-subeler/",
+      "text": "Şubeler"
+    },
+    {
+      "href": "https://bedriusta.com/emaar/",
+      "text": "Emaar"
+    },
+    {
+      "href": "https://bedriusta.com/bursa/",
+      "text": "Bur a"
+    },
+    {
+      "href": "https://bedriusta.com/ciftehavuzlar/",
+      "text": "Çiftehavuzlar"
+    },
+    {
+      "href": "https://bedriusta.com/kalamis/",
+      "text": "Kalamış"
+    },
+    {
+      "href": "https://bedriusta.com/kiziltoprak/",
+      "text": "Kızıltoprak"
+    },
+    {
+      "href": "https://bedriusta.com/suadiye/",
+      "text": "Suadiye"
+    },
+    {
+      "href": "https://bedriusta.com/tuzla/",
+      "text": "Tuzla"
+    },
+    {
+      "href": "https://bedriusta.com/diger-subeler/",
+      "text": "Diğer Şubeler"
+    },
+    {
+      "href": "https://bedriusta.com/menumuz/",
+      "text": "Menümüz"
+    },
+    {
+      "href": "https://bedriusta.com/iletisim/",
+      "text": "İletişim"
+    },
+    {
+      "href": "https://bedriusta.com/#",
+      "text": "^"
+    },
+    {
+      "href": "https://bedriusta.com/hakkimizda",
+      "text": "Devamı.."
+    },
+    {
+      "href": "https://bedriusta.com/kalamis",
+      "text": ""
+    },
+    {
+      "href": "https://bedriusta.com/emaar",
+      "text": ""
+    },
+    {
+      "href": "https://bedriusta.com/tuzla/",
+      "text": ""
+    },
+    {
+      "href": "https://bedriusta.com/ciftehavuzlar/",
+      "text": ""
+    },
+    {
+      "href": "https://bedriusta.com/kiziltoprak/",
+      "text": ""
+    },
+    {
+      "href": "https://bedriusta.com/tum-subeler/",
+      "text": ""
+    }
+  ],
+  "text": [
+    "ANA SAYFA",
+    "ANA SAYFA",
+    "ANA SAYFA",
+    "ANA SAYFA",
+    "KURUMSAL\n\n\tHAKKIMIZDA\n\tBEDRİ USTA GÜNCEL\n\tPOLİTİKALARIMIZ",
+    "KURUMSAL",
+    "KURUMSAL",
+    "KURUMSAL",
+    "HAKKIMIZDA",
+    "HAKKIMIZDA",
+    "HAKKIMIZDA",
+    "HAKKIMIZDA",
+    "BEDRİ USTA GÜNCEL",
+    "BEDRİ USTA GÜNCEL",
+    "BEDRİ USTA GÜNCEL",
+    "BEDRİ USTA GÜNCEL",
+    "POLİTİKALARIMIZ",
+    "POLİTİKALARIMIZ",
+    "POLİTİKALARIMIZ",
+    "POLİTİKALARIMIZ",
+    "ŞUBELER\n\n\tBURSA\n\tÇİFTEHAVUZLAR\n\tEMAAR\n\tKALAMIŞ\n\tKIZILTOPRAK\n\tSUADİYE\n\tTUZLA\n\tDİĞER ŞUBELER",
+    "ŞUBELER",
+    "ŞUBELER",
+    "ŞUBELER",
+    "BURSA",
+    "BURSA",
+    "BURSA",
+    "BURSA",
+    "ÇİFTEHAVUZLAR",
+    "ÇİFTEHAVUZLAR",
+    "ÇİFTEHAVUZLAR",
+    "ÇİFTEHAVUZLAR",
+    "EMAAR",
+    "EMAAR",
+    "EMAAR",
+    "EMAAR",
+    "KALAMIŞ",
+    "KALAMIŞ",
+    "KALAMIŞ",
+    "KALAMIŞ",
+    "KIZILTOPRAK",
+    "KIZILTOPRAK",
+    "KIZILTOPRAK",
+    "KIZILTOPRAK",
+    "SUADİYE",
+    "SUADİYE",
+    "SUADİYE",
+    "SUADİYE",
+    "TUZLA",
+    "TUZLA",
+    "TUZLA",
+    "TUZLA",
+    "DİĞER ŞUBELER",
+    "DİĞER ŞUBELER",
+    "DİĞER ŞUBELER",
+    "DİĞER ŞUBELER",
+    "MENÜMÜZ",
+    "MENÜMÜZ",
+    "MENÜMÜZ",
+    "MENÜMÜZ",
+    "İLETİŞİM",
+    "İLETİŞİM",
+    "İLETİŞİM",
+    "İLETİŞİM",
+    "ANA SAYFA",
+    "ANA SAYFA",
+    "ANA SAYFA",
+    "ANA SAYFA",
+    "KURUMSAL\n\n\tHAKKIMIZDA\n\tBEDRİ USTA GÜNCEL\n\tPOLİTİKALARIMIZ",
+    "KURUMSAL",
+    "KURUMSAL",
+    "KURUMSAL",
+    "HAKKIMIZDA",
+    "HAKKIMIZDA",
+    "HAKKIMIZDA",
+    "HAKKIMIZDA",
+    "BEDRİ USTA GÜNCEL",
+    "BEDRİ USTA GÜNCEL",
+    "BEDRİ USTA GÜNCEL",
+    "BEDRİ USTA GÜNCEL",
+    "POLİTİKALARIMIZ",
+    "POLİTİKALARIMIZ",
+    "POLİTİKALARIMIZ",
+    "POLİTİKALARIMIZ",
+    "ŞUBELER\n\n\tBURSA\n\tÇİFTEHAVUZLAR\n\tEMAAR\n\tKALAMIŞ\n\tKIZILTOPRAK\n\tSUADİYE\n\tTUZLA\n\tDİĞER ŞUBELER",
+    "ŞUBELER",
+    "ŞUBELER",
+    "ŞUBELER",
+    "BURSA",
+    "BURSA",
+    "BURSA",
+    "BURSA",
+    "ÇİFTEHAVUZLAR",
+    "ÇİFTEHAVUZLAR",
+    "ÇİFTEHAVUZLAR",
+    "ÇİFTEHAVUZLAR",
+    "EMAAR",
+    "EMAAR",
+    "EMAAR",
+    "EMAAR",
+    "KALAMIŞ",
+    "KALAMIŞ",
+    "KALAMIŞ",
+    "KALAMIŞ",
+    "KIZILTOPRAK",
+    "KIZILTOPRAK",
+    "KIZILTOPRAK",
+    "KIZILTOPRAK",
+    "SUADİYE",
+    "SUADİYE",
+    "SUADİYE",
+    "SUADİYE",
+    "TUZLA",
+    "TUZLA",
+    "TUZLA",
+    "TUZLA",
+    "DİĞER ŞUBELER",
+    "DİĞER ŞUBELER",
+    "DİĞER ŞUBELER",
+    "DİĞER ŞUBELER",
+    "MENÜMÜZ",
+    "MENÜMÜZ",
+    "MENÜMÜZ",
+    "MENÜMÜZ",
+    "İLETİŞİM",
+    "İLETİŞİM",
+    "İLETİŞİM",
+    "İLETİŞİM",
+    "Ana Sayfa",
+    "Ana Sayfa",
+    "Ana Sayfa",
+    "Kurum al\n\n\tHakkımızda\n\tBedri U ta’ dan",
+    "Kurum al",
+    "Kurum al",
+    "Hakkımızda",
+    "Hakkımızda",
+    "Hakkımızda",
+    "Bedri U ta’ dan",
+    "Bedri U ta’ dan",
+    "Bedri U ta’ dan",
+    "Şubeler\n\n\tEmaar\n\tBur a\n\tÇiftehavuzlar\n\tKalamış\n\tKızıltoprak\n\tSuadiye\n\tTuzla\n\tDiğer Şubeler",
+    "Şubeler",
+    "Şubeler",
+    "Emaar",
+    "Emaar",
+    "Emaar",
+    "Bur a",
+    "Bur a",
+    "Bur a",
+    "Çiftehavuzlar",
+    "Çiftehavuzlar",
+    "Çiftehavuzlar",
+    "Kalamış",
+    "Kalamış",
+    "Kalamış",
+    "Kızıltoprak",
+    "Kızıltoprak",
+    "Kızıltoprak",
+    "Suadiye",
+    "Suadiye"
+  ]
+}
