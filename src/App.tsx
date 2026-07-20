@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Image,
   Linking,
@@ -39,6 +39,16 @@ const navItems = [
   { label: "İletişim", href: "#contact" },
   { label: "Menü", href: "#menu" },
   { label: "Rezervasyon", href: "tel:+902160000000" }
+];
+
+const mobileFooterNavItems = [
+  { label: "FAQ", href: "#faq" },
+  { label: "Impressum", href: "#policies" },
+  { label: "Datenschutz", href: "#policies" },
+  { label: "Cookie-Einstellungen", href: "#policies" },
+  { label: "İletişim", href: "#contact" },
+  { label: "Instagram", href: "https://www.instagram.com/bedriustaa" },
+  { label: "YouTube", href: "https://www.youtube.com/c/BedriUsta" }
 ];
 
 const menuItems = [
@@ -332,8 +342,24 @@ function Header({ isMobile }: { isMobile: boolean }) {
   const rightNavItems = navItems.slice(2);
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const closeOnScroll = () => closeMobileMenu();
+
+    window.addEventListener("scroll", closeOnScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", closeOnScroll);
+    };
+  }, [mobileMenuOpen]);
+
   return (
     <View style={styles.header}>
+      {isMobile && mobileMenuOpen && (
+        <Pressable style={styles.mobileMenuBackdrop} onPress={closeMobileMenu} />
+      )}
+
       <View style={styles.headerRail}>
         {!isMobile && (
           <View style={styles.navSide}>
@@ -406,6 +432,21 @@ function Header({ isMobile }: { isMobile: boolean }) {
               </Pressable>
             );
           })}
+          <View style={styles.mobileMenuGroup}>
+            <Text style={styles.mobileMenuGroupTitle}>Alt Menü</Text>
+            {mobileFooterNavItems.map((item) => (
+              <Pressable
+                key={item.label}
+                onPress={() => {
+                  openNavigationTarget(item.href);
+                  closeMobileMenu();
+                }}
+                style={styles.mobileMenuChild}
+              >
+                <Text style={styles.mobileMenuChildText}>{item.label}</Text>
+              </Pressable>
+            ))}
+          </View>
         </View>
       )}
     </View>
@@ -580,10 +621,11 @@ function MenuBoard() {
 
 function Footer({ isMobile }: { isMobile: boolean }) {
   const legalLinks = [
-    "Impressum",
-    "Gizlilik Politikası",
-    "Çerez Ayarları",
-    "İletişim"
+    { label: "Impressum", href: "#policies" },
+    { label: "Datenschutz", href: "#policies" },
+    { label: "Cookie-Einstellungen", href: "#policies" },
+    { label: "FAQ", href: "#faq" },
+    { label: "İletişim", href: "#contact" }
   ];
 
   const actionLinks = [
@@ -670,25 +712,28 @@ function Footer({ isMobile }: { isMobile: boolean }) {
             </View>
           </View>
 
-          <Text nativeID="policies" style={styles.footerHeading}>Yasal Bilgiler</Text>
-          <View style={styles.footerLinkRow}>
-            {legalLinks.map((label, index) => (
-              <View key={label} style={styles.footerLinkItem}>
+          <View nativeID="policies" style={styles.footerLegalSection}>
+            <Text style={styles.footerHeading}>Yasal Bilgiler</Text>
+            <View style={[styles.footerLinkRow, isMobile && styles.footerLinkRowMobile]}>
+              {legalLinks.map((item) => (
                 <Pressable
-                  onPress={() => {
-                    if (label === "İletişim") scrollToHash("#contact");
-                  }}
+                  key={item.label}
+                  onPress={() => openNavigationTarget(item.href)}
+                  style={styles.footerLegalButton}
                 >
-                  <Text style={styles.footerLink}>{label}</Text>
+                  <Text style={styles.footerLink}>{item.label}</Text>
                 </Pressable>
-                {index < legalLinks.length - 1 && <Text style={styles.footerDot}>·</Text>}
-              </View>
-            ))}
+              ))}
+            </View>
+            <Text nativeID="faq" style={styles.footerFaqText}>
+              FAQ: Rezervasyon, menü, adres, çalışma saatleri ve Bedri Usta Mannheim
+              hakkında sık sorulan sorular için bizimle iletişime geçebilirsiniz.
+            </Text>
+            <Text style={styles.copyright}>© 2026 Bedri Usta. Tüm hakları saklıdır.</Text>
           </View>
         </View>
 
       </View>
-      <Text style={styles.copyright}>© 2026 Bedri Usta. Tüm hakları saklıdır.</Text>
     </View>
   );
 }
@@ -742,6 +787,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 18,
+    position: "relative",
+    zIndex: 21,
     boxShadow: "0 18px 50px rgba(0,0,0,0.3)"
   } as any,
   navSide: {
@@ -844,6 +891,14 @@ const styles = StyleSheet.create({
     width: 48,
     height: 44
   },
+  mobileMenuBackdrop: {
+    position: "fixed",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    zIndex: 18
+  } as any,
   mobileMenuPanel: {
     maxWidth: 560,
     width: "calc(100% - 40px)",
@@ -854,6 +909,8 @@ const styles = StyleSheet.create({
     borderColor: "rgba(255,247,223,0.22)",
     backgroundColor: "rgba(23,10,8,0.96)",
     padding: 10,
+    position: "relative",
+    zIndex: 22,
     boxShadow: "0 22px 52px rgba(0,0,0,0.36)"
   } as any,
   mobileMenuItem: {
@@ -1709,20 +1766,32 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     whiteSpace: "nowrap"
   } as any,
+  footerLegalSection: {
+    marginTop: 2,
+    paddingTop: 18,
+    borderTopWidth: 1,
+    borderTopColor: "rgba(255,255,255,0.12)",
+    position: "relative",
+    zIndex: 2
+  },
   footerLinkRow: {
     flexDirection: "row",
     flexWrap: "wrap",
     alignItems: "flex-start",
-    gap: 8,
-    marginBottom: 22,
+    gap: 10,
+    marginBottom: 12,
     position: "relative",
     zIndex: 2
   },
-  footerLinkItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 8,
-    minHeight: 26
+  footerLinkRowMobile: {
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: 4,
+    marginBottom: 14
+  },
+  footerLegalButton: {
+    minHeight: 30,
+    justifyContent: "center"
   },
   footerLink: {
     color: "#ffffff",
@@ -1731,26 +1800,22 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     fontWeight: "700"
   },
-  footerDot: {
-    display: "none"
+  footerFaqText: {
+    color: "rgba(255,255,255,0.68)",
+    fontFamily: "Karla, sans-serif",
+    fontSize: 12,
+    lineHeight: 19,
+    marginTop: 4,
+    maxWidth: 760
   },
   copyright: {
-    maxWidth: 1180,
-    width: "100%",
-    marginHorizontal: "auto",
     color: "rgba(255,255,255,0.58)",
     fontFamily: "Karla, sans-serif",
     fontSize: 12,
     letterSpacing: 1.1,
     marginTop: 12,
-    paddingTop: 18,
-    borderTopWidth: 1,
-    borderTopColor: "rgba(255,255,255,0.12)",
     lineHeight: 20,
-    position: "relative",
-    zIndex: 1,
-    display: "block",
-    clear: "both"
+    display: "block"
   } as any
 });
 
