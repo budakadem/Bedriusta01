@@ -1053,11 +1053,14 @@ const styles = StyleSheet.create({
   },
   signatureCard: {
     alignSelf: "center",
-    marginTop: -54,
-    backgroundColor: "#050202",
+    marginTop: -1,
+    backgroundColor: "#ffffff",
     borderWidth: 1,
-    borderColor: "rgba(255,247,223,0.24)",
-    borderRadius: 8,
+    borderColor: "rgba(116,27,21,0.24)",
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
     paddingVertical: 14,
     paddingHorizontal: 28,
     minWidth: 196,
@@ -1068,7 +1071,7 @@ const styles = StyleSheet.create({
     display: "none"
   },
   signatureText: {
-    color: "#ffffff",
+    color: colors.red,
     fontFamily: "Karla, sans-serif",
     fontSize: 18,
     lineHeight: 24,
