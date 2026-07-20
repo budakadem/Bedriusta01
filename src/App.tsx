@@ -639,7 +639,7 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     borderWidth: 1,
     borderColor: "rgba(255, 247, 223, 0.28)",
-    backgroundColor: "rgba(116, 27, 21, 0.92)",
+    backgroundColor: "rgba(116, 27, 21, 0.55)",
     backdropFilter: "blur(18px)",
     display: "flex",
     flexDirection: "row",
