@@ -182,6 +182,7 @@ function openNavigationTarget(href: string) {
 async function copyAddress() {
   if (navigator?.clipboard?.writeText) {
     await navigator.clipboard.writeText(restaurantAddress);
+    window.alert("Kopyalandı");
   }
 }
 
@@ -212,7 +213,7 @@ function App() {
           </Text>
           <View style={[styles.heroActions, layout.isMobile && styles.actionsMobile]}>
             <Button label="Rezervasyon" href="tel:+902160000000" primary />
-            <Button label="Menuyu Incele" onPress={() => scrollToHash("#menu")} />
+            <Button label="Menü" onPress={() => scrollToHash("#menu")} />
           </View>
         </View>
 
@@ -365,9 +366,7 @@ function Header({ isMobile }: { isMobile: boolean }) {
             ))}
           </View>
         ) : (
-          <Pressable style={styles.mobileReserveButton} onPress={() => openNavigationTarget("tel:+902160000000")}>
-            <Text style={styles.mobileReserveText}>Rezervasyon</Text>
-          </Pressable>
+          <View style={styles.mobileHeaderSpacer} />
         )}
       </View>
       {isMobile && mobileMenuOpen && (
@@ -496,7 +495,20 @@ function Button({
         (hovered || pressed) && styles.buttonActive
       ]}
     >
-      <Text style={[styles.buttonText, primary && styles.buttonTextPrimary]}>{label}</Text>
+      {({ hovered, pressed }: any) => {
+        const active = hovered || pressed;
+        return (
+          <Text
+            style={[
+              styles.buttonText,
+              primary && styles.buttonTextPrimary,
+              active && styles.buttonTextActive
+            ]}
+          >
+            {label}
+          </Text>
+        );
+      }}
     </Pressable>
   );
 }
@@ -829,20 +841,9 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     backgroundColor: "#ffffff"
   },
-  mobileReserveButton: {
-    minHeight: 40,
-    borderRadius: 999,
-    backgroundColor: "#ffffff",
-    paddingHorizontal: 13,
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  mobileReserveText: {
-    color: colors.red,
-    fontFamily: "Karla, sans-serif",
-    fontSize: 11,
-    letterSpacing: 1,
-    fontWeight: "800"
+  mobileHeaderSpacer: {
+    width: 48,
+    height: 44
   },
   mobileMenuPanel: {
     maxWidth: 560,
@@ -901,7 +902,11 @@ const styles = StyleSheet.create({
     width: 92,
     height: 64,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    position: "absolute",
+    left: "50%",
+    top: 6,
+    transform: [{ translateX: -46 }]
   },
   logo: {
     width: 88,
@@ -992,28 +997,35 @@ const styles = StyleSheet.create({
     minHeight: 50,
     borderRadius: 999,
     borderWidth: 1,
-    borderColor: "rgba(255,247,223,0.42)",
+    borderColor: colors.red,
+    backgroundColor: colors.red,
     paddingHorizontal: 24,
     alignItems: "center",
     justifyContent: "center",
-    transitionDuration: "180ms"
+    transitionDuration: "180ms",
+    transitionProperty: "transform, box-shadow, background-color, border-color"
   } as any,
   buttonPrimary: {
-    backgroundColor: colors.cream,
-    borderColor: colors.cream
+    backgroundColor: colors.red,
+    borderColor: colors.red
   },
   buttonActive: {
     transform: [{ translateY: -2 }],
+    backgroundColor: colors.cream,
+    borderColor: colors.cream,
     boxShadow: "0 14px 30px rgba(0,0,0,.28)"
   } as any,
   buttonText: {
-    color: colors.cream,
+    color: "#ffffff",
     fontFamily: "Karla, sans-serif",
     fontWeight: "700",
     letterSpacing: 1.4,
     fontSize: 13
   },
   buttonTextPrimary: {
+    color: "#ffffff"
+  },
+  buttonTextActive: {
     color: colors.red
   },
   heroVisual: {
