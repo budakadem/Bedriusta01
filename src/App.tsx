@@ -702,6 +702,9 @@ function Footer({ isMobile }: { isMobile: boolean }) {
             style={[styles.footerBrandFigure, isMobile && styles.footerBrandFigureMobile] as any}
             resizeMode="contain"
           />
+          <View style={[styles.footerCityBadge, isMobile && styles.footerCityBadgeMobile]}>
+            <Text style={styles.footerCityBadgeText}>MANNHEIM</Text>
+          </View>
           <Text style={[styles.footerText, isMobile && styles.footerTextMobile]}>
             Premium kebap deneyimi, Bedri Usta imzası ve sıcak misafirlik.
           </Text>
@@ -1686,7 +1689,8 @@ const styles = StyleSheet.create({
     maxWidth: 340,
     height: 420,
     objectFit: "contain",
-    backgroundColor: "transparent"
+    backgroundColor: "transparent",
+    marginBottom: 0
   } as any,
   footerBrandFigureMobile: {
     width: "min(72vw, 320px)",
@@ -1694,14 +1698,43 @@ const styles = StyleSheet.create({
     height: "min(96vw, 420px)",
     maxHeight: 420,
     flexShrink: 0,
-    marginBottom: 14
+    marginBottom: 0
   } as any,
+  footerCityBadge: {
+    alignSelf: "center",
+    minWidth: 190,
+    minHeight: 54,
+    borderRadius: 8,
+    backgroundColor: "#050202",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.2)",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 26,
+    marginTop: -18,
+    marginBottom: 24,
+    boxShadow: "0 12px 28px rgba(0,0,0,0.34)"
+  } as any,
+  footerCityBadgeMobile: {
+    minWidth: 168,
+    minHeight: 48,
+    marginTop: -14,
+    marginBottom: 22
+  },
+  footerCityBadgeText: {
+    color: "#ffffff",
+    fontFamily: "Karla, sans-serif",
+    fontSize: 16,
+    lineHeight: 20,
+    letterSpacing: 5,
+    fontWeight: "800"
+  },
   footerText: {
     color: "#ffffff",
     fontFamily: "Heebo, sans-serif",
     fontSize: 18,
     lineHeight: 29,
-    marginTop: 14,
+    marginTop: 0,
     fontWeight: "700",
     maxWidth: 360
   },
