@@ -170,9 +170,9 @@ const menuCategories = [
 ];
 
 const proofItems = [
-  ["Usta Isi", "Her tabak ayni ritimle hazirlanir: sade, net, hafizada kalici."],
-  ["Ates Dengesi", "Is, tuz, aci ve doku birbirini bastirmadan ayni sofrada bulusur."],
-  ["Misafirlik", "Hizli degil, iyi agirlanmis hissettiren bir restoran deneyimi."]
+  ["Usta İşi", "Her tabak aynı özenle hazırlanır: sade, net ve hafızada kalıcı."],
+  ["Ateş Dengesi", "Isı, tuz, acı ve doku aynı sofrada kusursuz bir uyum yakalar."],
+  ["Misafirlik", "Sıcak karşılama, özenli servis ve sofrada kendini özel hissettiren bir restoran deneyimi."]
 ];
 
 function scrollToHash(hash: string) {
@@ -339,7 +339,7 @@ function App() {
       <View style={[styles.section, styles.craftSection]}>
         <View style={[styles.craftInner, layout.isMobile && styles.stack]}>
           <Text style={[styles.craftTitle, layout.isMobile && styles.sectionTitleMobile]}>
-            Ustaligin pahali gorunmesi gerekmez; iyi hissedilmesi yeter.
+            Ustalık, ateşin başında başlar; sofrada zarif bir deneyime dönüşür.
           </Text>
           <View style={styles.proofList}>
             {proofItems.map(([title, text]) => (
