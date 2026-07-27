@@ -29,6 +29,17 @@ img {
   max-width: 100%;
 }
 
+#restaurant-menu-categories,
+#restaurant-menu-utilities {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+#restaurant-menu-categories::-webkit-scrollbar,
+#restaurant-menu-utilities::-webkit-scrollbar {
+  display: none;
+}
+
 #root {
   min-height: 100vh;
 }
