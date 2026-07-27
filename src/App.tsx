@@ -1761,29 +1761,52 @@ function MobileActionDock({ desktop }: { desktop: boolean }) {
       style={[styles.mobileActionDock, desktop && styles.desktopActionDock]}
       accessibilityLabel="Hızlı erişim"
     >
-      {items.map((item, index) => (
-        <Pressable
-          key={item.label}
-          onPress={item.action}
-          accessibilityRole="link"
-          style={({ pressed }: any) => [
-            styles.mobileActionDockButton,
-            desktop && styles.desktopActionDockButton,
-            index === items.length - 1 && styles.mobileActionDockButtonLast,
-            pressed && styles.mobileActionDockButtonActive
-          ]}
-        >
-          <QuickActionGlyph type={item.icon} compact />
-          <Text
-            style={[
-              styles.mobileActionDockLabel,
-              desktop && styles.desktopActionDockLabel
+      {items.map((item, index) => {
+        if (item.label === "Yol Tarifi") {
+          return (
+            <a
+              key={item.label}
+              href={googleMapsPlaceLink}
+              aria-label="Yol Tarifi"
+              className={`mobile-map-link${desktop ? " mobile-map-link--desktop" : ""}`}
+            >
+              <QuickActionGlyph type={item.icon} compact />
+              <Text
+                style={[
+                  styles.mobileActionDockLabel,
+                  desktop && styles.desktopActionDockLabel
+                ]}
+              >
+                {item.label}
+              </Text>
+            </a>
+          );
+        }
+
+        return (
+          <Pressable
+            key={item.label}
+            onPress={item.action}
+            accessibilityRole="link"
+            style={({ pressed }: any) => [
+              styles.mobileActionDockButton,
+              desktop && styles.desktopActionDockButton,
+              index === items.length - 1 && styles.mobileActionDockButtonLast,
+              pressed && styles.mobileActionDockButtonActive
             ]}
           >
-            {item.label}
-          </Text>
-        </Pressable>
-      ))}
+            <QuickActionGlyph type={item.icon} compact />
+            <Text
+              style={[
+                styles.mobileActionDockLabel,
+                desktop && styles.desktopActionDockLabel
+              ]}
+            >
+              {item.label}
+            </Text>
+          </Pressable>
+        );
+      })}
     </View>
   );
 }
