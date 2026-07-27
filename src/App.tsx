@@ -73,8 +73,11 @@ const menuLahmacunImage = "https://commons.wikimedia.org/wiki/Special:FilePath/A
 const menuMezeImage = "https://commons.wikimedia.org/wiki/Special:FilePath/Turkish_meze_plate.jpg?width=900";
 const menuDessertImage = "https://commons.wikimedia.org/wiki/Special:FilePath/F%C4%B1st%C4%B1kl%C4%B1_Baklava.jpg?width=900";
 const restaurantAddress = "K1 1-4, 68159 Mannheim, Almanya";
-const encodedRestaurantAddress = encodeURIComponent(restaurantAddress);
-const googleMapsLink = `https://www.google.com/maps/dir/?api=1&destination=${encodedRestaurantAddress}&travelmode=driving`;
+const restaurantMapDestination = `QULIS - Mannheim, ${restaurantAddress}`;
+const encodedRestaurantDestination = encodeURIComponent(restaurantMapDestination);
+const googleMapsLink =
+  `https://www.google.com/maps/dir/?api=1&destination=${encodedRestaurantDestination}` +
+  "&travelmode=driving&dir_action=navigate";
 
 const navItems = [
   { label: "Anasayfa", href: "/" },
@@ -188,7 +191,9 @@ async function copyAddress(onCopied?: () => void) {
 }
 
 function openMapForAddress() {
-  window.location.assign(googleMapsLink);
+  Linking.openURL(googleMapsLink).catch(() => {
+    window.location.assign(googleMapsLink);
+  });
 }
 
 function App() {
@@ -4810,7 +4815,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    zIndex: 60,
+    zIndex: 95,
     minHeight: 70,
     flexDirection: "row",
     alignItems: "stretch",
