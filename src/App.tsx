@@ -12,6 +12,9 @@ import {
 const brandImage = "/images/bedri-usta-brand.png";
 const logoImage = "/images/bedriusta-logo.png";
 const portraitImage = "/images/bedri-portrait.png";
+const heroV3Image = "/images/hero-v3.png";
+const heroVideo = "/videos/hero-deneme02.mp4";
+const editorialHeroImage = "/images/mannheim-editorial-hero-v2.webp";
 const footerTransparentLogoImage = "/images/bedri-footer-logo-cutout.png";
 const instagramIconImage = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5.2" stroke="#ffffff" stroke-width="2.2"/><circle cx="12" cy="12" r="4.2" stroke="#ffffff" stroke-width="2.2"/><circle cx="17.3" cy="6.7" r="1.25" fill="#ffffff"/></svg>`
@@ -19,22 +22,68 @@ const instagramIconImage = `data:image/svg+xml;charset=UTF-8,${encodeURIComponen
 const youtubeIconImage = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 20" fill="none"><rect x="1.5" y="1.5" width="25" height="17" rx="5" stroke="#ffffff" stroke-width="2.4"/><path d="M12 6.2v7.6l6.5-3.8L12 6.2Z" fill="#ffffff"/></svg>`
 )}`;
+const languageGlobeIcon = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M3.8 12h16.4M12 3.5c2.2 2.3 3.3 5.1 3.3 8.5S14.2 18.2 12 20.5M12 3.5C9.8 5.8 8.7 8.6 8.7 12s1.1 6.2 3.3 8.5"/></svg>`
+)}`;
+const loginUserIcon = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#dfbf78" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.3"/><circle cx="12" cy="8.8" r="3"/><path d="M6.7 18.4c.7-3 2.6-4.5 5.3-4.5s4.6 1.5 5.3 4.5"/></svg>`
+)}`;
+const quickActionIcon = (content: string) =>
+  `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#dfbf78" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${content}</svg>`
+  )}`;
+const quickActionIcons = {
+  menu: quickActionIcon(
+    `<path d="M3 5.5c3.4-.8 6.3-.2 9 2.1v12c-2.7-2.3-5.6-2.9-9-2.1v-12Z"/><path d="M21 5.5c-3.4-.8-6.3-.2-9 2.1v12c2.7-2.3 5.6-2.9 9-2.1v-12Z"/><path d="M5 3.7c2.8-.3 5.1.4 7 2.2 1.9-1.8 4.2-2.5 7-2.2"/>`
+  ),
+  reservation: quickActionIcon(
+    `<rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M7 3v4M17 3v4M3.5 9.5h17M7.5 13h2M12 13h2M16.5 13h.1M7.5 16.5h2M12 16.5h2"/>`
+  ),
+  instagram: quickActionIcon(
+    `<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.4" cy="6.7" r=".8" fill="#dfbf78" stroke="none"/>`
+  ),
+  directions: quickActionIcon(
+    `<path d="M12 17.5s5-4.5 5-9.6a5 5 0 1 0-10 0c0 5.1 5 9.6 5 9.6Z"/><circle cx="12" cy="8" r="1.8"/><ellipse cx="12" cy="20" rx="6.2" ry="1.8"/>`
+  ),
+  email: quickActionIcon(`<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/>`),
+  youtube: quickActionIcon(
+    `<rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="m10 9 5 3-5 3V9Z"/>`
+  ),
+  contact: quickActionIcon(
+    `<path d="M6 3.5h9l3 3V20H6V3.5Z"/><path d="M14.5 3.5V7H18M9 11h6M9 14.5h6M9 18h4"/>`
+  ),
+  phone: quickActionIcon(
+    `<path d="M7.2 3.5 10 7.2 8.4 9.6c1.2 2.7 3.3 4.8 6 6l2.4-1.6 3.7 2.8-.8 3c-.2.8-1 1.3-1.8 1.2C9.7 20 4 14.3 3 6.1c-.1-.8.4-1.6 1.2-1.8l3-.8Z"/>`
+  ),
+  whatsapp: quickActionIcon(
+    `<path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.1A8 8 0 1 1 20 11.5Z"/><path d="M9 8.2c.5 3.2 2.3 5 5.5 5.6"/>`
+  ),
+  facebook: quickActionIcon(`<path d="M14.5 21v-8h3l.5-3h-3.5V8.2c0-.9.3-1.7 1.8-1.7H18V3.8c-.5-.1-1.5-.3-2.7-.3-2.7 0-4.3 1.6-4.3 4.5v2H8v3h3v8"/>`),
+  pinterest: quickActionIcon(
+    `<circle cx="12" cy="12" r="8.5"/><path d="M9.7 19.8 12 10.2"/><path d="M10.1 14.8c-1.2-.8-1.8-2-1.8-3.6 0-2.5 1.8-4.5 4.4-4.5 2.3 0 3.8 1.6 3.8 3.8 0 2.8-1.2 4.9-3.1 4.9-1 0-1.7-.8-1.5-1.8"/>`
+  ),
+  tiktok: quickActionIcon(
+    `<path d="M14 4v10.2a4.1 4.1 0 1 1-3.4-4"/><path d="M14 4c.5 2.6 2.1 4 4.6 4.2"/>`
+  ),
+  twitter: quickActionIcon(`<path d="m5 4 14 16M19 4 5 20"/>`)
+} as const;
+type QuickActionIconName = keyof typeof quickActionIcons;
 const menuKebabImage = "https://commons.wikimedia.org/wiki/Special:FilePath/Adana_kebap_2024.jpg?width=900";
 const menuLahmacunImage = "https://commons.wikimedia.org/wiki/Special:FilePath/Ac%C4%B1l%C4%B1_Lahmacun.jpg?width=900";
 const menuMezeImage = "https://commons.wikimedia.org/wiki/Special:FilePath/Turkish_meze_plate.jpg?width=900";
 const menuDessertImage = "https://commons.wikimedia.org/wiki/Special:FilePath/F%C4%B1st%C4%B1kl%C4%B1_Baklava.jpg?width=900";
 const restaurantAddress = "K1 1-4, 68159 Mannheim, Almanya";
 const encodedRestaurantAddress = encodeURIComponent(restaurantAddress);
-const googleMapsLink = `https://www.google.com/maps/search/?api=1&query=${encodedRestaurantAddress}`;
+const googleMapsLink = `https://www.google.com/maps/dir/?api=1&destination=${encodedRestaurantAddress}&travelmode=driving`;
 
 const navItems = [
-  { label: "Anasayfa", href: "#home" },
+  { label: "Anasayfa", href: "/" },
   {
     label: "Kurumsal",
     items: [
-      { label: "Hakkımızda", href: "#about" },
+      { label: "Hakkımızda", href: "/hakkimizda" },
       { label: "Jobs", href: "#jobs" },
-      { label: "Politikalarımız", href: "#policies" }
+      { label: "Politikalarımız", href: "/politikalarimiz" }
     ]
   },
   { label: "İletişim", href: "#contact" },
@@ -175,14 +224,33 @@ const proofItems = [
   ["Misafirlik", "Sıcak karşılama, özenli servis ve sofrada kendini özel hissettiren bir restoran deneyimi."]
 ];
 
+function navigateToPath(target: string) {
+  window.history.pushState({}, "", target);
+  window.dispatchEvent(new PopStateEvent("popstate"));
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
 function scrollToHash(hash: string) {
   const element = document.querySelector(hash);
-  element?.scrollIntoView({ behavior: "smooth", block: "start" });
+  if (element) {
+    element.scrollIntoView({ behavior: "smooth", block: "start" });
+    return;
+  }
+
+  navigateToPath(`/${hash}`);
+  window.setTimeout(() => {
+    document.querySelector(hash)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, 50);
 }
 
 function openNavigationTarget(href: string) {
   if (href.startsWith("#")) {
     scrollToHash(href);
+    return;
+  }
+
+  if (href.startsWith("/")) {
+    navigateToPath(href);
     return;
   }
 
@@ -208,42 +276,126 @@ async function copyAddress(onCopied?: () => void) {
   onCopied?.();
 }
 
-async function openMapForAddress() {
-  const userAgent = navigator.userAgent.toLowerCase();
-  const isAndroid = userAgent.includes("android");
-  const isIOS =
-    /iphone|ipad|ipod/.test(userAgent) ||
-    (userAgent.includes("macintosh") && navigator.maxTouchPoints > 1);
-  const mapUrls = isIOS
-    ? [`maps://?q=${encodedRestaurantAddress}`, googleMapsLink]
-    : isAndroid
-      ? [`geo:0,0?q=${encodedRestaurantAddress}`, googleMapsLink]
-      : [googleMapsLink];
-
-  for (const url of mapUrls) {
-    try {
-      await Linking.openURL(url);
-      return;
-    } catch {
-      continue;
-    }
-  }
+function openMapForAddress() {
+  window.location.assign(googleMapsLink);
 }
 
 function App() {
   const { width } = useWindowDimensions();
+  const [pathname, setPathname] = useState(() => window.location.pathname);
   const layout = useMemo(
     () => ({
-      isMobile: width < 1180
+      isMobile: width < 1180,
+      showBottomDock: width < 900,
+      compactActions: width < 600
     }),
     [width]
   );
 
+  useEffect(() => {
+    const handleRouteChange = () => setPathname(window.location.pathname);
+    window.addEventListener("popstate", handleRouteChange);
+    return () => window.removeEventListener("popstate", handleRouteChange);
+  }, []);
+
+  if (pathname.replace(/\/+$/, "") === "/politikalarimiz") {
+    return (
+      <View style={[styles.page, styles.pageWithBottomDock]}>
+        <Header isMobile={layout.isMobile} />
+        <PoliciesPage isMobile={layout.isMobile} />
+        <Footer isMobile={layout.isMobile} />
+        <MobileActionDock desktop={!layout.showBottomDock} />
+      </View>
+    );
+  }
+
   return (
-    <View style={styles.page}>
+    <View style={[styles.page, styles.pageWithBottomDock]}>
       <Header isMobile={layout.isMobile} />
 
-      <View nativeID="home" style={[styles.hero, layout.isMobile && styles.heroMobile]}>
+      <View
+        nativeID="home"
+        style={[styles.editorialHero, layout.isMobile && styles.editorialHeroMobile]}
+      >
+        <View
+          style={[
+            styles.editorialHeroInner,
+            layout.isMobile && styles.editorialHeroInnerMobile
+          ]}
+        >
+          <View
+            style={[
+              styles.editorialHeroMedia,
+              layout.isMobile && styles.editorialHeroMediaMobile
+            ]}
+          >
+            <Image
+              source={{ uri: editorialHeroImage }}
+              style={styles.editorialHeroImage as any}
+              resizeMode="contain"
+              accessibilityLabel="Bedri Usta Mannheim editorial portresi"
+            />
+          </View>
+
+          <View
+            style={[
+              styles.editorialHeroCopy,
+              layout.isMobile && styles.editorialHeroCopyMobile
+            ]}
+          >
+            <Text style={styles.editorialHeroEyebrow}>ADANA Ocakbaşı</Text>
+            <Text
+              style={[
+                styles.editorialHeroTitle,
+                layout.isMobile && styles.editorialHeroTitleMobile
+              ]}
+            >
+              Bedri Usta Mannheim
+            </Text>
+            <Text
+              style={[
+                styles.editorialHeroSubtitle,
+                layout.isMobile && styles.editorialHeroSubtitleMobile
+              ]}
+            >
+              KEBAP & GRILL RESTAURANT
+            </Text>
+            <Text
+              style={[
+                styles.editorialHeroText,
+                layout.isMobile && styles.editorialHeroTextMobile
+              ]}
+            >
+              Bedri Usta'nın 50 yılı aşkın deneyimi, Mannheim şehir merkezinde yeni
+              bir ocakbaşı deneyimiyle buluşuyor. Adana kebabı, seçkin grill
+              lezzetleri ve sıcak Türk misafirliği; premium ama samimi bir sofrada
+              bir araya geliyor.
+            </Text>
+          </View>
+        </View>
+      </View>
+
+      <View style={[styles.campaignHero, layout.isMobile && styles.campaignHeroMobile]}>
+        <video
+          src={heroVideo}
+          poster={heroV3Image}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          controls={false}
+          aria-label="Bedri Usta New Story Germany"
+          style={StyleSheet.flatten(
+            [
+              styles.campaignHeroVideo,
+              layout.isMobile && styles.campaignHeroVideoMobile
+            ]
+          ) as any}
+        />
+      </View>
+
+      <View style={[styles.hero, layout.isMobile && styles.heroMobile]}>
         <View style={styles.heroBackdrop} />
         <View style={[styles.heroCopy, layout.isMobile && styles.heroCopyMobile]}>
           <Text style={styles.eyebrow}>ADANA Ocakbaşı</Text>
@@ -281,15 +433,38 @@ function App() {
             <Image source={{ uri: portraitImage }} style={styles.portrait as any} resizeMode="contain" />
           </View>
           <View style={styles.storyCopy}>
-            <Text style={styles.eyebrowDark}>BEDRI USTA</Text>
+            <Text style={styles.eyebrowDark}>HAKKIMIZDA · BEDRİ USTA</Text>
             <Text style={[styles.sectionTitle, layout.isMobile && styles.sectionTitleMobile]}>
-              "Kebabin yanindaki kozlenmis biber gibi seviyorum."
+              Mardin’den Adana’ya, ocak başından dünyaya.
             </Text>
             <Text style={styles.bodyText}>
-              Bedri Usta'nin dili gosteristen cok lezzetin kendisine yaslanir.
-              Sofrada fazla sus yoktur; iyi et, dogru ates, sicak servis ve
-              unutulmayan bir imza vardir.
+              1970 yılında Mardin’in Altıyol köyünde dünyaya gelen Bedrettin
+              Aydoğdu, yedi yaşında ailesiyle Adana’ya göç etti. Mesleğe çocuk
+              yaşta ocak başında başladı; yıllar içinde herkesin Bedri Usta
+              olarak tanıdığı, gerçek Türk kebabının güçlü temsilcilerinden
+              biri oldu.
             </Text>
+            <Text style={[styles.bodyText, styles.storyParagraphSecondary]}>
+              Adana’da başlayan yolculuk İstanbul’a, ardından yurt içi ve yurt
+              dışındaki restoranlara uzandı. Marka büyürken Bedri Usta ocağın
+              başından ayrılmadı; doğru ateşi, imza lezzetlerini ve sıcak
+              misafirlik anlayışını yeni kuşaklarla paylaşmayı sürdürdü. Bugün
+              bu ustalık hikâyesi Mannheim’da yeni bir sofrayla devam ediyor.
+            </Text>
+            <View style={styles.storyFacts}>
+              <View style={styles.storyFact}>
+                <Text style={styles.storyFactValue}>1970</Text>
+                <Text style={styles.storyFactLabel}>Mardin · Altıyol</Text>
+              </View>
+              <View style={styles.storyFact}>
+                <Text style={styles.storyFactValue}>7 yaşında</Text>
+                <Text style={styles.storyFactLabel}>Adana’da mesleğe başlangıç</Text>
+              </View>
+              <View style={styles.storyFact}>
+                <Text style={styles.storyFactValue}>50+ yıl</Text>
+                <Text style={styles.storyFactLabel}>Ocakbaşı tecrübesi</Text>
+              </View>
+            </View>
           </View>
         </View>
       </View>
@@ -369,15 +544,292 @@ function App() {
         </View>
       </View>
 
+      <QuickActionsSection compact={layout.compactActions} />
       <Footer isMobile={layout.isMobile} />
+      <MobileActionDock desktop={!layout.showBottomDock} />
     </View>
+  );
+}
+
+function AboutPage({ isMobile }: { isMobile: boolean }) {
+  useEffect(() => {
+    const previousTitle = document.title;
+    document.title = "Hakkımızda | Bedri Usta Mannheim";
+
+    return () => {
+      document.title = previousTitle;
+    };
+  }, []);
+
+  const journey = [
+    {
+      year: "1970",
+      city: "Mardin",
+      text: "Altıyol köyünde başlayan; yokluğu, emeği ve aileyi merkeze alan ilk bölüm."
+    },
+    {
+      year: "1977",
+      city: "Adana",
+      text: "Yedi yaşında ocak başıyla tanıştı. Etin, ateşin ve sabrın dilini burada öğrendi."
+    },
+    {
+      year: "İstanbul",
+      city: "Bir marka doğuyor",
+      text: "Sokak arasındaki tezgahtan, kendi adıyla anılan güçlü bir restoran kültürüne."
+    },
+    {
+      year: "Bugün",
+      city: "Mannheim",
+      text: "Gerçek Türk kebabı ve sıcak misafirlik, şimdi Mannheim şehir merkezinde."
+    }
+  ];
+
+  return (
+    <>
+      <View style={[styles.aboutPageHero, isMobile && styles.aboutPageHeroMobile]}>
+        <View style={[styles.aboutVerticalRail, isMobile && styles.aboutVerticalRailMobile]}>
+          <Text
+            accessibilityLabel="Mardin"
+            style={[styles.aboutVerticalText, isMobile && styles.aboutVerticalTextMobile]}
+          >
+            {"M\nA\nR\nD\nİ\nN"}
+          </Text>
+        </View>
+
+        <View style={[styles.aboutHeroMain, isMobile && styles.aboutHeroMainMobile]}>
+          <View style={[styles.aboutHeroCopy, isMobile && styles.aboutHeroCopyMobile]}>
+            <Text style={styles.aboutPageEyebrow}>KÖKLERDEN DÜNYAYA</Text>
+            <Text style={[styles.aboutPageTitle, isMobile && styles.aboutPageTitleMobile]}>
+              Bir ömür, bir ocak, dört şehir.
+            </Text>
+            <Text style={[styles.aboutPageLead, isMobile && styles.aboutPageLeadMobile]}>
+              Bedri Usta’nın hikâyesi Mardin’de başladı; Adana’da ateşle biçimlendi,
+              İstanbul’da markaya dönüştü ve Mannheim’da yeni bir sofrayla devam ediyor.
+            </Text>
+            <View style={[styles.aboutCityLine, isMobile && styles.aboutCityLineMobile]}>
+              {["MARDİN", "ADANA", "İSTANBUL", "MANNHEIM"].map((city, index) => (
+                <View key={city} style={styles.aboutCityItem}>
+                  <Text style={styles.aboutCityName}>{city}</Text>
+                  {index < 3 && <View style={styles.aboutCityConnector} />}
+                </View>
+              ))}
+            </View>
+          </View>
+
+          <View style={[styles.aboutHeroMedia, isMobile && styles.aboutHeroMediaMobile]}>
+            <View style={styles.aboutHeroMediaGlow} />
+            <Image
+              source={{ uri: brandImage }}
+              style={styles.aboutHeroFigure as any}
+              resizeMode="contain"
+              accessibilityLabel="Bedri Usta portresi"
+            />
+            <View style={styles.aboutHeroYearBadge}>
+              <Text style={styles.aboutHeroYear}>1970</Text>
+              <Text style={styles.aboutHeroYearLabel}>MARDİN</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.aboutJourneySection}>
+        <View style={styles.aboutContentInner}>
+          <Text style={styles.aboutSectionEyebrow}>USTALIĞIN ROTASI</Text>
+          <Text style={[styles.aboutSectionTitleLight, isMobile && styles.aboutSectionTitleMobile]}>
+            Mardin’den Mannheim’a uzanan gerçek bir hayat hikâyesi.
+          </Text>
+          <View style={[styles.aboutJourneyGrid, isMobile && styles.aboutJourneyGridMobile]}>
+            {journey.map((item, index) => (
+              <View key={`${item.year}-${item.city}`} style={styles.aboutJourneyCard}>
+                <Text style={styles.aboutJourneyNumber}>
+                  {String(index + 1).padStart(2, "0")}
+                </Text>
+                <Text style={styles.aboutJourneyYear}>{item.year}</Text>
+                <Text style={styles.aboutJourneyCity}>{item.city}</Text>
+                <Text style={styles.aboutJourneyText}>{item.text}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.aboutManifestoSection}>
+        <View style={[styles.aboutManifestoInner, isMobile && styles.aboutManifestoInnerMobile]}>
+          <View style={styles.aboutManifestoVisual}>
+            <Image
+              source={{ uri: portraitImage }}
+              style={styles.aboutManifestoPortrait as any}
+              resizeMode="contain"
+              accessibilityLabel="Bedri Usta illüstrasyonu"
+            />
+            <Text style={styles.aboutManifestoStamp}>USTALIKLA PİŞER HAYAT</Text>
+          </View>
+          <View style={styles.aboutManifestoCopy}>
+            <Text style={styles.eyebrowDark}>BEDRİ USTA’NIN FELSEFESİ</Text>
+            <Text style={[styles.aboutManifestoTitle, isMobile && styles.aboutSectionTitleMobile]}>
+              Mesele yalnızca kebap değil; ateşi, emeği ve hayatı doğru pişirmek.
+            </Text>
+            <Text style={styles.aboutManifestoText}>
+              Çocuk yaşta başlayan meslek yolculuğu, yıllar içinde bir ustalık
+              kültürüne dönüştü. Bedri Usta için iyi bir sofra; doğru ürünün,
+              kararında ateşin ve samimi misafirliğin aynı anda buluşmasıdır.
+            </Text>
+            <Text style={[styles.aboutManifestoText, styles.aboutManifestoTextSecondary]}>
+              Marka büyüse de ocağın başındaki dikkat değişmedi. İmza lezzetler,
+              kuşaktan kuşağa aktarılan çalışma disiplini ve sofraya duyulan saygı,
+              bugün Bedri Usta adının temelini oluşturuyor.
+            </Text>
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.aboutMannheimSection}>
+        <View style={styles.aboutMannheimInner}>
+          <Text style={styles.aboutMannheimKicker}>MARDİN’DEN MANNHEIM’A</Text>
+          <Text style={[styles.aboutMannheimTitle, isMobile && styles.aboutMannheimTitleMobile]}>
+            Kökler Mardin’de. Sofra Mannheim’da.
+          </Text>
+          <Text style={styles.aboutMannheimText}>
+            Bedri Usta’nın yarım asrı aşan deneyimi, Mannheim’da Adana ocakbaşı
+            kültürüyle buluşuyor. Aynı ateş, aynı özen, yeni bir şehir.
+          </Text>
+          <View style={[styles.heroActions, isMobile && styles.actionsMobile]}>
+            <Button label="Menüyü İncele" onPress={() => scrollToHash("#menu")} primary />
+            <Button label="Rezervasyon" href="tel:+902160000000" />
+          </View>
+        </View>
+      </View>
+    </>
+  );
+}
+
+function PoliciesPage({ isMobile }: { isMobile: boolean }) {
+  useEffect(() => {
+    const previousTitle = document.title;
+    document.title = "Politikalarımız | Bedri Usta Mannheim";
+
+    return () => {
+      document.title = previousTitle;
+    };
+  }, []);
+
+  const policies = [
+    {
+      number: "01",
+      title: "Entegre Politika",
+      text: "Teknolojik gelişmeleri takip eder; ekiplerimizin bilgi ve becerilerini düzenli eğitimlerle güçlendiririz. Güncel ürün bilgisini şeffaf biçimde paylaşır, üretimin her aşamasında kaliteyi ve sürekli iyileştirmeyi esas alırız."
+    },
+    {
+      number: "02",
+      title: "Hijyen Politikası",
+      text: "Ürünlerimizin hazırlanmasından sunumuna kadar fiziksel, kimyasal ve biyolojik gıda güvenliği risklerini belirler, kontrol altında tutar ve tüm süreçleri sağlık ile hijyen kurallarına uygun yürütürüz."
+    },
+    {
+      number: "03",
+      title: "Fiziksel Görünüş ve Takı",
+      text: "Üretim alanlarında temiz koruyucu önlük ve saçı tamamen kapatan bone kullanılır. Gıda güvenliğini korumak amacıyla üretim sırasında takı kullanımına izin verilmez."
+    },
+    {
+      number: "04",
+      title: "Üretim Alanlarına Giriş",
+      text: "Ziyaretçi ve tedarikçiler üretim alanlarına yalnızca gerekli koruyucu ekipmanla, belirlenen hijyen adımlarını tamamlayarak ve ziyaretçi kontrol sürecine tabi olarak girebilir."
+    }
+  ];
+
+  return (
+    <>
+      <View style={[styles.policyHero, isMobile && styles.policyHeroMobile]}>
+        <View style={[styles.policyHeroCopy, isMobile && styles.policyHeroCopyMobile]}>
+          <Text style={styles.policyEyebrow}>BEDRİ USTA · MANNHEIM</Text>
+          <Text style={[styles.policyHeroTitle, isMobile && styles.policyHeroTitleMobile]}>
+            Lezzetin arkasında tavizsiz bir standart var.
+          </Text>
+          <Text style={[styles.policyHeroLead, isMobile && styles.policyHeroLeadMobile]}>
+            Misafirlerimize sunduğumuz her üründe gıda güvenliğini, hijyeni, eğitimi ve
+            sürekli gelişimi aynı bütünün parçaları olarak görüyoruz.
+          </Text>
+          <View style={styles.policyPillRow}>
+            {["GIDA GÜVENLİĞİ", "HİJYEN", "SÜREKLİ GELİŞİM"].map((label) => (
+              <View key={label} style={styles.policyPill}>
+                <Text style={styles.policyPillText}>{label}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        <View style={[styles.policyHeroVisual, isMobile && styles.policyHeroVisualMobile]}>
+          <View style={styles.policyHeroRingOuter}>
+            <View style={styles.policyHeroRingInner}>
+              <Text style={styles.policyHeroCheck}>✓</Text>
+            </View>
+          </View>
+          <Text style={styles.policyHeroVisualKicker}>HER AŞAMADA</Text>
+          <Text style={styles.policyHeroVisualTitle}>ÖZEN</Text>
+          <Text style={styles.policyHeroVisualNumber}>01—04</Text>
+        </View>
+      </View>
+
+      <View style={styles.policyIntroSection}>
+        <View style={[styles.policyIntroInner, isMobile && styles.policyIntroInnerMobile]}>
+          <View style={styles.policyIntroHeading}>
+            <Text style={styles.eyebrowDark}>ENTEGRE YAKLAŞIM</Text>
+            <Text style={[styles.policySectionTitle, isMobile && styles.policySectionTitleMobile]}>
+              Güven, mutfakta başlayan bir disiplindir.
+            </Text>
+          </View>
+          <Text style={styles.policyIntroText}>
+            Gıda güvenliği kültürünün tüm ekip tarafından benimsenmesini sağlıyor;
+            çalışanlarımızı düzenli eğitimlerle destekliyoruz. Kaliteli ve hijyenik ürün
+            sunarken yasal gerekliliklere uymayı, tüketici ve tedarikçilerle doğru bilgi
+            paylaşmayı ve sistemimizi sürekli geliştirmeyi taahhüt ediyoruz.
+          </Text>
+        </View>
+      </View>
+
+      <View style={styles.policyCardsSection}>
+        <View style={styles.policyContentInner}>
+          <Text style={styles.policySectionKicker}>ÇALIŞMA PRENSİPLERİMİZ</Text>
+          <View style={[styles.policyGrid, isMobile && styles.policyGridMobile]}>
+            {policies.map((policy) => (
+              <View key={policy.number} style={styles.policyCard}>
+                <View style={styles.policyCardTop}>
+                  <Text style={styles.policyCardNumber}>{policy.number}</Text>
+                  <View style={styles.policyCardLine} />
+                </View>
+                <Text style={styles.policyCardTitle}>{policy.title}</Text>
+                <Text style={styles.policyCardText}>{policy.text}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.policyNoticeSection}>
+        <View style={[styles.policyNoticeInner, isMobile && styles.policyNoticeInnerMobile]}>
+          <View style={styles.policyNoticeMark}>
+            <Text style={styles.policyNoticeMarkText}>!</Text>
+          </View>
+          <View style={styles.policyNoticeCopy}>
+            <Text style={styles.policyNoticeKicker}>ORTAK SORUMLULUK</Text>
+            <Text style={[styles.policyNoticeTitle, isMobile && styles.policySectionTitleMobile]}>
+              Üretim alanlarında kurallar herkes için geçerlidir.
+            </Text>
+            <Text style={styles.policyNoticeText}>
+              Üretim ve depolama alanlarında sigara içilmez, yiyecek veya içecek
+              tüketilmez. Kurallar görünür uyarılarla desteklenir; çalışanların,
+              ziyaretçilerin ve hizmet sağlayıcıların bu standartlara uyması sağlanır.
+            </Text>
+          </View>
+        </View>
+      </View>
+    </>
   );
 }
 
 function Header({ isMobile }: { isMobile: boolean }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const leftNavItems = navItems.slice(0, 2);
-  const rightNavItems = navItems.slice(2);
+  const rightNavItems = navItems.slice(2, 3);
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
   useEffect(() => {
@@ -398,7 +850,7 @@ function Header({ isMobile }: { isMobile: boolean }) {
         <Pressable style={styles.mobileMenuBackdrop} onPress={closeMobileMenu} />
       )}
 
-      <View style={styles.headerRail}>
+      <View style={[styles.headerRail, isMobile && styles.headerRailMobile]}>
         {!isMobile && (
           <View style={styles.navSide}>
             {leftNavItems.map((item) => (
@@ -418,7 +870,7 @@ function Header({ isMobile }: { isMobile: boolean }) {
           </Pressable>
         )}
 
-        <Pressable style={styles.logoButton} onPress={() => scrollToHash("#home")}>
+        <Pressable style={styles.logoButton} onPress={() => openNavigationTarget("/")}>
           <Image source={{ uri: logoImage }} style={styles.logo as any} resizeMode="contain" />
         </Pressable>
 
@@ -427,9 +879,10 @@ function Header({ isMobile }: { isMobile: boolean }) {
             {rightNavItems.map((item) => (
               <NavItem key={item.label} item={item} />
             ))}
+            <HeaderUtilities />
           </View>
         ) : (
-          <View style={styles.mobileHeaderSpacer} />
+          <HeaderUtilities compact />
         )}
       </View>
       {isMobile && mobileMenuOpen && (
@@ -491,6 +944,33 @@ function Header({ isMobile }: { isMobile: boolean }) {
   );
 }
 
+function HeaderUtilities({ compact = false }: { compact?: boolean }) {
+  return (
+    <View
+      style={[styles.headerUtilities, compact && styles.headerUtilitiesCompact]}
+      accessibilityLabel="Kullanıcı ve dil seçenekleri"
+    >
+      <View style={[styles.headerLogin, compact && styles.headerLoginCompact]}>
+        <Image
+          source={{ uri: loginUserIcon }}
+          style={[styles.headerLoginIcon, compact && styles.headerLoginIconCompact] as any}
+          resizeMode="contain"
+        />
+      </View>
+      <View
+        style={[styles.languageMark, compact && styles.languageMarkCompact]}
+        accessibilityLabel="Dil seçimi yakında"
+      >
+        <Image
+          source={{ uri: languageGlobeIcon }}
+          style={[styles.languageGlobe, compact && styles.languageGlobeCompact] as any}
+          resizeMode="contain"
+        />
+      </View>
+    </View>
+  );
+}
+
 function NavItem({
   item,
   compact = false
@@ -498,13 +978,19 @@ function NavItem({
   item: (typeof navItems)[number];
   compact?: boolean;
 }) {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownItems = "items" in item ? item.items : undefined;
 
   if (dropdownItems) {
     return (
-      <Pressable style={styles.navDropdown}>
+      <Pressable
+        onPress={() => setDropdownOpen((open) => !open)}
+        style={styles.navDropdown}
+        accessibilityRole="button"
+        accessibilityState={{ expanded: dropdownOpen }}
+      >
         {({ hovered, pressed }: any) => {
-          const open = hovered || pressed;
+          const open = hovered || pressed || dropdownOpen;
           return (
             <>
               <View style={[styles.navLink, compact && styles.navLinkCompact, open && styles.navLinkHover]}>
@@ -516,7 +1002,10 @@ function NavItem({
                   {dropdownItems.map((child) => (
                     <Pressable
                       key={child.label}
-                      onPress={() => openNavigationTarget(child.href)}
+                      onPress={() => {
+                        setDropdownOpen(false);
+                        openNavigationTarget(child.href);
+                      }}
                       style={({ hovered: childHovered }: any) => [
                         styles.navDropdownItem,
                         childHovered && styles.navDropdownItemHover
@@ -657,6 +1146,165 @@ function MenuBoard() {
   );
 }
 
+function QuickActionGlyph({
+  type,
+  compact = false
+}: {
+  type: QuickActionIconName;
+  compact?: boolean;
+}) {
+  return (
+    <Image
+      source={{ uri: quickActionIcons[type] }}
+      style={[styles.quickActionGlyph, compact && styles.quickActionGlyphCompact] as any}
+      resizeMode="contain"
+    />
+  );
+}
+
+function QuickActionsSection({ compact }: { compact: boolean }) {
+  const actions: Array<{
+    label: string;
+    detail: string;
+    icon: QuickActionIconName;
+    action?: () => void;
+  }> = [
+    { label: "Menü", detail: "Lezzetleri keşfet", icon: "menu", action: () => scrollToHash("#menu") },
+    {
+      label: "Rezervasyon",
+      detail: "Masanızı ayırtın",
+      icon: "reservation",
+      action: () => Linking.openURL("tel:+902160000000")
+    },
+    {
+      label: "Instagram",
+      detail: "@bedriustaa",
+      icon: "instagram",
+      action: () => Linking.openURL("https://www.instagram.com/bedriustaa")
+    },
+    { label: "Yol Tarifi", detail: "Mannheim merkez", icon: "directions", action: openMapForAddress },
+    {
+      label: "E-posta",
+      detail: "info@bedriusta.de",
+      icon: "email",
+      action: () => Linking.openURL("mailto:info@bedriusta.de")
+    },
+    {
+      label: "YouTube",
+      detail: "Videoları izle",
+      icon: "youtube",
+      action: () => Linking.openURL("https://www.youtube.com/c/BedriUsta")
+    },
+    { label: "Pinterest", detail: "Yakında", icon: "pinterest" },
+    { label: "TikTok", detail: "Yakında", icon: "tiktok" },
+    { label: "Twitter", detail: "Yakında", icon: "twitter" },
+    { label: "İletişim", detail: "Bize ulaşın", icon: "contact", action: () => scrollToHash("#contact") },
+    {
+      label: "Telefon",
+      detail: "Hemen arayın",
+      icon: "phone",
+      action: () => Linking.openURL("tel:+902160000000")
+    },
+    {
+      label: "WhatsApp",
+      detail: "Mesaj gönderin",
+      icon: "whatsapp",
+      action: () => Linking.openURL("https://wa.me/902160000000")
+    },
+    { label: "Facebook", detail: "Yakında", icon: "facebook" }
+  ];
+
+  return (
+    <View style={styles.quickActionsSection}>
+      <View style={styles.quickActionsInner}>
+        <Text style={styles.quickActionsEyebrow}>HIZLI ERİŞİM</Text>
+        <Text style={styles.quickActionsTitle}>Tüm bağlantılar tek yerde.</Text>
+        <Text style={styles.quickActionsIntro}>
+          Menüden yol tarifine, rezervasyondan sosyal kanallara kadar Bedri Usta
+          Mannheim'a ulaşmanın en kısa yolları.
+        </Text>
+
+        <View style={[styles.quickActionsGrid, compact && styles.quickActionsGridCompact]}>
+          {actions.map((item) => {
+            const disabled = !item.action;
+            return (
+              <Pressable
+                key={item.label}
+                onPress={item.action}
+                accessibilityRole={disabled ? undefined : "link"}
+                accessibilityState={{ disabled }}
+                style={({ hovered, pressed }: any) => [
+                  styles.quickActionCard,
+                  disabled && styles.quickActionCardDisabled,
+                  !disabled && (hovered || pressed) && styles.quickActionCardActive
+                ]}
+              >
+                <View style={styles.quickActionIconFrame}>
+                  <QuickActionGlyph type={item.icon} />
+                </View>
+                <Text style={styles.quickActionLabel}>{item.label}</Text>
+                <Text style={styles.quickActionDetail}>{item.detail}</Text>
+              </Pressable>
+            );
+          })}
+        </View>
+      </View>
+    </View>
+  );
+}
+
+function MobileActionDock({ desktop }: { desktop: boolean }) {
+  const items: Array<{
+    label: string;
+    icon: QuickActionIconName;
+    action: () => void;
+  }> = [
+    { label: "Menü", icon: "menu", action: () => scrollToHash("#menu") },
+    {
+      label: "Rezervasyon",
+      icon: "reservation",
+      action: () => Linking.openURL("tel:+902160000000")
+    },
+    {
+      label: "Instagram",
+      icon: "instagram",
+      action: () => Linking.openURL("https://www.instagram.com/bedriustaa")
+    },
+    { label: "Yol Tarifi", icon: "directions", action: openMapForAddress }
+  ];
+
+  return (
+    <View
+      style={[styles.mobileActionDock, desktop && styles.desktopActionDock]}
+      accessibilityLabel="Hızlı erişim"
+    >
+      {items.map((item, index) => (
+        <Pressable
+          key={item.label}
+          onPress={item.action}
+          accessibilityRole="link"
+          style={({ pressed }: any) => [
+            styles.mobileActionDockButton,
+            desktop && styles.desktopActionDockButton,
+            index === items.length - 1 && styles.mobileActionDockButtonLast,
+            pressed && styles.mobileActionDockButtonActive
+          ]}
+        >
+          <QuickActionGlyph type={item.icon} compact />
+          <Text
+            style={[
+              styles.mobileActionDockLabel,
+              desktop && styles.desktopActionDockLabel
+            ]}
+          >
+            {item.label}
+          </Text>
+        </Pressable>
+      ))}
+    </View>
+  );
+}
+
 function Footer({ isMobile }: { isMobile: boolean }) {
   const [addressCopied, setAddressCopied] = useState(false);
   const copyToastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -746,7 +1394,11 @@ function Footer({ isMobile }: { isMobile: boolean }) {
             </View>
             <View style={[styles.footerInfoBlock, styles.footerAddressBlock]}>
               <Text style={styles.footerHeading}>Adres</Text>
-              <Pressable onPress={handleCopyAddress}>
+              <Pressable
+                onPress={openMapForAddress}
+                accessibilityRole="link"
+                accessibilityLabel="QULIS Mannheim adresini Google Maps'te aç"
+              >
                 <Text style={[styles.footerInfoStrong, styles.footerAddressText]}>{restaurantAddress}</Text>
               </Pressable>
               <View style={styles.footerAddressActions}>
@@ -817,11 +1469,13 @@ function SocialIcon({ type, primary }: { type: string; primary?: boolean }) {
 }
 
 const colors = {
-  wine: "#170a08",
-  red: "#741b15",
-  cream: "#fff7df",
-  ivory: "#fffaf0",
-  sand: "#ead5ac",
+  wine: "#160807",
+  red: "#a7191e",
+  headerRed: "#530e0f",
+  cream: "#fff8ee",
+  ivory: "#fffdf8",
+  paper: "#f6f3f0",
+  sand: "#e7d1ad",
   copper: "#c46632",
   ink: "#0c0705"
 };
@@ -831,6 +1485,9 @@ const styles = StyleSheet.create({
     minHeight: "100vh",
     backgroundColor: colors.wine
   } as any,
+  pageWithBottomDock: {
+    paddingBottom: "calc(92px + env(safe-area-inset-bottom))"
+  } as any,
   header: {
     position: "fixed",
     top: 0,
@@ -838,18 +1495,15 @@ const styles = StyleSheet.create({
     right: 0,
     zIndex: 20,
     paddingTop: 12,
-    paddingHorizontal: 20
+    paddingHorizontal: 0
   } as any,
   headerRail: {
     minHeight: 76,
-    maxWidth: 1180,
     width: "100%",
-    marginHorizontal: "auto",
-    borderRadius: 999,
+    borderRadius: 0,
     borderWidth: 1,
-    borderColor: "rgba(255, 247, 223, 0.28)",
-    backgroundColor: "rgba(116, 27, 21, 0.55)",
-    backdropFilter: "blur(18px)",
+    borderColor: colors.headerRed,
+    backgroundColor: colors.headerRed,
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
@@ -859,12 +1513,72 @@ const styles = StyleSheet.create({
     zIndex: 21,
     boxShadow: "0 18px 50px rgba(0,0,0,0.3)"
   } as any,
+  headerRailMobile: {
+    minHeight: 58,
+    paddingHorizontal: 14
+  },
   navSide: {
     width: "38%",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-evenly",
     gap: 8
+  },
+  headerUtilities: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 7
+  },
+  headerUtilitiesCompact: {
+    width: 72,
+    justifyContent: "flex-end",
+    gap: 5
+  },
+  headerLogin: {
+    width: 36,
+    height: 36,
+    minHeight: 36,
+    paddingHorizontal: 0,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: "rgba(223,191,120,.48)",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  headerLoginCompact: {
+    width: 32,
+    height: 32,
+    minHeight: 32,
+    paddingHorizontal: 0
+  },
+  headerLoginIcon: {
+    width: 27,
+    height: 27
+  },
+  headerLoginIconCompact: {
+    width: 24,
+    height: 24
+  },
+  languageMark: {
+    width: 36,
+    height: 36,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: "rgba(255,247,223,.24)",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  languageMarkCompact: {
+    width: 32,
+    height: 32
+  },
+  languageGlobe: {
+    width: 20,
+    height: 20
+  },
+  languageGlobeCompact: {
+    width: 17,
+    height: 17
   },
   navLink: {
     borderRadius: 999,
@@ -936,8 +1650,8 @@ const styles = StyleSheet.create({
     fontWeight: "700"
   },
   mobileMenuButton: {
-    width: 48,
-    height: 44,
+    width: 44,
+    height: 40,
     borderRadius: 999,
     borderWidth: 1,
     borderColor: "rgba(255,247,223,0.26)",
@@ -954,10 +1668,6 @@ const styles = StyleSheet.create({
     height: 2,
     borderRadius: 999,
     backgroundColor: "#ffffff"
-  },
-  mobileHeaderSpacer: {
-    width: 48,
-    height: 44
   },
   mobileMenuBackdrop: {
     position: "fixed",
@@ -1037,6 +1747,847 @@ const styles = StyleSheet.create({
     height: 108,
     transform: [{ translateY: 12 }]
   },
+  editorialHero: {
+    width: "100%",
+    minHeight: "100svh",
+    paddingTop: 124,
+    paddingBottom: 48,
+    paddingHorizontal: 32,
+    backgroundColor: colors.paper,
+    justifyContent: "center",
+    overflow: "hidden"
+  } as any,
+  editorialHeroMobile: {
+    minHeight: 0,
+    paddingTop: 116,
+    paddingBottom: 52,
+    paddingHorizontal: 18
+  } as any,
+  editorialHeroInner: {
+    width: "100%",
+    maxWidth: 1280,
+    marginHorizontal: "auto",
+    flexDirection: "row-reverse",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 64
+  },
+  editorialHeroInnerMobile: {
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    gap: 34
+  },
+  editorialHeroMedia: {
+    width: "min(43vw, 600px)",
+    maxWidth: 600,
+    aspectRatio: 1856 / 2304,
+    flexShrink: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
+    backgroundColor: colors.paper
+  } as any,
+  editorialHeroMediaMobile: {
+    width: "100%",
+    maxWidth: 520,
+    alignSelf: "center"
+  } as any,
+  editorialHeroImage: {
+    width: "100%",
+    height: "100%"
+  },
+  editorialHeroCopy: {
+    flex: 1,
+    minWidth: 0,
+    maxWidth: 590
+  },
+  editorialHeroCopyMobile: {
+    width: "100%",
+    maxWidth: 620,
+    alignItems: "center"
+  },
+  editorialHeroEyebrow: {
+    color: colors.red,
+    fontFamily: "Karla, sans-serif",
+    fontSize: 12,
+    lineHeight: 18,
+    letterSpacing: 4.5,
+    fontWeight: "800",
+    textTransform: "uppercase",
+    marginBottom: 18
+  } as any,
+  editorialHeroTitle: {
+    color: colors.ink,
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 64,
+    lineHeight: 68,
+    fontWeight: "800",
+    letterSpacing: -1.6
+  },
+  editorialHeroTitleMobile: {
+    fontSize: 42,
+    lineHeight: 47,
+    letterSpacing: -0.8,
+    textAlign: "center"
+  },
+  editorialHeroSubtitle: {
+    color: colors.red,
+    fontFamily: "Karla, sans-serif",
+    fontSize: 22,
+    lineHeight: 30,
+    fontWeight: "800",
+    letterSpacing: 2,
+    marginTop: 12
+  } as any,
+  editorialHeroSubtitleMobile: {
+    fontSize: 17,
+    lineHeight: 24,
+    letterSpacing: 1.3,
+    textAlign: "center"
+  },
+  editorialHeroText: {
+    color: "#514744",
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 18,
+    lineHeight: 30,
+    maxWidth: 560,
+    marginTop: 24
+  },
+  editorialHeroTextMobile: {
+    fontSize: 16,
+    lineHeight: 27,
+    textAlign: "center"
+  },
+  campaignHero: {
+    width: "100%",
+    minHeight: 0,
+    padding: 0,
+    backgroundColor: "#ffffff",
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden"
+  } as any,
+  campaignHeroMobile: {
+    minHeight: 0,
+    padding: 0
+  } as any,
+  campaignHeroVideo: {
+    display: "block",
+    width: "100%",
+    height: "auto",
+    maxWidth: 1920,
+    maxHeight: 1080,
+    aspectRatio: 16 / 9,
+    objectFit: "contain",
+    backgroundColor: "#ffffff"
+  } as any,
+  campaignHeroVideoMobile: {
+    width: "100%",
+    height: "auto",
+    minHeight: 0,
+    aspectRatio: 16 / 9
+  } as any,
+  policyHero: {
+    width: "100%",
+    minHeight: "82svh",
+    paddingTop: 88,
+    flexDirection: "row",
+    backgroundColor: colors.paper,
+    overflow: "hidden"
+  } as any,
+  policyHeroMobile: {
+    minHeight: 0,
+    paddingTop: 70,
+    flexDirection: "column"
+  } as any,
+  policyHeroCopy: {
+    flex: 1.08,
+    minWidth: 0,
+    paddingVertical: 82,
+    paddingHorizontal: "clamp(28px, 7vw, 112px)",
+    justifyContent: "center"
+  } as any,
+  policyHeroCopyMobile: {
+    paddingVertical: 52,
+    paddingHorizontal: 24
+  },
+  policyEyebrow: {
+    color: colors.red,
+    fontFamily: "Karla, sans-serif",
+    fontSize: 12,
+    lineHeight: 18,
+    letterSpacing: 4,
+    fontWeight: "800"
+  },
+  policyHeroTitle: {
+    maxWidth: 720,
+    color: colors.ink,
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 68,
+    lineHeight: 73,
+    letterSpacing: -2,
+    fontWeight: "900",
+    marginTop: 20
+  },
+  policyHeroTitleMobile: {
+    fontSize: 42,
+    lineHeight: 47,
+    letterSpacing: -1
+  },
+  policyHeroLead: {
+    maxWidth: 620,
+    color: "#514744",
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 19,
+    lineHeight: 31,
+    marginTop: 24
+  },
+  policyHeroLeadMobile: {
+    fontSize: 16,
+    lineHeight: 27
+  },
+  policyPillRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 9,
+    marginTop: 34
+  },
+  policyPill: {
+    borderWidth: 1,
+    borderColor: "#c9bdb5",
+    paddingVertical: 9,
+    paddingHorizontal: 13
+  },
+  policyPillText: {
+    color: colors.red,
+    fontFamily: "Karla, sans-serif",
+    fontSize: 10,
+    lineHeight: 14,
+    letterSpacing: 1.7,
+    fontWeight: "800"
+  },
+  policyHeroVisual: {
+    flex: 0.92,
+    minWidth: 0,
+    position: "relative",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.headerRed,
+    backgroundImage:
+      "radial-gradient(circle at 50% 42%, rgba(223,191,120,.14), transparent 35%), linear-gradient(145deg, #3b090b 0%, #681a1e 100%)",
+    overflow: "hidden"
+  } as any,
+  policyHeroVisualMobile: {
+    minHeight: 410,
+    flex: 0
+  },
+  policyHeroRingOuter: {
+    width: "clamp(190px, 28vw, 340px)",
+    aspectRatio: 1,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: "rgba(223,191,120,.42)",
+    alignItems: "center",
+    justifyContent: "center"
+  } as any,
+  policyHeroRingInner: {
+    width: "72%",
+    aspectRatio: 1,
+    borderRadius: 999,
+    borderWidth: 2,
+    borderColor: "#dfbf78",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(48,5,7,.52)"
+  },
+  policyHeroCheck: {
+    color: "#dfbf78",
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 92,
+    lineHeight: 105,
+    fontWeight: "300"
+  },
+  policyHeroVisualKicker: {
+    color: "#dfbf78",
+    fontFamily: "Karla, sans-serif",
+    fontSize: 11,
+    lineHeight: 16,
+    letterSpacing: 4,
+    fontWeight: "800",
+    marginTop: 26
+  },
+  policyHeroVisualTitle: {
+    color: "#ffffff",
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 46,
+    lineHeight: 50,
+    letterSpacing: 8,
+    fontWeight: "900",
+    marginTop: 3
+  },
+  policyHeroVisualNumber: {
+    position: "absolute",
+    right: 24,
+    bottom: 18,
+    color: "rgba(223,191,120,.55)",
+    fontFamily: "Karla, sans-serif",
+    fontSize: 12,
+    lineHeight: 18,
+    letterSpacing: 2.4,
+    fontWeight: "800"
+  } as any,
+  policyIntroSection: {
+    backgroundColor: "#ffffff",
+    paddingVertical: 92,
+    paddingHorizontal: 28
+  },
+  policyIntroInner: {
+    width: "100%",
+    maxWidth: 1160,
+    marginHorizontal: "auto",
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 72
+  },
+  policyIntroInnerMobile: {
+    flexDirection: "column",
+    gap: 24
+  },
+  policyIntroHeading: {
+    flex: 0.92,
+    minWidth: 0
+  },
+  policySectionTitle: {
+    color: colors.ink,
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 46,
+    lineHeight: 53,
+    letterSpacing: -1,
+    fontWeight: "900"
+  },
+  policySectionTitleMobile: {
+    fontSize: 34,
+    lineHeight: 40,
+    letterSpacing: -0.5
+  },
+  policyIntroText: {
+    flex: 1.08,
+    minWidth: 0,
+    color: "#514744",
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 17,
+    lineHeight: 30
+  },
+  policyCardsSection: {
+    backgroundColor: colors.wine,
+    paddingVertical: 100,
+    paddingHorizontal: 28
+  },
+  policyContentInner: {
+    width: "100%",
+    maxWidth: 1160,
+    marginHorizontal: "auto"
+  },
+  policySectionKicker: {
+    color: "#dfbf78",
+    fontFamily: "Karla, sans-serif",
+    fontSize: 12,
+    lineHeight: 18,
+    letterSpacing: 4,
+    fontWeight: "800"
+  },
+  policyGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+    gap: 14,
+    marginTop: 38
+  } as any,
+  policyGridMobile: {
+    gridTemplateColumns: "minmax(0, 1fr)",
+    gap: 10
+  } as any,
+  policyCard: {
+    minHeight: 300,
+    borderWidth: 1,
+    borderColor: "rgba(223,191,120,.26)",
+    backgroundColor: "rgba(255,255,255,.035)",
+    paddingVertical: 28,
+    paddingHorizontal: "clamp(20px, 4vw, 38px)"
+  } as any,
+  policyCardTop: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 14
+  },
+  policyCardNumber: {
+    color: "#dfbf78",
+    fontFamily: "Karla, sans-serif",
+    fontSize: 12,
+    lineHeight: 18,
+    letterSpacing: 2.4,
+    fontWeight: "800"
+  },
+  policyCardLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: "rgba(223,191,120,.22)"
+  },
+  policyCardTitle: {
+    color: "#ffffff",
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 28,
+    lineHeight: 34,
+    fontWeight: "900",
+    marginTop: 42
+  },
+  policyCardText: {
+    color: "rgba(255,255,255,.69)",
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 16,
+    lineHeight: 27,
+    marginTop: 16
+  },
+  policyNoticeSection: {
+    backgroundColor: colors.paper,
+    paddingVertical: 96,
+    paddingHorizontal: 28
+  },
+  policyNoticeInner: {
+    width: "100%",
+    maxWidth: 1040,
+    marginHorizontal: "auto",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 56
+  },
+  policyNoticeInnerMobile: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+    gap: 30
+  },
+  policyNoticeMark: {
+    width: 150,
+    height: 150,
+    flexShrink: 0,
+    borderRadius: 999,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.headerRed,
+    boxShadow: "0 20px 55px rgba(83,14,15,.18)"
+  } as any,
+  policyNoticeMarkText: {
+    color: "#dfbf78",
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 78,
+    lineHeight: 88,
+    fontWeight: "300"
+  },
+  policyNoticeCopy: {
+    flex: 1,
+    minWidth: 0
+  },
+  policyNoticeKicker: {
+    color: colors.red,
+    fontFamily: "Karla, sans-serif",
+    fontSize: 11,
+    lineHeight: 16,
+    letterSpacing: 3.2,
+    fontWeight: "800"
+  },
+  policyNoticeTitle: {
+    color: colors.ink,
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 44,
+    lineHeight: 51,
+    letterSpacing: -0.9,
+    fontWeight: "900",
+    marginTop: 12
+  },
+  policyNoticeText: {
+    color: "#514744",
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 16,
+    lineHeight: 28,
+    marginTop: 18
+  },
+  aboutPageHero: {
+    width: "100%",
+    minHeight: "100svh",
+    paddingTop: 88,
+    flexDirection: "row",
+    backgroundColor: colors.paper,
+    overflow: "hidden"
+  } as any,
+  aboutPageHeroMobile: {
+    minHeight: 0,
+    paddingTop: 70
+  } as any,
+  aboutVerticalRail: {
+    width: 134,
+    flexShrink: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRightWidth: 1,
+    borderRightColor: "#ded6cf",
+    backgroundColor: "#f1ece8"
+  },
+  aboutVerticalRailMobile: {
+    width: 52
+  },
+  aboutVerticalText: {
+    color: colors.ink,
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 68,
+    lineHeight: 75,
+    letterSpacing: -2,
+    fontWeight: "900",
+    textAlign: "center"
+  },
+  aboutVerticalTextMobile: {
+    fontSize: 31,
+    lineHeight: 37,
+    letterSpacing: -0.5
+  },
+  aboutHeroMain: {
+    flex: 1,
+    minWidth: 0,
+    maxWidth: 1440,
+    marginHorizontal: "auto",
+    flexDirection: "row",
+    alignItems: "stretch"
+  },
+  aboutHeroMainMobile: {
+    flexDirection: "column"
+  },
+  aboutHeroCopy: {
+    flex: 0.92,
+    minWidth: 0,
+    paddingVertical: 76,
+    paddingHorizontal: "clamp(28px, 5vw, 76px)",
+    justifyContent: "center"
+  } as any,
+  aboutHeroCopyMobile: {
+    paddingVertical: 48,
+    paddingHorizontal: 20
+  },
+  aboutPageEyebrow: {
+    color: colors.red,
+    fontFamily: "Karla, sans-serif",
+    fontSize: 12,
+    lineHeight: 18,
+    letterSpacing: 4.4,
+    fontWeight: "800"
+  },
+  aboutPageTitle: {
+    color: colors.ink,
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 68,
+    lineHeight: 72,
+    letterSpacing: -2,
+    fontWeight: "900",
+    maxWidth: 610,
+    marginTop: 18
+  },
+  aboutPageTitleMobile: {
+    fontSize: 42,
+    lineHeight: 46,
+    letterSpacing: -1
+  },
+  aboutPageLead: {
+    color: "#514744",
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 19,
+    lineHeight: 31,
+    maxWidth: 600,
+    marginTop: 24
+  },
+  aboutPageLeadMobile: {
+    fontSize: 16,
+    lineHeight: 27
+  },
+  aboutCityLine: {
+    flexDirection: "row",
+    alignItems: "center",
+    flexWrap: "wrap",
+    gap: 9,
+    marginTop: 34
+  },
+  aboutCityLineMobile: {
+    alignItems: "flex-start",
+    gap: 7,
+    marginTop: 28
+  },
+  aboutCityItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 9
+  },
+  aboutCityName: {
+    color: colors.red,
+    fontFamily: "Karla, sans-serif",
+    fontSize: 11,
+    lineHeight: 16,
+    letterSpacing: 1.7,
+    fontWeight: "800"
+  },
+  aboutCityConnector: {
+    width: 22,
+    height: 1,
+    backgroundColor: "#c8aaa1"
+  },
+  aboutHeroMedia: {
+    flex: 1.08,
+    minWidth: 0,
+    minHeight: 650,
+    position: "relative",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    backgroundColor: colors.headerRed,
+    overflow: "hidden"
+  } as any,
+  aboutHeroMediaMobile: {
+    minHeight: 430
+  },
+  aboutHeroMediaGlow: {
+    position: "absolute",
+    width: "72%",
+    aspectRatio: 1,
+    top: "8%",
+    borderRadius: 999,
+    backgroundColor: "rgba(223,191,120,.16)",
+    boxShadow: "0 0 120px rgba(223,191,120,.16)"
+  } as any,
+  aboutHeroFigure: {
+    width: "92%",
+    height: "94%"
+  },
+  aboutHeroYearBadge: {
+    position: "absolute",
+    right: 22,
+    bottom: 22,
+    minWidth: 104,
+    borderWidth: 1,
+    borderColor: "rgba(223,191,120,.66)",
+    backgroundColor: "rgba(48,5,7,.84)",
+    paddingVertical: 13,
+    paddingHorizontal: 16
+  } as any,
+  aboutHeroYear: {
+    color: "#dfbf78",
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 24,
+    lineHeight: 28,
+    fontWeight: "900"
+  },
+  aboutHeroYearLabel: {
+    color: "#ffffff",
+    fontFamily: "Karla, sans-serif",
+    fontSize: 10,
+    lineHeight: 14,
+    letterSpacing: 2.5,
+    fontWeight: "800",
+    marginTop: 2
+  },
+  aboutJourneySection: {
+    backgroundColor: colors.wine,
+    paddingVertical: 100,
+    paddingHorizontal: 28
+  },
+  aboutContentInner: {
+    width: "100%",
+    maxWidth: 1180,
+    marginHorizontal: "auto"
+  },
+  aboutSectionEyebrow: {
+    color: "#dfbf78",
+    fontFamily: "Karla, sans-serif",
+    fontSize: 12,
+    lineHeight: 18,
+    letterSpacing: 4,
+    fontWeight: "800"
+  },
+  aboutSectionTitleLight: {
+    color: "#ffffff",
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 48,
+    lineHeight: 55,
+    letterSpacing: -1.1,
+    fontWeight: "900",
+    maxWidth: 780,
+    marginTop: 14
+  },
+  aboutSectionTitleMobile: {
+    fontSize: 34,
+    lineHeight: 40,
+    letterSpacing: -0.5
+  },
+  aboutJourneyGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+    gap: 14,
+    marginTop: 48
+  } as any,
+  aboutJourneyGridMobile: {
+    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+    gap: 10,
+    marginTop: 34
+  } as any,
+  aboutJourneyCard: {
+    minHeight: 270,
+    borderWidth: 1,
+    borderColor: "rgba(223,191,120,.24)",
+    backgroundColor: "rgba(255,255,255,.035)",
+    paddingVertical: 24,
+    paddingHorizontal: 20
+  },
+  aboutJourneyNumber: {
+    color: "rgba(223,191,120,.58)",
+    fontFamily: "Karla, sans-serif",
+    fontSize: 11,
+    lineHeight: 16,
+    letterSpacing: 2,
+    fontWeight: "800"
+  },
+  aboutJourneyYear: {
+    color: "#dfbf78",
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 24,
+    lineHeight: 30,
+    fontWeight: "900",
+    marginTop: 30
+  },
+  aboutJourneyCity: {
+    color: "#ffffff",
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 18,
+    lineHeight: 24,
+    fontWeight: "800",
+    marginTop: 2
+  },
+  aboutJourneyText: {
+    color: "rgba(255,255,255,.68)",
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 14,
+    lineHeight: 23,
+    marginTop: 14
+  },
+  aboutManifestoSection: {
+    backgroundColor: colors.paper,
+    paddingVertical: 100,
+    paddingHorizontal: 28
+  },
+  aboutManifestoInner: {
+    width: "100%",
+    maxWidth: 1120,
+    marginHorizontal: "auto",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 72
+  },
+  aboutManifestoInnerMobile: {
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: 42
+  },
+  aboutManifestoVisual: {
+    flex: 0.8,
+    minHeight: 470,
+    position: "relative",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    borderWidth: 1,
+    borderColor: "#ded6cf",
+    backgroundColor: "#efe8e3",
+    overflow: "hidden"
+  } as any,
+  aboutManifestoPortrait: {
+    width: "92%",
+    height: 430
+  },
+  aboutManifestoStamp: {
+    position: "absolute",
+    left: 18,
+    bottom: 18,
+    color: colors.red,
+    fontFamily: "Karla, sans-serif",
+    fontSize: 11,
+    lineHeight: 16,
+    letterSpacing: 2.5,
+    fontWeight: "800",
+    backgroundColor: "rgba(246,243,240,.9)",
+    paddingVertical: 8,
+    paddingHorizontal: 10
+  } as any,
+  aboutManifestoCopy: {
+    flex: 1.2,
+    minWidth: 0
+  },
+  aboutManifestoTitle: {
+    color: colors.ink,
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 46,
+    lineHeight: 53,
+    letterSpacing: -1,
+    fontWeight: "900",
+    marginTop: 14
+  },
+  aboutManifestoText: {
+    color: "#514744",
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 17,
+    lineHeight: 29,
+    marginTop: 22
+  },
+  aboutManifestoTextSecondary: {
+    marginTop: 13
+  },
+  aboutMannheimSection: {
+    backgroundColor: colors.headerRed,
+    backgroundImage:
+      "radial-gradient(circle at 88% 22%, rgba(223,191,120,.18), transparent 34%), linear-gradient(135deg, #3b090b 0%, #530e0f 58%, #210506 100%)",
+    paddingVertical: 104,
+    paddingHorizontal: 28
+  } as any,
+  aboutMannheimInner: {
+    width: "100%",
+    maxWidth: 940,
+    marginHorizontal: "auto",
+    alignItems: "center"
+  },
+  aboutMannheimKicker: {
+    color: "#dfbf78",
+    fontFamily: "Karla, sans-serif",
+    fontSize: 12,
+    lineHeight: 18,
+    letterSpacing: 4,
+    fontWeight: "800",
+    textAlign: "center"
+  },
+  aboutMannheimTitle: {
+    color: "#ffffff",
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 56,
+    lineHeight: 62,
+    letterSpacing: -1.4,
+    fontWeight: "900",
+    textAlign: "center",
+    marginTop: 16
+  },
+  aboutMannheimTitleMobile: {
+    fontSize: 38,
+    lineHeight: 44,
+    letterSpacing: -0.6
+  },
+  aboutMannheimText: {
+    color: "rgba(255,255,255,.72)",
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 18,
+    lineHeight: 30,
+    maxWidth: 680,
+    textAlign: "center",
+    marginTop: 18,
+    marginBottom: 30
+  },
   hero: {
     minHeight: "100vh",
     paddingTop: 150,
@@ -1059,7 +2610,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     inset: 0,
     backgroundImage:
-      "radial-gradient(circle at 78% 25%, rgba(196,102,50,.26), transparent 34%), radial-gradient(circle at 18% 78%, rgba(116,27,21,.5), transparent 38%)"
+      "radial-gradient(circle at 78% 25%, rgba(196,102,50,.22), transparent 34%), radial-gradient(circle at 18% 78%, rgba(167,25,30,.48), transparent 38%)"
   } as any,
   heroCopy: {
     maxWidth: 610,
@@ -1287,6 +2838,41 @@ const styles = StyleSheet.create({
     fontSize: 18,
     lineHeight: 31,
     marginTop: 20
+  },
+  storyParagraphSecondary: {
+    marginTop: 14
+  },
+  storyFacts: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
+    marginTop: 26
+  },
+  storyFact: {
+    flex: 1,
+    minWidth: 128,
+    minHeight: 94,
+    borderWidth: 1,
+    borderColor: "#e7d1ad",
+    backgroundColor: "#fffdf7",
+    paddingVertical: 15,
+    paddingHorizontal: 14,
+    justifyContent: "center"
+  },
+  storyFactValue: {
+    color: colors.red,
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 20,
+    lineHeight: 25,
+    fontWeight: "800"
+  },
+  storyFactLabel: {
+    color: "#5b433b",
+    fontFamily: "Karla, sans-serif",
+    fontSize: 12,
+    lineHeight: 17,
+    fontWeight: "700",
+    marginTop: 4
   },
   menuSection: {
     backgroundColor: colors.wine,
@@ -1645,6 +3231,182 @@ const styles = StyleSheet.create({
     maxWidth: 560,
     textAlign: "center",
     marginTop: 14
+  },
+  quickActionsSection: {
+    backgroundColor: colors.paper,
+    paddingVertical: 88,
+    paddingHorizontal: 32,
+    borderTopWidth: 1,
+    borderTopColor: "#ded6cf"
+  },
+  quickActionsInner: {
+    width: "100%",
+    maxWidth: 1180,
+    marginHorizontal: "auto"
+  },
+  quickActionsEyebrow: {
+    color: colors.red,
+    fontFamily: "Karla, sans-serif",
+    fontSize: 12,
+    lineHeight: 18,
+    letterSpacing: 4.2,
+    fontWeight: "800",
+    textAlign: "center"
+  },
+  quickActionsTitle: {
+    color: colors.ink,
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 44,
+    lineHeight: 50,
+    fontWeight: "800",
+    textAlign: "center",
+    marginTop: 12
+  },
+  quickActionsIntro: {
+    color: "#5a4e49",
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 16,
+    lineHeight: 26,
+    textAlign: "center",
+    maxWidth: 650,
+    marginHorizontal: "auto",
+    marginTop: 14,
+    marginBottom: 36
+  },
+  quickActionsGrid: {
+    width: "100%",
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(min(180px, 100%), 1fr))",
+    gap: 14
+  } as any,
+  quickActionsGridCompact: {
+    gridTemplateColumns: "repeat(2, minmax(0, 1fr))"
+  } as any,
+  quickActionCard: {
+    minHeight: 164,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#6d2426",
+    backgroundColor: colors.headerRed,
+    paddingVertical: 20,
+    paddingHorizontal: 18,
+    alignItems: "center",
+    justifyContent: "center",
+    transitionDuration: "180ms",
+    transitionProperty: "transform, box-shadow, background-color, border-color"
+  } as any,
+  quickActionCardActive: {
+    transform: [{ translateY: -4 }],
+    borderColor: "#dfbf78",
+    backgroundColor: "#651316",
+    boxShadow: "0 18px 34px rgba(83,14,15,.22)"
+  } as any,
+  quickActionCardDisabled: {
+    opacity: 0.58
+  },
+  quickActionIconFrame: {
+    width: 58,
+    height: 58,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: "rgba(223,191,120,.42)",
+    backgroundColor: "rgba(255,255,255,.035)",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 15
+  },
+  quickActionGlyph: {
+    width: 31,
+    height: 31
+  },
+  quickActionGlyphCompact: {
+    width: 22,
+    height: 22
+  },
+  quickActionLabel: {
+    color: "#ffffff",
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 17,
+    lineHeight: 23,
+    fontWeight: "800",
+    textAlign: "center"
+  },
+  quickActionDetail: {
+    color: "rgba(255,255,255,.62)",
+    fontFamily: "Karla, sans-serif",
+    fontSize: 11,
+    lineHeight: 16,
+    letterSpacing: 0.8,
+    fontWeight: "700",
+    textAlign: "center",
+    marginTop: 5
+  },
+  mobileActionDock: {
+    position: "fixed",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 60,
+    minHeight: 70,
+    flexDirection: "row",
+    alignItems: "stretch",
+    backgroundColor: colors.headerRed,
+    borderTopWidth: 1,
+    borderTopColor: "#8a6638",
+    paddingTop: 7,
+    paddingBottom: "max(7px, env(safe-area-inset-bottom))",
+    paddingHorizontal: 4,
+    boxShadow: "0 -12px 34px rgba(31,4,5,.26)"
+  } as any,
+  desktopActionDock: {
+    left: "50%",
+    right: "auto",
+    bottom: 18,
+    width: "min(640px, calc(100% - 48px))",
+    minHeight: 68,
+    borderWidth: 1,
+    borderColor: "rgba(223,191,120,.58)",
+    borderRadius: 10,
+    paddingTop: 6,
+    paddingBottom: 6,
+    paddingHorizontal: 8,
+    transform: "translateX(-50%)",
+    boxShadow: "0 18px 46px rgba(31,4,5,.34)"
+  } as any,
+  mobileActionDockButton: {
+    flex: 1,
+    minWidth: 0,
+    minHeight: 55,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 4,
+    paddingHorizontal: 4,
+    borderRightWidth: 1,
+    borderRightColor: "rgba(223,191,120,.18)"
+  },
+  desktopActionDockButton: {
+    minHeight: 54,
+    borderRadius: 6
+  },
+  mobileActionDockButtonLast: {
+    borderRightWidth: 0
+  },
+  mobileActionDockButtonActive: {
+    backgroundColor: "#651316"
+  },
+  mobileActionDockLabel: {
+    color: "#ffffff",
+    fontFamily: "Karla, sans-serif",
+    fontSize: 10,
+    lineHeight: 14,
+    letterSpacing: 0.2,
+    fontWeight: "800",
+    textAlign: "center",
+    whiteSpace: "nowrap"
+  } as any,
+  desktopActionDockLabel: {
+    fontSize: 11,
+    letterSpacing: 0.5
   },
   footer: {
     backgroundColor: "#120604",
