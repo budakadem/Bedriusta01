@@ -75,11 +75,8 @@ const menuDessertImage = "https://commons.wikimedia.org/wiki/Special:FilePath/F%
 const restaurantAddress = "K1 1-4, 68159 Mannheim, Almanya";
 const restaurantMapDestination = `QULIS - Mannheim, ${restaurantAddress}`;
 const encodedRestaurantDestination = encodeURIComponent(restaurantMapDestination);
-const googleMapsLink =
-  `https://www.google.com/maps/dir/?api=1&destination=${encodedRestaurantDestination}` +
-  "&travelmode=driving&dir_action=navigate";
-const androidGoogleNavigationLink =
-  `google.navigation:q=${encodedRestaurantDestination}&mode=d`;
+const googleMapsPlaceLink =
+  `https://www.google.com/maps/search/?api=1&query=${encodedRestaurantDestination}`;
 
 const navItems = [
   { label: "Anasayfa", href: "/" },
@@ -193,29 +190,7 @@ async function copyAddress(onCopied?: () => void) {
 }
 
 function openMapForAddress() {
-  if (/Android/i.test(navigator.userAgent)) {
-    const fallbackTimer = window.setTimeout(() => {
-      if (document.visibilityState === "visible") {
-        window.location.assign(googleMapsLink);
-      }
-    }, 1400);
-
-    const cancelFallbackWhenMapsOpens = () => {
-      if (document.visibilityState === "hidden") {
-        window.clearTimeout(fallbackTimer);
-      }
-    };
-
-    document.addEventListener("visibilitychange", cancelFallbackWhenMapsOpens, {
-      once: true
-    });
-    window.location.assign(androidGoogleNavigationLink);
-    return;
-  }
-
-  Linking.openURL(googleMapsLink).catch(() => {
-    window.location.assign(googleMapsLink);
-  });
+  window.location.assign(googleMapsPlaceLink);
 }
 
 function App() {
