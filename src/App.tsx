@@ -18,7 +18,6 @@ import {
 
 const logoImage = "/images/bedriusta-logo.png";
 const portraitImage = "/images/bedri-portrait.png";
-const heroV3Image = "/images/hero-v3.png";
 const heroVideo = "/videos/hero-deneme02.mp4";
 const editorialHeroImage = "/images/mannheim-editorial-hero-v2.webp";
 const aboutIllustrationImage = "/images/bedri-usta-about-illustration.webp";
@@ -314,13 +313,22 @@ function App() {
       <View style={[styles.campaignHero, layout.isMobile && styles.campaignHeroMobile]}>
         <video
           src={heroVideo}
-          poster={heroV3Image}
           autoPlay
           muted
           loop
           playsInline
           preload="auto"
           controls={false}
+          disablePictureInPicture
+          onLoadedMetadata={(event) => {
+            event.currentTarget.muted = true;
+            event.currentTarget.defaultMuted = true;
+          }}
+          onCanPlay={(event) => {
+            void event.currentTarget.play().catch(() => {
+              // Veri tasarrufu veya cihaz politikası otomatik oynatmayı engelleyebilir.
+            });
+          }}
           aria-label="Bedri Usta New Story Germany"
           style={StyleSheet.flatten(
             [
@@ -332,10 +340,7 @@ function App() {
       </View>
 
       <View nativeID="about" style={[styles.section, styles.storySection]}>
-        <View style={[styles.storyGrid, layout.isMobile && styles.stack]}>
-          <View style={styles.portraitFrame}>
-            <Image source={{ uri: portraitImage }} style={styles.portrait as any} resizeMode="contain" />
-          </View>
+        <View style={styles.storyGrid}>
           <View style={styles.storyCopy}>
             <Text style={styles.eyebrowDark}>HAKKIMIZDA · BEDRİ USTA</Text>
             <Text style={[styles.sectionTitle, layout.isMobile && styles.sectionTitleMobile]}>
@@ -343,10 +348,10 @@ function App() {
             </Text>
             <Text style={styles.bodyText}>
               1970 yılında Mardin’in Altıyol köyünde dünyaya gelen Bedrettin
-              Aydoğdu, yedi yaşında ailesiyle Adana’ya göç etti. Mesleğe çocuk
-              yaşta ocak başında başladı; yıllar içinde herkesin Bedri Usta
-              olarak tanıdığı, gerçek Türk kebabının güçlü temsilcilerinden
-              biri oldu.
+              Aydoğdu, yedi yaşında Adana’da çalışmaya ve mesleği öğrenmeye başladı.
+              Çocuk yaşta ocak başında başlayan bu yolculukta, yıllar içinde
+              herkesin Bedri Usta olarak tanıdığı, gerçek Türk kebabının güçlü
+              temsilcilerinden biri oldu.
             </Text>
             <Text style={[styles.bodyText, styles.storyParagraphSecondary]}>
               Adana’da başlayan yolculuk İstanbul’a, ardından yurt içi ve yurt
@@ -4270,32 +4275,17 @@ const styles = StyleSheet.create({
     backgroundColor: colors.ivory
   },
   storyGrid: {
-    maxWidth: 1120,
+    maxWidth: 860,
     width: "100%",
     marginHorizontal: "auto",
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 58
+    alignItems: "stretch"
   },
   stack: {
     flexDirection: "column",
     alignItems: "stretch"
   },
-  portraitFrame: {
-    flex: 1,
-    minHeight: 460,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#fffdf7",
-    borderWidth: 1,
-    borderColor: "#f0ddbd"
-  },
-  portrait: {
-    width: "86%",
-    height: 420
-  },
   storyCopy: {
-    flex: 1,
+    width: "100%",
     minWidth: 0
   },
   sectionTitle: {
