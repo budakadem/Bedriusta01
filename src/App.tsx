@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import {
   Image,
   Linking,
@@ -192,6 +192,61 @@ function openMapForAddress() {
   window.location.assign(googleMapsPlaceLink);
 }
 
+function ScrollReveal({
+  children,
+  delay = 0,
+  style
+}: {
+  children: ReactNode;
+  delay?: number;
+  style?: any;
+}) {
+  const elementRef = useRef<any>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const element = elementRef.current as HTMLElement | null;
+
+    if (!element) return;
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (reduceMotion || !("IntersectionObserver" in window)) {
+      setVisible(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setVisible(true);
+        observer.disconnect();
+      },
+      {
+        threshold: 0.12,
+        rootMargin: "0px 0px -7% 0px"
+      }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <View
+      ref={elementRef}
+      style={[
+        style,
+        styles.scrollReveal,
+        visible ? styles.scrollRevealVisible : styles.scrollRevealHidden,
+        { transitionDelay: `${delay}ms` }
+      ]}
+    >
+      {children}
+    </View>
+  );
+}
+
 function App() {
   const { width } = useWindowDimensions();
   const [pathname, setPathname] = useState(() => window.location.pathname);
@@ -379,48 +434,49 @@ function App() {
       </View>
 
       <View nativeID="menu" style={[styles.section, styles.menuSection]}>
-        <View style={styles.sectionHeader}>
+        <ScrollReveal style={styles.sectionHeader}>
           <Text style={styles.eyebrow}>MENUMUZ</Text>
           <Text style={[styles.sectionTitleLight, layout.isMobile && styles.sectionTitleMobile]}>
             Paylaşılan her tabakta ustalık, her sofrada güzel bir sohbet var.
           </Text>
-        </View>
+        </ScrollReveal>
         <View style={[styles.menuGrid, layout.isMobile && styles.menuGridMobile]}>
           {menuItems.map((item, index) => (
-            <Pressable
-              key={item.title}
-              style={({ hovered, pressed }: any) => [
-                styles.menuCard,
-                (hovered || pressed) && styles.menuCardActive
-              ]}
-            >
-              {({ hovered, pressed }: any) => {
-                const active = hovered || pressed;
-                return (
-                  <View style={[styles.menuFlip, active && styles.menuFlipActive]}>
-                    <View style={[styles.menuFace, styles.menuFaceFront, index % 2 === 1 && styles.menuCardAlt]}>
-                      <Text style={styles.menuNumber}>{String(index + 1).padStart(2, "0")}</Text>
-                      <Text style={styles.menuTitle}>{item.title}</Text>
-                      <Text style={styles.menuText}>{item.text}</Text>
-                    </View>
-                    <View style={[styles.menuFace, styles.menuFaceBack]}>
-                      <Image source={{ uri: item.image }} style={styles.menuImage as any} resizeMode="cover" />
-                      <View style={styles.menuBackShade} />
-                      <View style={styles.menuBackCaption}>
-                        <Text style={styles.menuBackNumber}>{String(index + 1).padStart(2, "0")}</Text>
-                        <Text style={styles.menuBackTitle}>{item.title}</Text>
+            <ScrollReveal key={item.title} delay={index * 70} style={styles.scrollRevealGridItem}>
+              <Pressable
+                style={({ hovered, pressed }: any) => [
+                  styles.menuCard,
+                  (hovered || pressed) && styles.menuCardActive
+                ]}
+              >
+                {({ hovered, pressed }: any) => {
+                  const active = hovered || pressed;
+                  return (
+                    <View style={[styles.menuFlip, active && styles.menuFlipActive]}>
+                      <View style={[styles.menuFace, styles.menuFaceFront, index % 2 === 1 && styles.menuCardAlt]}>
+                        <Text style={styles.menuNumber}>{String(index + 1).padStart(2, "0")}</Text>
+                        <Text style={styles.menuTitle}>{item.title}</Text>
+                        <Text style={styles.menuText}>{item.text}</Text>
+                      </View>
+                      <View style={[styles.menuFace, styles.menuFaceBack]}>
+                        <Image source={{ uri: item.image }} style={styles.menuImage as any} resizeMode="cover" />
+                        <View style={styles.menuBackShade} />
+                        <View style={styles.menuBackCaption}>
+                          <Text style={styles.menuBackNumber}>{String(index + 1).padStart(2, "0")}</Text>
+                          <Text style={styles.menuBackTitle}>{item.title}</Text>
+                        </View>
                       </View>
                     </View>
-                  </View>
-                );
-              }}
-            </Pressable>
+                  );
+                }}
+              </Pressable>
+            </ScrollReveal>
           ))}
         </View>
       </View>
 
       <View style={[styles.section, styles.craftSection]}>
-        <View style={[styles.craftInner, layout.isMobile && styles.stack]}>
+        <ScrollReveal style={[styles.craftInner, layout.isMobile && styles.stack]}>
           <Text style={[styles.craftTitle, layout.isMobile && styles.sectionTitleMobile]}>
             Ustalık, özenle hazırlanır; sofrada zarif bir deneyime dönüşür.
           </Text>
@@ -432,11 +488,11 @@ function App() {
               </View>
             ))}
           </View>
-        </View>
+        </ScrollReveal>
       </View>
 
       <View nativeID="contact" style={[styles.section, styles.contactSection]}>
-        <View style={[styles.contactPanel, layout.isMobile && styles.contactPanelMobile]}>
+        <ScrollReveal style={[styles.contactPanel, layout.isMobile && styles.contactPanelMobile]}>
           <View style={styles.contactCopy}>
             <View style={styles.contactAccentLine} />
             <Text style={styles.contactKicker}>REZERVASYON · MANNHEIM</Text>
@@ -503,7 +559,7 @@ function App() {
               <Text style={styles.contactActionArrowSecondary}>→</Text>
             </Pressable>
           </View>
-        </View>
+        </ScrollReveal>
       </View>
 
       <QuickActionsSection compact={layout.compactActions} />
@@ -1704,7 +1760,7 @@ function QuickActionsSection({ compact }: { compact: boolean }) {
 
   return (
     <View style={styles.quickActionsSection}>
-      <View style={styles.quickActionsInner}>
+      <ScrollReveal style={styles.quickActionsInner}>
         <Text style={styles.quickActionsEyebrow}>HIZLI ERİŞİM</Text>
         <Text style={styles.quickActionsTitle}>Tüm bağlantılar tek yerde.</Text>
         <Text style={styles.quickActionsIntro}>
@@ -1736,7 +1792,7 @@ function QuickActionsSection({ compact }: { compact: boolean }) {
             );
           })}
         </View>
-      </View>
+      </ScrollReveal>
     </View>
   );
 }
@@ -2074,6 +2130,24 @@ const styles = StyleSheet.create({
   pageWithBottomDock: {
     paddingBottom: "calc(92px + env(safe-area-inset-bottom))"
   } as any,
+  scrollReveal: {
+    transitionProperty: "opacity, transform",
+    transitionDuration: "480ms",
+    transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)"
+  } as any,
+  scrollRevealHidden: {
+    opacity: 0,
+    transform: [{ translateY: 18 }],
+    willChange: "opacity, transform"
+  } as any,
+  scrollRevealVisible: {
+    opacity: 1,
+    transform: [{ translateY: 0 }],
+    willChange: "auto"
+  } as any,
+  scrollRevealGridItem: {
+    minWidth: 0
+  },
   header: {
     position: "fixed",
     top: 0,
