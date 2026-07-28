@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#530e0f" />
+    <title>Çevrimdışı | Bedri Usta</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        background: #f6f3f0;
+        color: #0c0705;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-width: 320px;
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        background:
+          linear-gradient(145deg, rgba(83, 14, 15, 0.08), transparent 48%),
+          #f6f3f0;
+      }
+
+      main {
+        width: min(100%, 560px);
+        padding: clamp(32px, 7vw, 64px);
+        border: 1px solid #dfbf78;
+        background: #fffdf8;
+        text-align: center;
+        box-shadow: 0 28px 80px rgba(83, 14, 15, 0.12);
+      }
+
+      img {
+        width: 92px;
+        height: 112px;
+        object-fit: contain;
+      }
+
+      p:first-of-type {
+        margin: 28px 0 8px;
+        color: #a7191e;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 3px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(34px, 8vw, 52px);
+        line-height: 1.05;
+      }
+
+      p:last-of-type {
+        margin: 20px auto 0;
+        color: #514744;
+        font-size: 17px;
+        line-height: 1.65;
+      }
+
+      button {
+        min-height: 50px;
+        margin-top: 28px;
+        padding: 0 26px;
+        border: 0;
+        background: #530e0f;
+        color: #fff;
+        font: inherit;
+        font-weight: 800;
+        letter-spacing: 1px;
+        cursor: pointer;
+      }
+
+      button:focus-visible {
+        outline: 3px solid #dfbf78;
+        outline-offset: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <img src="/images/bedriusta-logo.png" alt="Bedri Usta" />
+      <p>BEDRİ USTA · MANNHEIM</p>
+      <h1>Şu anda çevrimdışısınız.</h1>
+      <p>
+        Bağlantınız geri geldiğinde sayfayı yenileyerek menüye ve tüm içeriklere
+        yeniden ulaşabilirsiniz.
+      </p>
+      <button type="button" onclick="window.location.reload()">Tekrar dene</button>
+    </main>
+  </body>
+</html>
