@@ -333,34 +333,42 @@ function App() {
               layout.isMobile && styles.editorialHeroCopyMobile
             ]}
           >
-            <Text style={styles.editorialHeroEyebrow}>ADANA Ocakbaşı</Text>
-            <Text
-              style={[
-                styles.editorialHeroTitle,
-                layout.isMobile && styles.editorialHeroTitleMobile
-              ]}
-            >
-              Bedri Usta Mannheim
-            </Text>
-            <Text
-              style={[
-                styles.editorialHeroSubtitle,
-                layout.isMobile && styles.editorialHeroSubtitleMobile
-              ]}
-            >
-              KEBAP & GRILL RESTAURANT
-            </Text>
-            <Text
-              style={[
-                styles.editorialHeroText,
-                layout.isMobile && styles.editorialHeroTextMobile
-              ]}
-            >
-              Bedri Usta'nın 50 yılı aşkın deneyimi, Mannheim şehir merkezinde yeni
-              bir ocakbaşı deneyimiyle buluşuyor. Adana kebabı, seçkin grill
-              lezzetleri ve sıcak Türk misafirliği; premium ama samimi bir sofrada
-              bir araya geliyor.
-            </Text>
+            <ScrollReveal style={styles.heroRevealLine}>
+              <Text style={styles.editorialHeroEyebrow}>ADANA Ocakbaşı</Text>
+            </ScrollReveal>
+            <ScrollReveal delay={90} style={styles.heroRevealLine}>
+              <Text
+                style={[
+                  styles.editorialHeroTitle,
+                  layout.isMobile && styles.editorialHeroTitleMobile
+                ]}
+              >
+                Bedri Usta Mannheim
+              </Text>
+            </ScrollReveal>
+            <ScrollReveal delay={180} style={styles.heroRevealLine}>
+              <Text
+                style={[
+                  styles.editorialHeroSubtitle,
+                  layout.isMobile && styles.editorialHeroSubtitleMobile
+                ]}
+              >
+                KEBAP & GRILL RESTAURANT
+              </Text>
+            </ScrollReveal>
+            <ScrollReveal delay={270} style={styles.heroRevealLine}>
+              <Text
+                style={[
+                  styles.editorialHeroText,
+                  layout.isMobile && styles.editorialHeroTextMobile
+                ]}
+              >
+                Bedri Usta'nın 50 yılı aşkın deneyimi, Mannheim şehir merkezinde yeni
+                bir ocakbaşı deneyimiyle buluşuyor. Adana kebabı, seçkin grill
+                lezzetleri ve sıcak Türk misafirliği; premium ama samimi bir sofrada
+                bir araya geliyor.
+              </Text>
+            </ScrollReveal>
           </View>
         </View>
       </View>
@@ -396,7 +404,7 @@ function App() {
 
       <View nativeID="about" style={[styles.section, styles.storySection]}>
         <View style={styles.storyGrid}>
-          <View style={styles.storyCopy}>
+          <ScrollReveal style={styles.storyCopy}>
             <Text style={styles.eyebrowDark}>HAKKIMIZDA · BEDRİ USTA</Text>
             <Text style={[styles.sectionTitle, layout.isMobile && styles.sectionTitleMobile]}>
               Mardin’den Adana’ya, ocak başından dünyaya.
@@ -429,7 +437,7 @@ function App() {
                 <Text style={styles.storyFactLabel}>Ocakbaşı tecrübesi</Text>
               </View>
             </View>
-          </View>
+          </ScrollReveal>
         </View>
       </View>
 
@@ -442,7 +450,7 @@ function App() {
         </ScrollReveal>
         <View style={[styles.menuGrid, layout.isMobile && styles.menuGridMobile]}>
           {menuItems.map((item, index) => (
-            <ScrollReveal key={item.title} delay={index * 70} style={styles.scrollRevealGridItem}>
+            <ScrollReveal key={item.title} delay={index * 85} style={styles.scrollRevealGridItem}>
               <Pressable
                 style={({ hovered, pressed }: any) => [
                   styles.menuCard,
@@ -2132,12 +2140,12 @@ const styles = StyleSheet.create({
   } as any,
   scrollReveal: {
     transitionProperty: "opacity, transform",
-    transitionDuration: "480ms",
+    transitionDuration: "560ms",
     transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)"
   } as any,
   scrollRevealHidden: {
     opacity: 0,
-    transform: [{ translateY: 18 }],
+    transform: [{ translateY: 32 }],
     willChange: "opacity, transform"
   } as any,
   scrollRevealVisible: {
@@ -2146,6 +2154,10 @@ const styles = StyleSheet.create({
     willChange: "auto"
   } as any,
   scrollRevealGridItem: {
+    minWidth: 0
+  },
+  heroRevealLine: {
+    width: "100%",
     minWidth: 0
   },
   header: {
