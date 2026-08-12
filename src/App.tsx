@@ -15,6 +15,7 @@ import {
   restaurantMenuSections,
   type MenuDiet
 } from "./menuData";
+import { NotificationCenter } from "./components/NotificationCenter";
 
 const logoImage = "/images/bedriusta-logo.png";
 const portraitImage = "/images/bedri-portrait.png";
@@ -1440,6 +1441,7 @@ function Header({ isMobile }: { isMobile: boolean }) {
 
 function HeaderUtilities({ compact = false }: { compact?: boolean }) {
   const [languageOpen, setLanguageOpen] = useState(false);
+  const [notificationCenterOpen, setNotificationCenterOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] =
     useState<(typeof languageOptions)[number]["code"]>("TR");
   const languageSelectorRef = useRef<any>(null);
@@ -1471,12 +1473,14 @@ function HeaderUtilities({ compact = false }: { compact?: boolean }) {
       accessibilityLabel="Kullanıcı ve dil seçenekleri"
     >
       <Pressable
+        onPress={() => setNotificationCenterOpen(true)}
         accessibilityRole="button"
-        accessibilityLabel="Login"
+        accessibilityLabel="Bildirim merkezini aç"
+        accessibilityState={{ expanded: notificationCenterOpen }}
         style={({ hovered, pressed }: any) => [
           styles.headerLogin,
           compact && styles.headerLoginCompact,
-          (hovered || pressed) && styles.headerUtilityActive
+          (hovered || pressed || notificationCenterOpen) && styles.headerUtilityActive
         ]}
       >
         <Image
@@ -1484,6 +1488,7 @@ function HeaderUtilities({ compact = false }: { compact?: boolean }) {
           style={[styles.headerLoginIcon, compact && styles.headerLoginIconCompact] as any}
           resizeMode="contain"
         />
+        <View style={styles.headerNotificationDot} />
       </Pressable>
 
       <View ref={languageSelectorRef} style={styles.languageSelector}>
@@ -1556,6 +1561,10 @@ function HeaderUtilities({ compact = false }: { compact?: boolean }) {
           </View>
         )}
       </View>
+      <NotificationCenter
+        onClose={() => setNotificationCenterOpen(false)}
+        visible={notificationCenterOpen}
+      />
     </View>
   );
 }
@@ -2217,8 +2226,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(223,191,120,.48)",
     alignItems: "center",
-    justifyContent: "center"
-  },
+    justifyContent: "center",
+    position: "relative"
+  } as any,
   headerLoginCompact: {
     width: 32,
     height: 32,
@@ -2232,6 +2242,17 @@ const styles = StyleSheet.create({
   headerLoginIconCompact: {
     width: 24,
     height: 24
+  },
+  headerNotificationDot: {
+    position: "absolute",
+    top: -2,
+    right: -1,
+    width: 8,
+    height: 8,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: colors.headerRed,
+    backgroundColor: "#dfbf78"
   },
   headerUtilityActive: {
     borderColor: "#dfbf78",
