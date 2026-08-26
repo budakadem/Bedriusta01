@@ -27,53 +27,23 @@ const portraitImage = "/images/bedri-portrait.png";
 const heroVideo = "/videos/hero-deneme02.mp4";
 const editorialHeroImage = "/images/mannheim-editorial-hero-v2.webp";
 const aboutIllustrationImage = "/images/bedri-usta-about-illustration.webp";
-const languageGlobeIcon = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M3.8 12h16.4M12 3.5c2.2 2.3 3.3 5.1 3.3 8.5S14.2 18.2 12 20.5M12 3.5C9.8 5.8 8.7 8.6 8.7 12s1.1 6.2 3.3 8.5"/></svg>`
-)}`;
-const loginUserIcon = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#dfbf78" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.3"/><circle cx="12" cy="8.8" r="3"/><path d="M6.7 18.4c.7-3 2.6-4.5 5.3-4.5s4.6 1.5 5.3 4.5"/></svg>`
-)}`;
-const sharePageIcon = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.5M8.2 13.2l7.6 4.5"/></svg>`
-)}`;
-const quickActionIcon = (content: string) =>
-  `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#dfbf78" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${content}</svg>`
-  )}`;
+const languageGlobeIcon = "/icons/ui/language-globe.svg";
+const loginUserIcon = "/icons/ui/user.svg";
+const sharePageIcon = "/icons/ui/share.svg";
 const quickActionIcons = {
-  menu: quickActionIcon(
-    `<path d="M3 5.5c3.4-.8 6.3-.2 9 2.1v12c-2.7-2.3-5.6-2.9-9-2.1v-12Z"/><path d="M21 5.5c-3.4-.8-6.3-.2-9 2.1v12c2.7-2.3 5.6-2.9 9-2.1v-12Z"/><path d="M5 3.7c2.8-.3 5.1.4 7 2.2 1.9-1.8 4.2-2.5 7-2.2"/>`
-  ),
-  reservation: quickActionIcon(
-    `<rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M7 3v4M17 3v4M3.5 9.5h17M7.5 13h2M12 13h2M16.5 13h.1M7.5 16.5h2M12 16.5h2"/>`
-  ),
-  instagram: quickActionIcon(
-    `<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.4" cy="6.7" r=".8" fill="#dfbf78" stroke="none"/>`
-  ),
-  directions: quickActionIcon(
-    `<path d="M12 17.5s5-4.5 5-9.6a5 5 0 1 0-10 0c0 5.1 5 9.6 5 9.6Z"/><circle cx="12" cy="8" r="1.8"/><ellipse cx="12" cy="20" rx="6.2" ry="1.8"/>`
-  ),
-  email: quickActionIcon(`<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/>`),
-  youtube: quickActionIcon(
-    `<rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="m10 9 5 3-5 3V9Z"/>`
-  ),
-  contact: quickActionIcon(
-    `<path d="M6 3.5h9l3 3V20H6V3.5Z"/><path d="M14.5 3.5V7H18M9 11h6M9 14.5h6M9 18h4"/>`
-  ),
-  phone: quickActionIcon(
-    `<path d="M7.2 3.5 10 7.2 8.4 9.6c1.2 2.7 3.3 4.8 6 6l2.4-1.6 3.7 2.8-.8 3c-.2.8-1 1.3-1.8 1.2C9.7 20 4 14.3 3 6.1c-.1-.8.4-1.6 1.2-1.8l3-.8Z"/>`
-  ),
-  whatsapp: quickActionIcon(
-    `<path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.1A8 8 0 1 1 20 11.5Z"/><path d="M9 8.2c.5 3.2 2.3 5 5.5 5.6"/>`
-  ),
-  facebook: quickActionIcon(`<path d="M14.5 21v-8h3l.5-3h-3.5V8.2c0-.9.3-1.7 1.8-1.7H18V3.8c-.5-.1-1.5-.3-2.7-.3-2.7 0-4.3 1.6-4.3 4.5v2H8v3h3v8"/>`),
-  pinterest: quickActionIcon(
-    `<circle cx="12" cy="12" r="8.5"/><path d="M9.7 19.8 12 10.2"/><path d="M10.1 14.8c-1.2-.8-1.8-2-1.8-3.6 0-2.5 1.8-4.5 4.4-4.5 2.3 0 3.8 1.6 3.8 3.8 0 2.8-1.2 4.9-3.1 4.9-1 0-1.7-.8-1.5-1.8"/>`
-  ),
-  tiktok: quickActionIcon(
-    `<path d="M14 4v10.2a4.1 4.1 0 1 1-3.4-4"/><path d="M14 4c.5 2.6 2.1 4 4.6 4.2"/>`
-  ),
-  twitter: quickActionIcon(`<path d="m5 4 14 16M19 4 5 20"/>`)
+  menu: "/icons/ui/menu.svg",
+  reservation: "/icons/ui/reservation.svg",
+  instagram: "/icons/social/instagram.svg",
+  directions: "/icons/ui/directions.svg",
+  email: "/icons/ui/email.svg",
+  youtube: "/icons/social/youtube.svg",
+  contact: "/icons/ui/contact.svg",
+  phone: "/icons/ui/phone.svg",
+  whatsapp: "/icons/ui/whatsapp.svg",
+  facebook: "/icons/social/facebook.svg",
+  pinterest: "/icons/social/pinterest.svg",
+  tiktok: "/icons/social/tiktok.svg",
+  twitter: "/icons/ui/x.svg"
 } as const;
 type QuickActionIconName = keyof typeof quickActionIcons;
 const menuKebabImage = "/images/menu-adana-portrait.webp";
@@ -2590,6 +2560,7 @@ function Footer({ isMobile }: { isMobile: boolean }) {
     { label: "Datenschutz", href: "/datenschutz" },
     { label: "Cookie-Einstellungen", href: "/datenschutz#cookies" },
     { label: "AGB", disabled: true },
+    { label: "FAQ", href: "/#contact" }
   ];
 
   useEffect(() => {
@@ -5751,8 +5722,8 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(22,8,7,.2)"
   },
   quickActionIconFrameUnavailable: {
-    borderColor: "rgba(223,191,120,.55)",
-    backgroundColor: "rgba(48,8,10,.24)"
+    borderColor: "rgba(223,191,120,.64)",
+    backgroundColor: "rgba(22,8,7,.2)"
   },
   quickActionGlyph: {
     width: 31,
@@ -5791,7 +5762,7 @@ const styles = StyleSheet.create({
     color: colors.sand
   },
   quickActionDetailUnavailable: {
-    color: "rgba(255,248,239,.72)"
+    color: colors.sand
   },
   mobileActionDock: {
     position: "fixed",
