@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-26T12:00:00+02:00",
+  "title": "Design System: Bedri Usta Mannheim",
+  "extensions": {
+    "colorMeta": {
+      "master-wine": { "role": "neutral", "displayName": "Usta Bordosu", "canonical": "#160807", "tonalRamp": ["#260d0b", "#411713", "#64231d", "#883129", "#aa4b42", "#cc746d", "#e7aaa5", "#f8dedb"] },
+      "mannheim-burgundy": { "role": "primary", "displayName": "Mannheim Bordosu", "canonical": "#530e0f", "tonalRamp": ["#2a0708", "#430b0c", "#641113", "#85171a", "#a82d30", "#cb5e60", "#e7a0a1", "#f8dddd"] },
+      "signature-red": { "role": "primary", "displayName": "İmza Kırmızısı", "canonical": "#a7191e", "tonalRamp": ["#34080a", "#590d10", "#811318", "#a7191e", "#c73d41", "#df7275", "#efaeb0", "#fbe2e3"] },
+      "hearth-cream": { "role": "neutral", "displayName": "Ocak Kremi", "canonical": "#fff8ee", "tonalRamp": ["#3a2f24", "#5a4a3a", "#7b6854", "#9e8971", "#c0aa8f", "#ddc9ae", "#f2e3ce", "#fff8ee"] },
+      "porcelain-ivory": { "role": "neutral", "displayName": "Porselen Fildişi", "canonical": "#fffdf8", "tonalRamp": ["#35322c", "#555149", "#777269", "#9b958b", "#beb8ae", "#ddd8cf", "#f2eee7", "#fffdf8"] },
+      "dining-paper": { "role": "neutral", "displayName": "Sofra Kâğıdı", "canonical": "#f3ece4", "tonalRamp": ["#342d27", "#554a41", "#76695e", "#988b7f", "#b9ada1", "#d5c9be", "#e8ddd3", "#f8f2ec"] },
+      "charcoal-ink": { "role": "neutral", "displayName": "Kömür Mürekkebi", "canonical": "#351311", "tonalRamp": ["#210c0b", "#351311", "#551f1c", "#762e2a", "#984a44", "#bb756f", "#dda8a4", "#f4dcda"] },
+      "hospitality-sand": { "role": "secondary", "displayName": "Misafirlik Kumu", "canonical": "#e7d1ad", "tonalRamp": ["#362a18", "#574528", "#79613a", "#9b7f50", "#bd9f70", "#d9bd91", "#ecd7b7", "#faf0dc"] },
+      "heritage-gold": { "role": "secondary", "displayName": "Miras Altını", "canonical": "#dfbf78", "tonalRamp": ["#352807", "#59440d", "#7c6016", "#9f7d24", "#c19b3f", "#dfbf78", "#efdcac", "#faf1da"] },
+      "ember-copper": { "role": "tertiary", "displayName": "Köz Bakırı", "canonical": "#c46632", "tonalRamp": ["#35170a", "#592711", "#7c381a", "#9f4a24", "#c46632", "#dd8d63", "#edb99c", "#f9e1d2"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Ana başlıklar ve güçlü bölüm açılışları." },
+      "headline": { "displayName": "Headline", "purpose": "Bölüm ve sonuç başlıkları." },
+      "body": { "displayName": "Body", "purpose": "Okunabilir açıklama ve yardımcı metin." },
+      "label": { "displayName": "Label", "purpose": "Navigasyon, kicker ve kısa durum metinleri." }
+    },
+    "shadows": [
+      { "name": "fixed-navigation", "value": "0 18px 50px rgba(0,0,0,0.30)", "purpose": "Sabit üst barı içerikten ayırır." },
+      { "name": "rising-action", "value": "0 18px 34px rgba(83,14,15,0.22)", "purpose": "Hover ve aktif CTA tepkisi." },
+      { "name": "premium-panel", "value": "0 22px 52px rgba(0,0,0,0.36)", "purpose": "Mobil menü ve güçlü yüzen yüzeyler." },
+      { "name": "light-card", "value": "0 12px 34px rgba(57,30,23,0.045)", "purpose": "Açık zeminde hafif yapısal ayrım." }
+    ],
+    "motion": [
+      { "name": "interaction", "value": "180ms cubic-bezier(0.22,1,0.36,1)", "purpose": "Buton ve kart etkileşimi." },
+      { "name": "content-reveal", "value": "560ms cubic-bezier(0.22,1,0.36,1)", "purpose": "Ölçülü içerik görünümü." }
+    ],
+    "breakpoints": [
+      { "name": "small-phone", "value": "340px" },
+      { "name": "compact", "value": "600px" },
+      { "name": "bottom-dock", "value": "900px" },
+      { "name": "desktop-nav", "value": "1180px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Rezervasyon ve ana dönüşüm eylemleri.",
+      "html": "<button class=\"ds-btn-primary\">Rezervasyon</button>",
+      "css": ".ds-btn-primary{min-height:58px;padding:14px 24px;border:1px solid #530e0f;border-radius:6px;background:#530e0f;color:#fff8ee;font:800 16px/1.2 Heebo,sans-serif;transition:transform 180ms cubic-bezier(.22,1,.36,1),background-color 180ms ease;cursor:pointer}.ds-btn-primary:hover{background:#6b171a;transform:translateY(-2px)}.ds-btn-primary:focus-visible{outline:3px solid #dfbf78;outline-offset:3px}.ds-btn-primary:active{transform:translateY(0)}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Ana CTA ile yarışmayan ikincil eylem.",
+      "html": "<button class=\"ds-btn-secondary\">Menüyü İncele</button>",
+      "css": ".ds-btn-secondary{min-height:48px;padding:10px 18px;border:1px solid #9f7f55;border-radius:6px;background:#f3ece4;color:#530e0f;font:800 14px/1.3 Heebo,sans-serif;transition:transform 180ms ease,border-color 180ms ease;cursor:pointer}.ds-btn-secondary:hover{border-color:#530e0f;transform:translateY(-2px)}.ds-btn-secondary:focus-visible{outline:3px solid #dfbf78;outline-offset:3px}.ds-btn-secondary:active{transform:translateY(0)}"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "field-default",
+      "description": "Rezervasyon ve iletişim formlarının sakin alanı.",
+      "html": "<label class=\"ds-field\"><span>Adınız</span><input placeholder=\"Adınızı yazın\"></label>",
+      "css": ".ds-field{display:grid;gap:7px;color:#4b3934;font:800 10px/1.35 Karla,sans-serif;letter-spacing:.08em;text-transform:uppercase}.ds-field input{min-height:50px;padding:12px 13px;border:1px solid #cbbdb3;border-radius:2px;background:#fffdf8;color:#351311;font:500 16px/1.4 Heebo,sans-serif;outline:none;transition:border-color 150ms ease,box-shadow 150ms ease}.ds-field input:hover{border-color:#9f7f55}.ds-field input:focus-visible{border-color:#530e0f;box-shadow:0 0 0 3px rgba(223,191,120,.35)}"
+    },
+    {
+      "name": "Mobile Navigation Row",
+      "kind": "nav",
+      "refersTo": "mobile-nav-row",
+      "description": "Mobil çekmecede düz, dokunulabilir bağlantı satırı.",
+      "html": "<nav class=\"ds-mobile-nav\"><a href=\"#\">Hakkımızda</a><a href=\"#\">Jobs</a><a href=\"#\">İletişim</a></nav>",
+      "css": ".ds-mobile-nav{width:min(380px,calc(100% - 16px));margin-left:8px;padding:8px 14px;border:1px solid rgba(255,247,223,.22);border-radius:2px 8px 8px;background:#160807;box-shadow:0 22px 52px rgba(0,0,0,.36)}.ds-mobile-nav a{min-height:48px;padding:0 6px;display:flex;align-items:center;border-bottom:1px solid rgba(255,247,223,.14);color:#fff8ee;text-decoration:none;font:800 15px/21px Heebo,sans-serif}.ds-mobile-nav a:last-child{border-bottom:0}.ds-mobile-nav a:hover{color:#dfbf78}.ds-mobile-nav a:focus-visible{outline:2px solid #dfbf78;outline-offset:-2px}.ds-mobile-nav a:active{background:rgba(255,247,223,.08)}"
+    },
+    {
+      "name": "Food Card",
+      "kind": "card",
+      "description": "Gerçek yemek görselini ve kısa lezzet anlatısını taşıyan yüzey.",
+      "html": "<article class=\"ds-food-card\"><div class=\"ds-food-photo\" aria-hidden=\"true\"></div><div><h3>Adana</h3><p>Zırh kıyma, seçkin baharatlar ve dengeli acı.</p></div></article>",
+      "css": ".ds-food-card{width:min(260px,100%);overflow:hidden;border:1px solid #cdb8a7;border-radius:8px;background:#fffdf8;color:#351311;transition:transform 180ms ease,box-shadow 180ms ease}.ds-food-card:hover{transform:translateY(-4px);box-shadow:0 18px 34px rgba(83,14,15,.18)}.ds-food-card:focus-within{outline:3px solid #dfbf78;outline-offset:3px}.ds-food-photo{aspect-ratio:9/16;background:linear-gradient(145deg,#530e0f,#c46632)}.ds-food-card div:last-child{padding:18px}.ds-food-card h3{margin:0;font:800 24px/1.1 Heebo,sans-serif}.ds-food-card p{margin:8px 0 0;font:500 15px/1.55 Heebo,sans-serif}"
+    },
+    {
+      "name": "Status Chip",
+      "kind": "chip",
+      "description": "Seçili ve hazırlanmakta olan durumları açıkça ayırır.",
+      "html": "<button class=\"ds-chip\" aria-pressed=\"true\">Seçili</button>",
+      "css": ".ds-chip{min-height:44px;padding:8px 14px;border:1px solid #8a6638;border-radius:999px;background:#530e0f;color:#fff8ee;font:800 12px/1 Karla,sans-serif;letter-spacing:.06em;cursor:pointer;transition:background-color 180ms ease,transform 180ms ease}.ds-chip:hover{background:#6b171a}.ds-chip:focus-visible{outline:3px solid #dfbf78;outline-offset:3px}.ds-chip:active{transform:scale(.98)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Çağdaş Ocakbaşı Sofrası",
+    "overview": "Bedri Usta Mannheim dijital deneyimi, ateş başındaki ustalığı Mannheim’ın net ve çağdaş ritmiyle buluşturur. Sistem usta işi, sıcak ve kendinden emindir; premium görünür ama hiçbir zaman mesafeli değildir. Gerçek yemek ve mekân fotoğrafları, güçlü bordo yüzeyler, krem nefes alanları ve altın ayrıntılar bu duygusal bağı taşır.\n\nBilgi mimarisi önce gelir: rezervasyon, menü ve iletişim yolları hızlı; yasal ve ikincil içerik sessiz ama erişilebilirdir. Mobil deneyim 320px’den itibaren taşmadan çalışır, dokunma hedefleri en az 44px’dir ve hareket yalnızca anlamı destekler.",
+    "keyCharacteristics": [
+      "Usta işi, sıcak ve kendinden emin marka tavrı.",
+      "Bordo, krem ve ölçülü altınla kurulan yüksek kontrast.",
+      "Gerçek yemek ve mekân görsellerinin yön verdiği sinematik kompozisyon.",
+      "Mobil öncelikli, erişilebilir ve yatay taşmasız düzen.",
+      "Keskin hiyerarşi, az kart ve ölçülü hareket."
+    ],
+    "rules": [
+      { "name": "The Bordo Omurga Rule", "body": "Marka ağırlığını Mannheim Bordosu taşır; yeni rastgele vurgu renkleri eklemek yasaktır.", "section": "colors" },
+      { "name": "The Rare Gold Rule", "body": "Miras Altını dekoratif dolgu değildir; ayırıcı, odak ve önemli premium işaretlerde ölçülü kullanılır.", "section": "colors" },
+      { "name": "The One Strong Voice Rule", "body": "Başlık ağırlığı Heebo ile, yönlendirme ritmi Karla ile kurulur; üçüncü bir yazı ailesi eklemek yasaktır.", "section": "typography" },
+      { "name": "The Flat-at-Rest Rule", "body": "Sıradan içerik yüzeyleri düz kalır; görünür gölge yalnız hiyerarşi veya etkileşim gerekçesi olduğunda eklenir.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do gerçek yemek, usta ve mekân görsellerini tasarımın ana taşıyıcısı yap.",
+      "Do mobilde en az 44px dokunma alanı, eşit sağ-sol boşluk ve kesintisiz safe-area koruması kullan.",
+      "Do Mannheim Bordosu, Ocak Kremi ve ölçülü Miras Altını ile tutarlı kontrast kur.",
+      "Do aktif, kullanılamayan ve seçili durumları hem renk hem metin veya biçimle ayır.",
+      "Do hareketi opacity ve transform ile, hızlı ve anlamlı tut; reduced-motion tercihini koru."
+    ],
+    "donts": [
+      "Don't generic restaurant templates kullan.",
+      "Don't childish/excessively rounded UI üret.",
+      "Don't random colors ekle veya weak contrast kullan.",
+      "Don't card piles oluştur; içerik hiyerarşisini iç içe kutularla boğma.",
+      "Don't attention-seeking motion kullan veya etkileşimleri gereksiz animasyonla yavaşlatma.",
+      "Don't fake food visuals kullan; gerçek varlıkların yerine yapay placeholder yerleştirme.",
+      "Don't unavailable links’i active-looking biçimde sun veya yanıltıcı tıklanabilirlik yarat.",
+      "Don't 100vw, kırılgan sabit genişlik veya yatay taşma oluşturan düzen kullan."
+    ]
+  }
+}

@@ -1,4 +1,4 @@
-const CACHE_VERSION = "bedri-usta-pwa-v4";
+const CACHE_VERSION = "bedri-usta-pwa-v6";
 const PAGE_CACHE = `${CACHE_VERSION}-pages`;
 const ASSET_CACHE = `${CACHE_VERSION}-assets`;
 const OFFLINE_URL = "/offline.html";
@@ -6,12 +6,12 @@ const CORE_ASSETS = [
   "/",
   OFFLINE_URL,
   "/manifest.webmanifest",
-  "/icons/favicon-32.png",
-  "/icons/apple-touch-icon.png",
-  "/icons/icon-192.png",
-  "/icons/icon-512.png",
-  "/icons/icon-maskable-512.png",
-  "/images/brand/bedri-usta-logo-white-cropped.png"
+  "/icons/bedri-favicon-v2-32.png",
+  "/icons/bedri-apple-touch-v2-180.png",
+  "/icons/bedri-pwa-v2-192.png",
+  "/icons/bedri-pwa-v2-512.png",
+  "/icons/bedri-pwa-maskable-v2-512.png",
+  "/images/brand/bedri-usta-logo-rectangular.png"
 ];
 
 async function cacheCoreAssets() {

@@ -22,7 +22,7 @@ import { PrivacyPage } from "./components/PrivacyPage";
 import { ReservationPage } from "./components/ReservationPage";
 import { getSiteLanguage, setSiteLanguage, subscribeToSiteLanguage, type SiteLanguage } from "./siteLanguage";
 
-const logoImage = "/images/brand/bedri-usta-logo-white-cropped.png";
+const logoImage = "/images/brand/bedri-usta-logo-rectangular.png";
 const portraitImage = "/images/bedri-portrait.png";
 const heroVideo = "/videos/hero-deneme02.mp4";
 const editorialHeroImage = "/images/mannheim-editorial-hero-v2.webp";
@@ -165,13 +165,20 @@ const languageOptions = [
   { code: "ENG", label: "English" }
 ] as const;
 
-const mobileFooterNavItems = [
-  { label: "FAQ", href: "#faq" },
-  { label: "Impressum", href: "#policies" },
+const mobilePrimaryNavItems = [
+  { label: "Anasayfa", href: "/" },
+  { label: "Hakkımızda", href: "/hakkimizda" },
+  { label: "Jobs", href: "/jobs" },
+  { label: "Politikalarımız", href: "/politikalarimiz" },
+  { label: "İletişim", href: "/#contact" },
+  { label: "FAQ", href: "/#contact" }
+];
+
+const mobileLegalNavItems: Array<{ label: string; href?: string; disabled?: boolean }> = [
+  { label: "Impressum", href: "/#policies" },
   { label: "Datenschutz", href: "/datenschutz" },
   { label: "Cookie-Einstellungen", href: "/datenschutz#cookies" },
-  { label: "Instagram", href: "https://www.instagram.com/mannheim_bedriusta" },
-  { label: "YouTube", href: "https://www.youtube.com/c/BedriUsta" }
+  { label: "AGB", disabled: true }
 ];
 
 const menuItems = [
@@ -348,6 +355,7 @@ function App() {
   const layout = useMemo(
     () => ({
       isMobile: width < 1180,
+      isTablet: width >= 600 && width < 1180,
       showBottomDock: width < 900,
       compactActions: width < 600
     }),
@@ -462,7 +470,8 @@ function App() {
           <View
             style={[
               styles.editorialHeroMedia,
-              layout.isMobile && styles.editorialHeroMediaMobile
+              layout.isMobile && styles.editorialHeroMediaMobile,
+              layout.isTablet && styles.editorialHeroMediaTablet
             ]}
           >
             <Image
@@ -1515,6 +1524,9 @@ function Header({ isMobile }: { isMobile: boolean }) {
         {isMobile && (
           <Pressable
             onPress={() => setMobileMenuOpen((open) => !open)}
+            accessibilityRole="button"
+            accessibilityLabel={mobileMenuOpen ? "Menüyü kapat" : "Menüyü aç"}
+            accessibilityState={{ expanded: mobileMenuOpen }}
             style={({ pressed }: any) => [styles.mobileMenuButton, pressed && styles.mobileMenuButtonActive]}
           >
             <View style={styles.menuLine} />
@@ -1540,54 +1552,48 @@ function Header({ isMobile }: { isMobile: boolean }) {
       </View>
       {isMobile && mobileMenuOpen && (
         <View style={styles.mobileMenuPanel}>
-          {navItems.map((item) => {
-            const dropdownItems = "items" in item ? item.items : undefined;
-            if (dropdownItems) {
-              return (
-                <View key={item.label} style={styles.mobileMenuGroup}>
-                  <Text style={styles.mobileMenuGroupTitle}>{item.label}</Text>
-                  {dropdownItems.map((child) => (
-                    <Pressable
-                      key={child.label}
-                      onPress={() => {
-                        openNavigationTarget(child.href);
-                        closeMobileMenu();
-                      }}
-                      style={styles.mobileMenuChild}
-                    >
-                      <Text style={styles.mobileMenuChildText}>{child.label}</Text>
-                    </Pressable>
-                  ))}
-                </View>
-              );
-            }
-
-            const href = "href" in item && item.href ? item.href : "#home";
-            return (
-              <Pressable
-                key={item.label}
-                onPress={() => {
-                  openNavigationTarget(href);
-                  closeMobileMenu();
-                }}
-                style={styles.mobileMenuItem}
-              >
-                <Text style={styles.mobileMenuText}>{item.label}</Text>
-              </Pressable>
-            );
-          })}
-          <View style={styles.mobileMenuGroup}>
-            <Text style={styles.mobileMenuGroupTitle}>Alt Menü</Text>
-            {mobileFooterNavItems.map((item) => (
+          <View>
+            {mobilePrimaryNavItems.map((item, index) => (
               <Pressable
                 key={item.label}
                 onPress={() => {
                   openNavigationTarget(item.href);
                   closeMobileMenu();
                 }}
-                style={styles.mobileMenuChild}
+                accessibilityRole="link"
+                style={[
+                  styles.mobileMenuItem,
+                  index < mobilePrimaryNavItems.length - 1 && styles.mobileMenuItemBorder
+                ]}
               >
-                <Text style={styles.mobileMenuChildText}>{item.label}</Text>
+                <Text style={styles.mobileMenuText}>{item.label}</Text>
+              </Pressable>
+            ))}
+          </View>
+
+          <View style={styles.mobileMenuSectionDivider} />
+
+          <View>
+            {mobileLegalNavItems.map((item, index) => (
+              <Pressable
+                key={item.label}
+                onPress={item.href ? () => {
+                  openNavigationTarget(item.href as string);
+                  closeMobileMenu();
+                } : undefined}
+                disabled={item.disabled}
+                accessibilityRole={item.disabled ? undefined : "link"}
+                accessibilityState={{ disabled: item.disabled }}
+                style={[
+                  styles.mobileMenuItem,
+                  index < mobileLegalNavItems.length - 1 && styles.mobileMenuItemBorder,
+                  item.disabled && styles.mobileMenuItemDisabled
+                ]}
+              >
+                <Text style={[styles.mobileMenuText, item.disabled && styles.mobileMenuTextDisabled]}>
+                  {item.label}
+                </Text>
+                {item.disabled && <Text style={styles.mobileMenuStatus}>HAZIRLANIYOR</Text>}
               </Pressable>
             ))}
           </View>
@@ -3219,59 +3225,66 @@ const styles = StyleSheet.create({
     zIndex: 18
   } as any,
   mobileMenuPanel: {
-    maxWidth: 560,
-    width: "calc(100% - 40px)",
-    marginHorizontal: "auto",
-    marginTop: 10,
-    borderRadius: 8,
+    maxWidth: 380,
+    width: "calc(100% - 16px)",
+    maxHeight: "calc(100svh - 92px)",
+    marginLeft: 8,
+    marginRight: "auto",
+    marginTop: 6,
+    borderTopLeftRadius: 2,
+    borderTopRightRadius: 8,
+    borderBottomRightRadius: 8,
+    borderBottomLeftRadius: 8,
     borderWidth: 1,
     borderColor: "rgba(255,247,223,0.22)",
     backgroundColor: "rgba(23,10,8,0.96)",
-    padding: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
     position: "relative",
     zIndex: 22,
+    overflowY: "auto",
+    overscrollBehavior: "contain",
     boxShadow: "0 22px 52px rgba(0,0,0,0.36)"
   } as any,
   mobileMenuItem: {
-    minHeight: 44,
-    borderRadius: 8,
-    justifyContent: "center",
-    paddingHorizontal: 14,
+    minHeight: 48,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 12,
+    paddingHorizontal: 6
+  },
+  mobileMenuItemBorder: {
     borderBottomWidth: 1,
-    borderBottomColor: "rgba(255,247,223,0.08)"
+    borderBottomColor: "rgba(255,247,223,0.14)"
   },
-  mobileMenuText: {
-    color: "#ffffff",
-    fontFamily: "Heebo, sans-serif",
-    fontSize: 16,
-    lineHeight: 22,
-    fontWeight: "800"
+  mobileMenuItemDisabled: {
+    opacity: 0.56
   },
-  mobileMenuGroup: {
-    borderRadius: 8,
-    backgroundColor: "rgba(116,27,21,0.28)",
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    marginVertical: 6
+  mobileMenuSectionDivider: {
+    height: 3,
+    marginVertical: 7,
+    backgroundColor: "rgba(223,191,120,0.72)"
   },
-  mobileMenuGroupTitle: {
+  mobileMenuStatus: {
     color: colors.sand,
     fontFamily: "Karla, sans-serif",
-    fontSize: 12,
-    letterSpacing: 2,
-    fontWeight: "800",
-    marginBottom: 8
+    fontSize: 9,
+    lineHeight: 12,
+    letterSpacing: 1.2,
+    fontWeight: "800"
   },
-  mobileMenuChild: {
-    minHeight: 38,
-    justifyContent: "center"
-  },
-  mobileMenuChildText: {
+  mobileMenuText: {
+    minWidth: 0,
+    flexShrink: 1,
     color: "#ffffff",
     fontFamily: "Heebo, sans-serif",
     fontSize: 15,
     lineHeight: 21,
-    fontWeight: "700"
+    fontWeight: "800"
+  },
+  mobileMenuTextDisabled: {
+    color: colors.cream
   },
   logoButton: {
     width: 92,
@@ -3287,7 +3300,6 @@ const styles = StyleSheet.create({
   logo: {
     width: 88,
     height: 108,
-    backgroundColor: "#fff8e8",
     transform: [{ translateY: 12 }]
   },
   editorialHero: {
@@ -3334,6 +3346,10 @@ const styles = StyleSheet.create({
     width: "100%",
     maxWidth: 520,
     alignSelf: "center"
+  } as any,
+  editorialHeroMediaTablet: {
+    width: "min(720px, 78vw)",
+    maxWidth: 720
   } as any,
   editorialHeroImage: {
     width: "100%",
