@@ -74,10 +74,13 @@ const quickActionIcons = {
   twitter: quickActionIcon(`<path d="m5 4 14 16M19 4 5 20"/>`)
 } as const;
 type QuickActionIconName = keyof typeof quickActionIcons;
-const menuKebabImage = "/images/adana-kebap-premium.webp";
-const menuLahmacunImage = "https://commons.wikimedia.org/wiki/Special:FilePath/Ac%C4%B1l%C4%B1_Lahmacun.jpg?width=900";
-const menuMezeImage = "https://commons.wikimedia.org/wiki/Special:FilePath/Turkish_meze_plate.jpg?width=900";
-const menuDessertImage = "https://commons.wikimedia.org/wiki/Special:FilePath/F%C4%B1st%C4%B1kl%C4%B1_Baklava.jpg?width=900";
+const menuKebabImage = "/images/menu-adana-portrait.webp";
+const menuDonerImage = "/images/menu-doner-portrait.webp";
+const menuLahmacunImage = "/images/menu-lahmacun-portrait.webp";
+const menuTavaImage = "/images/menu-tava-portrait.webp";
+const menuBreakfastImage = "/images/menu-kahvalti-portrait.webp";
+const menuMezeImage = "/images/menu-meze-portrait.webp";
+const menuDessertImage = "/images/menu-dessert-portrait.webp";
 const restaurantAddress = "K1 1-4, 68159 Mannheim, Almanya";
 const googleMapsPlaceLink = "https://maps.app.goo.gl/NZHsiEJmyTg9nVgRA";
 const restaurantOpeningHours = [
@@ -200,23 +203,38 @@ const mobileFooterNavItems = [
 
 const menuItems = [
   {
-    title: "Adana Kebap",
+    title: "Adana",
     text: "Zırh kıyma, seçkin baharatlar ve dengeli acıyla hazırlanan imza lezzet.",
     image: menuKebabImage
   },
   {
-    title: "Lahmacun",
-    text: "Ince hamur, taze yesillik ve sicak firindan cikan citir bir klasik.",
-    image: menuLahmacunImage
-  },
-  {
-    title: "Mezeler",
-    text: "Sofrayi yavaslatan, sohbeti uzatan kremamsi ve ferah tabaklar.",
+    title: "Meze",
+    text: "Sofrayı yavaşlatan, sohbeti uzatan kremamsı ve ferah tabaklar.",
     image: menuMezeImage
   },
   {
-    title: "Tatlilar",
-    text: "Yemegin sonunda hafif, sicak ve zarif bir kapanis hissi.",
+    title: "Döner",
+    text: "Ustalıkla pişirilen, ince kesilen ve sıcak servis edilen güçlü bir klasik.",
+    image: menuDonerImage
+  },
+  {
+    title: "Lahmacun",
+    text: "İnce hamur, taze yeşillik ve sıcak fırından çıkan çıtır bir klasik.",
+    image: menuLahmacunImage
+  },
+  {
+    title: "Tava",
+    text: "Fırından gelen sıcaklık, dengeli baharat ve paylaşmalık bereketli sunum.",
+    image: menuTavaImage
+  },
+  {
+    title: "Kahvaltı",
+    text: "Çay, sıcak ekmek ve özenle seçilmiş tatlarla güne sıcak bir başlangıç.",
+    image: menuBreakfastImage
+  },
+  {
+    title: "Tatlı",
+    text: "Yemeğin sonunda dengeli, sıcak ve zarif bir kapanış hissi.",
     image: menuDessertImage
   }
 ];
@@ -297,11 +315,13 @@ function openMapForAddress() {
 function ScrollReveal({
   children,
   delay = 0,
-  style
+  style,
+  accessibilityElementsHidden = false
 }: {
   children: ReactNode;
   delay?: number;
   style?: any;
+  accessibilityElementsHidden?: boolean;
 }) {
   const elementRef = useRef<any>(null);
   const [visible, setVisible] = useState(false);
@@ -320,9 +340,7 @@ function ScrollReveal({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry.isIntersecting) return;
-        setVisible(true);
-        observer.disconnect();
+        setVisible(entry.isIntersecting);
       },
       {
         threshold: 0.12,
@@ -337,6 +355,8 @@ function ScrollReveal({
   return (
     <View
       ref={elementRef}
+      accessibilityElementsHidden={accessibilityElementsHidden}
+      importantForAccessibility={accessibilityElementsHidden ? "no-hide-descendants" : "auto"}
       style={[
         style,
         styles.scrollReveal,
@@ -596,44 +616,58 @@ function App() {
 
       <View nativeID="menu" style={[styles.section, styles.menuSection]}>
         <ScrollReveal style={styles.sectionHeader}>
-          <Text style={styles.eyebrow}>MENUMUZ</Text>
-          <Text style={[styles.sectionTitleLight, layout.isMobile && styles.sectionTitleMobile]}>
+          <Text style={styles.menuEyebrow}>MENÜMÜZ</Text>
+          <Text style={[styles.menuSectionTitle, layout.isMobile && styles.sectionTitleMobile]}>
             Paylaşılan her tabakta ustalık, her sofrada güzel bir sohbet var.
           </Text>
         </ScrollReveal>
-        <View style={[styles.menuGrid, layout.isMobile && styles.menuGridMobile]}>
-          {menuItems.map((item, index) => (
-            <ScrollReveal key={item.title} delay={index * 85} style={styles.scrollRevealGridItem}>
-              <Pressable
-                style={({ hovered, pressed }: any) => [
-                  styles.menuCard,
-                  (hovered || pressed) && styles.menuCardActive
-                ]}
+        <HorizontalCardRail
+          id="featured-menu-card-rail"
+          accessibilityLabel="Öne çıkan lezzetler"
+          tone="paper"
+          autoPlay
+          loop
+        >
+          {[...menuItems, ...menuItems].map((item, index) => {
+            const displayIndex = index % menuItems.length;
+            const isLoopClone = index >= menuItems.length;
+
+            return (
+              <ScrollReveal
+                key={`${item.title}-${isLoopClone ? "loop" : "primary"}`}
+                delay={isLoopClone ? 0 : displayIndex * 85}
+                accessibilityElementsHidden={isLoopClone}
+                style={[styles.scrollRevealGridItem, styles.menuRailItem]}
               >
-                {({ hovered, pressed }: any) => {
-                  const active = hovered || pressed;
-                  return (
-                    <View style={[styles.menuFlip, active && styles.menuFlipActive]}>
-                      <View style={[styles.menuFace, styles.menuFaceFront, index % 2 === 1 && styles.menuCardAlt]}>
-                        <Text style={styles.menuNumber}>{String(index + 1).padStart(2, "0")}</Text>
-                        <Text style={styles.menuTitle}>{item.title}</Text>
-                        <Text style={styles.menuText}>{item.text}</Text>
-                      </View>
-                      <View style={[styles.menuFace, styles.menuFaceBack]}>
-                        <Image source={{ uri: item.image }} style={styles.menuImage as any} resizeMode="cover" />
+                <Pressable
+                  style={({ hovered, pressed }: any) => [
+                    styles.menuCard,
+                    (hovered || pressed) && styles.menuCardActive
+                  ]}
+                >
+                  {({ hovered, pressed }: any) => {
+                    const active = hovered || pressed;
+                    return (
+                      <View style={styles.menuCardMedia}>
+                        <Image
+                          source={{ uri: item.image }}
+                          style={[styles.menuImage, active && styles.menuImageActive] as any}
+                          resizeMode="cover"
+                        />
                         <View style={styles.menuBackShade} />
+                        <Text style={styles.menuCardNumber}>{String(displayIndex + 1).padStart(2, "0")}</Text>
                         <View style={styles.menuBackCaption}>
-                          <Text style={styles.menuBackNumber}>{String(index + 1).padStart(2, "0")}</Text>
                           <Text style={styles.menuBackTitle}>{item.title}</Text>
+                          <Text style={styles.menuCardDescription}>{item.text}</Text>
                         </View>
                       </View>
-                    </View>
-                  );
-                }}
-              </Pressable>
-            </ScrollReveal>
-          ))}
-        </View>
+                    );
+                  }}
+                </Pressable>
+              </ScrollReveal>
+            );
+          })}
+        </HorizontalCardRail>
       </View>
 
       <View style={[styles.section, styles.craftSection]}>
@@ -656,9 +690,11 @@ function App() {
         <ScrollReveal style={[styles.contactPanel, layout.isMobile && styles.contactPanelMobile]}>
           <View style={styles.contactCopy}>
             <View style={styles.contactAccentLine} />
-            <Text style={styles.contactKicker}>REZERVASYON · MANNHEIM</Text>
+            <Text style={[styles.contactKicker, layout.isMobile && styles.contactKickerMobile]}>
+              REZERVASYON · EVENT · MANNHEIM
+            </Text>
             <Text style={[styles.contactTitle, layout.isMobile && styles.contactTitleMobile]}>
-              Özel anlar, güzel sofralar.
+              Özel anlar, özenle hazırlanan sofralarda hatırlanır.
             </Text>
             <Text style={styles.contactText}>
               Doğum günü, aile yemeği, iş buluşması ya da sakin bir akşam için
@@ -1949,6 +1985,203 @@ function QuickActionGlyph({
   );
 }
 
+function HorizontalCardRail({
+  id,
+  children,
+  accessibilityLabel,
+  tone = "wine",
+  autoPlay = false,
+  loop = false
+}: {
+  id: string;
+  children: ReactNode;
+  accessibilityLabel: string;
+  tone?: "paper" | "wine" | "gold";
+  autoPlay?: boolean;
+  loop?: boolean;
+}) {
+  const [isOverflowing, setIsOverflowing] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const directionRef = useRef<1 | -1>(1);
+  const getLoopSpan = (rail: HTMLElement) => {
+    const cloneIndex = Math.floor(rail.children.length / 2);
+    const firstItem = rail.children.item(0) as HTMLElement | null;
+    const firstClone = rail.children.item(cloneIndex) as HTMLElement | null;
+    return firstItem && firstClone ? firstClone.offsetLeft - firstItem.offsetLeft : 0;
+  };
+
+  useEffect(() => {
+    const rail = document.getElementById(id);
+    if (!rail) return;
+
+    const updateOverflow = () => {
+      setIsOverflowing(rail.scrollWidth > rail.clientWidth + 4);
+    };
+
+    const normalizeLoopPosition = () => {
+      if (!loop) return;
+      const loopSpan = getLoopSpan(rail);
+      if (loopSpan > 0 && rail.scrollLeft >= loopSpan) {
+        rail.scrollLeft -= loopSpan;
+      }
+    };
+
+    const resizeObserver = new ResizeObserver(updateOverflow);
+    resizeObserver.observe(rail);
+    Array.from(rail.children).forEach((child) => resizeObserver.observe(child));
+    rail.addEventListener("scroll", normalizeLoopPosition, { passive: true });
+    window.addEventListener("resize", updateOverflow);
+    const frame = window.requestAnimationFrame(updateOverflow);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("resize", updateOverflow);
+      rail.removeEventListener("scroll", normalizeLoopPosition);
+      resizeObserver.disconnect();
+    };
+  }, [id, loop]);
+
+  useEffect(() => {
+    if (!autoPlay || !isOverflowing || isPaused) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const moveRail = () => {
+      const rail = document.getElementById(id);
+      if (!rail) return;
+
+      if (loop) {
+        const loopSpan = getLoopSpan(rail);
+        if (loopSpan > 0 && rail.scrollLeft >= loopSpan - 2) {
+          rail.scrollLeft -= loopSpan;
+        }
+        rail.scrollBy({
+          left: Math.min(rail.clientWidth * 0.78, 360),
+          behavior: "smooth"
+        });
+        return;
+      }
+
+      const maxScroll = Math.max(0, rail.scrollWidth - rail.clientWidth);
+      if (rail.scrollLeft >= maxScroll - 4) directionRef.current = -1;
+      if (rail.scrollLeft <= 4) directionRef.current = 1;
+
+      rail.scrollBy({
+        left: directionRef.current * Math.min(rail.clientWidth * 0.78, 360),
+        behavior: "smooth"
+      });
+    };
+
+    const initialMove = window.setTimeout(moveRail, 1400);
+    const interval = window.setInterval(moveRail, 3600);
+
+    return () => {
+      window.clearTimeout(initialMove);
+      window.clearInterval(interval);
+    };
+  }, [autoPlay, id, isOverflowing, isPaused, loop]);
+
+  const scrollRail = (direction: -1 | 1) => {
+    const rail = document.getElementById(id);
+    if (!rail) return;
+
+    if (loop) {
+      const loopSpan = getLoopSpan(rail);
+      const step = Math.min(rail.clientWidth * 0.78, 360);
+      if (direction === -1 && rail.scrollLeft <= step && loopSpan > 0) {
+        rail.scrollLeft += loopSpan;
+      }
+      rail.scrollBy({ left: direction * step, behavior: "smooth" });
+      return;
+    }
+
+    const maxScroll = Math.max(0, rail.scrollWidth - rail.clientWidth);
+    const atStart = rail.scrollLeft <= 4;
+    const atEnd = rail.scrollLeft >= maxScroll - 4;
+    directionRef.current = direction;
+
+    rail.scrollTo({
+      left:
+        direction === -1 && atStart
+          ? maxScroll
+          : direction === 1 && atEnd
+            ? 0
+            : Math.max(0, Math.min(maxScroll, rail.scrollLeft + direction * Math.min(rail.clientWidth * 0.78, 360))),
+      behavior: "smooth"
+    });
+  };
+
+  const interactionHandlers = {
+    onPointerDown: () => setIsPaused(true),
+    onPointerUp: () => setIsPaused(false),
+    onPointerCancel: () => setIsPaused(false),
+    onFocusCapture: () => setIsPaused(true),
+    onBlurCapture: () => setIsPaused(false),
+    onTouchStart: () => setIsPaused(true),
+    onTouchEnd: () => setIsPaused(false)
+  } as any;
+
+  return (
+    <View style={styles.cardRailShell} {...interactionHandlers}>
+      {isOverflowing && (
+        <Pressable
+          onPress={() => scrollRail(-1)}
+          accessibilityRole="button"
+          accessibilityLabel={`${accessibilityLabel}: önceki kartlar`}
+          style={({ hovered, pressed }: any) => [
+            styles.cardRailArrow,
+            styles.cardRailArrowLeft,
+            tone === "gold" && styles.cardRailArrowGold,
+            tone === "paper" && styles.cardRailArrowPaper,
+            (hovered || pressed) && styles.cardRailArrowActive
+          ]}
+        >
+          <Text
+            style={[
+              styles.cardRailArrowText,
+              tone === "gold" && styles.cardRailArrowTextGold,
+              tone === "paper" && styles.cardRailArrowTextPaper
+            ]}
+          >
+            ‹
+          </Text>
+        </Pressable>
+      )}
+      <View
+        nativeID={id}
+        accessibilityLabel={accessibilityLabel}
+        style={[styles.cardRail, isOverflowing && styles.cardRailOverflowing]}
+        {...({ className: "horizontal-card-rail" } as any)}
+      >
+        {children}
+      </View>
+      {isOverflowing && (
+        <Pressable
+          onPress={() => scrollRail(1)}
+          accessibilityRole="button"
+          accessibilityLabel={`${accessibilityLabel}: sonraki kartlar`}
+          style={({ hovered, pressed }: any) => [
+            styles.cardRailArrow,
+            styles.cardRailArrowRight,
+            tone === "gold" && styles.cardRailArrowGold,
+            tone === "paper" && styles.cardRailArrowPaper,
+            (hovered || pressed) && styles.cardRailArrowActive
+          ]}
+        >
+          <Text
+            style={[
+              styles.cardRailArrowText,
+              tone === "gold" && styles.cardRailArrowTextGold,
+              tone === "paper" && styles.cardRailArrowTextPaper
+            ]}
+          >
+            ›
+          </Text>
+        </Pressable>
+      )}
+    </View>
+  );
+}
+
 function QuickActionsSection({ compact }: { compact: boolean }) {
   type QuickActionItem = {
     label: string;
@@ -2002,15 +2235,37 @@ function QuickActionsSection({ compact }: { compact: boolean }) {
         style={({ hovered, pressed }: any) => [
           styles.quickActionCard,
           contact && styles.quickActionCardContact,
-          disabled && styles.quickActionCardDisabled,
+          disabled && styles.quickActionCardUnavailable,
           !disabled && (hovered || pressed) && (contact ? styles.quickActionCardContactActive : styles.quickActionCardActive)
         ]}
       >
-        <View style={[styles.quickActionIconFrame, contact && styles.quickActionIconFrameContact]}>
+        <View
+          style={[
+            styles.quickActionIconFrame,
+            contact && styles.quickActionIconFrameContact,
+            disabled && styles.quickActionIconFrameUnavailable
+          ]}
+        >
           <QuickActionGlyph type={item.icon} />
         </View>
-        <Text style={[styles.quickActionLabel, contact && styles.quickActionLabelContact]}>{item.label}</Text>
-        <Text style={[styles.quickActionDetail, contact && styles.quickActionDetailContact]}>{item.detail}</Text>
+        <Text
+          style={[
+            styles.quickActionLabel,
+            contact && styles.quickActionLabelContact,
+            disabled && styles.quickActionLabelUnavailable
+          ]}
+        >
+          {item.label}
+        </Text>
+        <Text
+          style={[
+            styles.quickActionDetail,
+            contact && styles.quickActionDetailContact,
+            disabled && styles.quickActionDetailUnavailable
+          ]}
+        >
+          {item.detail}
+        </Text>
       </Pressable>
     );
   };
@@ -2028,10 +2283,22 @@ function QuickActionsSection({ compact }: { compact: boolean }) {
 
         <View style={styles.quickActionsGroup}>
           <Text style={styles.quickActionsGroupEyebrow}>SOSYAL MEDYA</Text>
-          <Text style={styles.quickActionsGroupText}>Mutfaktan anları, yenilikleri ve duyuruları takip edin.</Text>
-          <View style={[styles.quickActionsGrid, compact && styles.quickActionsGridCompact]}>
-            {socialActions.map((item) => renderActionCard(item))}
-          </View>
+          <Text style={styles.quickActionsGroupText}>Takip Et · Yorum Yap · Paylaş</Text>
+          <HorizontalCardRail
+            id="social-action-card-rail"
+            accessibilityLabel="Sosyal medya bağlantıları"
+            tone="paper"
+            autoPlay={compact}
+          >
+            {socialActions.map((item) => (
+              <View
+                key={item.label}
+                style={[styles.quickActionRailItem, compact && styles.quickActionRailItemCompact]}
+              >
+                {renderActionCard(item)}
+              </View>
+            ))}
+          </HorizontalCardRail>
         </View>
         </ScrollReveal>
       </View>
@@ -2040,9 +2307,21 @@ function QuickActionsSection({ compact }: { compact: boolean }) {
         <ScrollReveal style={styles.quickActionsContactInner}>
           <Text style={[styles.quickActionsGroupEyebrow, styles.quickActionsGroupEyebrowContact]}>İLETİŞİM</Text>
           <Text style={[styles.quickActionsGroupText, styles.quickActionsGroupTextContact]}>Sorularınız ve talepleriniz için doğrudan bağlantılar.</Text>
-          <View style={[styles.quickActionsGrid, styles.quickActionsContactGrid, compact && styles.quickActionsContactGridCompact]}>
-            {contactActions.map((item) => renderActionCard(item, true))}
-          </View>
+          <HorizontalCardRail
+            id="contact-action-card-rail"
+            accessibilityLabel="İletişim bağlantıları"
+            tone="paper"
+            autoPlay={compact}
+          >
+            {contactActions.map((item) => (
+              <View
+                key={item.label}
+                style={[styles.quickActionRailItem, compact && styles.quickActionRailItemCompact]}
+              >
+                {renderActionCard(item, true)}
+              </View>
+            ))}
+          </HorizontalCardRail>
         </ScrollReveal>
       </View>
     </>
@@ -2377,6 +2656,14 @@ const colors = {
   cream: "#fff8ee",
   ivory: "#fffdf8",
   paper: "#f6f3f0",
+  menuSurface: "#f3ece4",
+  menuSurfaceRaised: "#fffaf3",
+  menuInk: "#351311",
+  quickReadySurface: "#fffaf3",
+  quickReadySurfaceActive: "#f0ddb0",
+  quickReadyBorder: "#cdb8a7",
+  quickUnavailableSurface: "#7a2e30",
+  quickUnavailableBorder: "#955356",
   sand: "#e7d1ad",
   copper: "#c46632",
   ink: "#0c0705"
@@ -4748,9 +5035,29 @@ const styles = StyleSheet.create({
     marginTop: 4
   },
   menuSection: {
-    backgroundColor: colors.wine,
+    backgroundColor: colors.menuSurface,
+    backgroundImage:
+      "radial-gradient(circle at 8% 10%, rgba(167,25,30,.075), transparent 28%), linear-gradient(180deg, #f8f3ed 0%, #eee5dc 100%)",
     borderTopWidth: 1,
-    borderTopColor: "rgba(255,247,223,0.12)"
+    borderTopColor: "#ded0c4"
+  } as any,
+  menuEyebrow: {
+    color: colors.red,
+    fontFamily: "Karla, sans-serif",
+    fontSize: 12,
+    lineHeight: 18,
+    letterSpacing: 4.2,
+    fontWeight: "800",
+    marginBottom: 16
+  },
+  menuSectionTitle: {
+    color: colors.menuInk,
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 48,
+    lineHeight: 56,
+    fontWeight: "900",
+    letterSpacing: -0.8,
+    maxWidth: 780
   },
   sectionHeader: {
     maxWidth: 1120,
@@ -4758,123 +5065,168 @@ const styles = StyleSheet.create({
     marginHorizontal: "auto",
     marginBottom: 34
   },
-  menuGrid: {
-    maxWidth: 1120,
+  cardRailShell: {
     width: "100%",
-    marginHorizontal: "auto",
-    display: "grid",
-    gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-    gap: 16
+    minWidth: 0,
+    position: "relative"
+  },
+  cardRail: {
+    width: "100%",
+    minWidth: 0,
+    flexDirection: "row",
+    alignItems: "stretch",
+    gap: 16,
+    overflowX: "auto",
+    overscrollBehaviorX: "contain",
+    scrollSnapType: "x mandatory",
+    scrollbarWidth: "none",
+    scrollBehavior: "smooth"
   } as any,
-  menuGridMobile: {
-    gridTemplateColumns: "1fr"
+  cardRailOverflowing: {
+    paddingHorizontal: 58,
+    paddingBottom: 10
+  },
+  cardRailArrow: {
+    position: "absolute",
+    top: "50%",
+    zIndex: 8,
+    width: 44,
+    height: 58,
+    marginTop: -29,
+    borderWidth: 1,
+    borderColor: "#dfbf78",
+    borderRadius: 6,
+    backgroundColor: colors.headerRed,
+    alignItems: "center",
+    justifyContent: "center",
+    boxShadow: "0 12px 28px rgba(42,8,9,.24)",
+    transitionDuration: "180ms",
+    transitionProperty: "transform, background-color, border-color"
+  } as any,
+  cardRailArrowLeft: {
+    left: 4
+  },
+  cardRailArrowRight: {
+    right: 4
+  },
+  cardRailArrowGold: {
+    borderColor: "#6c181b",
+    backgroundColor: "#dfbf78"
+  },
+  cardRailArrowPaper: {
+    borderColor: "#8c2b2f",
+    backgroundColor: "#fff8ef"
+  },
+  cardRailArrowActive: {
+    transform: [{ scale: 1.06 }],
+    borderColor: "#f1d89d"
+  },
+  cardRailArrowText: {
+    color: "#dfbf78",
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 32,
+    lineHeight: 36,
+    fontWeight: "800"
+  },
+  cardRailArrowTextGold: {
+    color: "#641619"
+  },
+  cardRailArrowTextPaper: {
+    color: "#7a2024"
+  },
+  menuRailItem: {
+    width: "clamp(220px, 72vw, 270px)",
+    flexShrink: 0,
+    scrollSnapAlign: "start"
   } as any,
   menuCard: {
-    minHeight: 280,
-    borderRadius: 8,
-    perspective: 1200,
+    width: "100%",
+    aspectRatio: 9 / 16,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#d3c1b4",
+    backgroundColor: colors.menuSurfaceRaised,
+    overflow: "hidden",
+    boxShadow: "0 18px 46px rgba(67,25,19,.13)",
     transitionDuration: "260ms",
-    transitionProperty: "transform, filter",
+    transitionProperty: "transform, box-shadow, border-color",
+    transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
     transformOrigin: "center center"
   } as any,
   menuCardActive: {
-    filter: "drop-shadow(0 28px 46px rgba(0,0,0,.34))",
-    transform: [{ translateY: -10 }, { scale: 1.02 }]
+    borderColor: "#9f4447",
+    boxShadow: "0 28px 58px rgba(83,14,15,.22)",
+    transform: [{ translateY: -7 }, { scale: 1.015 }]
   } as any,
-  menuFlip: {
-    minHeight: 280,
+  menuCardMedia: {
+    height: "100%",
     width: "100%",
     position: "relative",
-    transformStyle: "preserve-3d",
-    transitionDuration: "620ms",
-    transitionProperty: "transform",
-    transitionTimingFunction: "cubic-bezier(.2,.78,.18,1)"
+    overflow: "hidden"
   } as any,
-  menuFlipActive: {
-    transform: [{ rotateY: "180deg" }]
-  } as any,
-  menuFace: {
-    position: "absolute",
-    inset: 0,
-    borderWidth: 1,
-    borderColor: "rgba(255,247,223,0.16)",
-    backgroundColor: "rgba(255,247,223,0.055)",
-    borderRadius: 8,
-    minHeight: 280,
-    overflow: "hidden",
-    backfaceVisibility: "hidden"
-  } as any,
-  menuFaceFront: {
-    padding: 24,
-    justifyContent: "space-between",
-    transform: [{ rotateY: "0deg" }]
-  } as any,
-  menuFaceBack: {
-    borderColor: colors.copper,
-    backgroundColor: colors.red,
-    transform: [{ rotateY: "180deg" }]
-  } as any,
-  menuCardAlt: {
-    backgroundColor: "rgba(116,27,21,0.28)"
-  },
   menuImage: {
     width: "100%",
     height: "100%",
-    objectFit: "cover"
+    objectFit: "cover",
+    transitionDuration: "480ms",
+    transitionProperty: "transform",
+    transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)"
+  } as any,
+  menuImageActive: {
+    transform: [{ scale: 1.035 }]
   } as any,
   menuBackShade: {
     position: "absolute",
     inset: 0,
     backgroundImage:
-      "linear-gradient(180deg, rgba(23,10,8,.08) 0%, rgba(23,10,8,.18) 42%, rgba(23,10,8,.78) 100%)"
+      "linear-gradient(180deg, rgba(35,10,8,.02) 0%, rgba(35,10,8,.12) 42%, rgba(35,10,8,.88) 100%)"
+  } as any,
+  menuCardNumber: {
+    position: "absolute",
+    top: 18,
+    left: 18,
+    zIndex: 2,
+    color: colors.cream,
+    backgroundColor: "rgba(83,14,15,.9)",
+    borderWidth: 1,
+    borderColor: "rgba(255,248,238,.48)",
+    borderRadius: 999,
+    paddingVertical: 7,
+    paddingHorizontal: 10,
+    fontFamily: "Karla, sans-serif",
+    fontSize: 10,
+    lineHeight: 14,
+    letterSpacing: 2,
+    fontWeight: "800"
   } as any,
   menuBackCaption: {
     position: "absolute",
-    left: 20,
-    right: 20,
-    bottom: 20,
+    left: 22,
+    right: 22,
+    bottom: 22,
     zIndex: 2
   } as any,
-  menuBackNumber: {
-    color: colors.sand,
-    fontFamily: "Karla, sans-serif",
-    letterSpacing: 3,
-    fontWeight: "700",
-    marginBottom: 6
-  },
   menuBackTitle: {
     color: colors.cream,
     fontFamily: "Heebo, sans-serif",
-    fontSize: 30,
-    lineHeight: 34,
-    fontWeight: "800",
+    fontSize: 32,
+    lineHeight: 36,
+    fontWeight: "900",
     textShadowColor: "rgba(0,0,0,.42)",
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 12
   },
-  menuNumber: {
-    color: colors.copper,
-    fontFamily: "Karla, sans-serif",
-    letterSpacing: 3,
-    fontWeight: "700"
-  },
-  menuTitle: {
-    color: colors.cream,
+  menuCardDescription: {
+    color: "rgba(255,248,238,.84)",
     fontFamily: "Heebo, sans-serif",
-    fontSize: 28,
-    lineHeight: 34,
-    fontWeight: "800"
-  },
-  menuText: {
-    color: "rgba(255,247,223,0.72)",
-    fontFamily: "Heebo, sans-serif",
-    fontSize: 15,
-    lineHeight: 24
+    fontSize: 14,
+    lineHeight: 21,
+    marginTop: 7
   },
   craftSection: {
-    backgroundColor: "#0f0806",
+    backgroundColor: "#4d1113",
     backgroundImage:
-      "linear-gradient(135deg, rgba(196,102,50,.2), transparent 32%), radial-gradient(circle at 80% 70%, rgba(116,27,21,.36), transparent 34%)"
+      "linear-gradient(135deg, rgba(223,191,120,.12), transparent 34%), radial-gradient(circle at 82% 72%, rgba(130,34,38,.74), transparent 38%)"
   } as any,
   craftInner: {
     maxWidth: 1120,
@@ -4957,6 +5309,12 @@ const styles = StyleSheet.create({
     letterSpacing: 3,
     fontWeight: "800"
   },
+  contactKickerMobile: {
+    fontSize: 9,
+    lineHeight: 15,
+    letterSpacing: 1.6,
+    overflowWrap: "anywhere"
+  } as any,
   contactTitle: {
     maxWidth: 590,
     color: colors.ink,
@@ -5150,25 +5508,18 @@ const styles = StyleSheet.create({
     marginTop: 14,
     marginBottom: 36
   },
-  quickActionsGrid: {
-    width: "100%",
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(min(180px, 100%), 1fr))",
-    gap: 14
-  } as any,
-  quickActionsGridCompact: {
-    gridTemplateColumns: "repeat(2, minmax(0, 1fr))"
-  } as any,
   quickActionsGroup: {
     width: "100%"
   },
   quickActionsContactSection: {
     width: "100%",
-    backgroundColor: colors.headerRed,
+    backgroundColor: "#eee4da",
+    backgroundImage:
+      "radial-gradient(circle at 90% 18%, rgba(167,25,30,.07), transparent 28%), linear-gradient(180deg, #f4ede6 0%, #e9ddd2 100%)",
     paddingVertical: 72,
     paddingHorizontal: 32,
     borderTopWidth: 1,
-    borderTopColor: "#8a6638",
+    borderTopColor: "#d7c7ba",
     scrollMarginTop: 88
   } as any,
   quickActionsContactInner: {
@@ -5186,7 +5537,7 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   quickActionsGroupEyebrowContact: {
-    color: "#dfbf78"
+    color: colors.red
   },
   quickActionsGroupText: {
     color: "#6b5b54",
@@ -5198,20 +5549,28 @@ const styles = StyleSheet.create({
     marginBottom: 22
   },
   quickActionsGroupTextContact: {
-    color: "rgba(255,250,242,.82)"
+    color: "#6b5b54"
   },
-  quickActionsContactGrid: {
-    gridTemplateColumns: "repeat(4, minmax(0, 1fr))"
+  quickActionRailItem: {
+    minWidth: 0,
+    flexGrow: 1,
+    flexBasis: 0,
+    scrollSnapAlign: "start"
   } as any,
-  quickActionsContactGridCompact: {
-    gridTemplateColumns: "minmax(0, 1fr)"
+  quickActionRailItemCompact: {
+    width: "clamp(220px, 74vw, 280px)",
+    flexGrow: 0,
+    flexBasis: "auto",
+    flexShrink: 0
   } as any,
   quickActionCard: {
+    width: "100%",
+    height: "100%",
     minHeight: 164,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#6d2426",
-    backgroundColor: colors.headerRed,
+    borderColor: colors.quickReadyBorder,
+    backgroundColor: colors.quickReadySurface,
     paddingVertical: 20,
     paddingHorizontal: 18,
     alignItems: "center",
@@ -5221,32 +5580,35 @@ const styles = StyleSheet.create({
   } as any,
   quickActionCardActive: {
     transform: [{ translateY: -4 }],
-    borderColor: "#dfbf78",
-    backgroundColor: "#651316",
+    borderColor: colors.headerRed,
+    backgroundColor: colors.quickReadySurfaceActive,
     boxShadow: "0 18px 34px rgba(83,14,15,.22)"
   } as any,
   quickActionCardContact: {
     minHeight: 154,
-    borderWidth: 2,
-    borderColor: "#6c181b",
-    backgroundColor: "#dfbf78"
+    borderWidth: 1,
+    borderColor: colors.quickReadyBorder,
+    backgroundColor: colors.quickReadySurface
   },
   quickActionCardContactActive: {
     transform: [{ translateY: -4 }],
-    borderColor: "#6c181b",
-    backgroundColor: "#ead092",
+    borderColor: colors.headerRed,
+    backgroundColor: colors.quickReadySurfaceActive,
     boxShadow: "0 18px 34px rgba(83,14,15,.18)"
   } as any,
-  quickActionCardDisabled: {
-    opacity: 0.58
+  quickActionCardUnavailable: {
+    borderWidth: 1,
+    borderColor: colors.quickUnavailableBorder,
+    backgroundColor: colors.quickUnavailableSurface,
+    opacity: 1
   },
   quickActionIconFrame: {
     width: 58,
     height: 58,
     borderRadius: 999,
     borderWidth: 1,
-    borderColor: "rgba(223,191,120,.42)",
-    backgroundColor: "rgba(255,255,255,.035)",
+    borderColor: "#6c181b",
+    backgroundColor: "#6c181b",
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 15
@@ -5254,6 +5616,10 @@ const styles = StyleSheet.create({
   quickActionIconFrameContact: {
     borderColor: "#6c181b",
     backgroundColor: "#6c181b"
+  },
+  quickActionIconFrameUnavailable: {
+    borderColor: "rgba(223,191,120,.55)",
+    backgroundColor: "rgba(48,8,10,.24)"
   },
   quickActionGlyph: {
     width: 31,
@@ -5264,7 +5630,7 @@ const styles = StyleSheet.create({
     height: 22
   },
   quickActionLabel: {
-    color: "#ffffff",
+    color: colors.menuInk,
     fontFamily: "Heebo, sans-serif",
     fontSize: 17,
     lineHeight: 23,
@@ -5272,10 +5638,13 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   quickActionLabelContact: {
-    color: "#2a0809"
+    color: colors.menuInk
+  },
+  quickActionLabelUnavailable: {
+    color: "#fff8ef"
   },
   quickActionDetail: {
-    color: "rgba(255,255,255,.62)",
+    color: "#735d54",
     fontFamily: "Karla, sans-serif",
     fontSize: 11,
     lineHeight: 16,
@@ -5287,6 +5656,9 @@ const styles = StyleSheet.create({
   } as any,
   quickActionDetailContact: {
     color: "#6c181b"
+  },
+  quickActionDetailUnavailable: {
+    color: "rgba(255,248,239,.72)"
   },
   mobileActionDock: {
     position: "fixed",
