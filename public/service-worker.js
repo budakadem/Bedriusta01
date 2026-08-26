@@ -1,4 +1,4 @@
-const CACHE_VERSION = "bedri-usta-pwa-v4";
+const CACHE_VERSION = "bedri-usta-pwa-v5";
 const PAGE_CACHE = `${CACHE_VERSION}-pages`;
 const ASSET_CACHE = `${CACHE_VERSION}-assets`;
 const OFFLINE_URL = "/offline.html";

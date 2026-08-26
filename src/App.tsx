@@ -3287,7 +3287,7 @@ const styles = StyleSheet.create({
   logo: {
     width: 88,
     height: 108,
-    backgroundColor: "#fff8e8",
+    backgroundColor: colors.headerRed,
     transform: [{ translateY: 12 }]
   },
   editorialHero: {
