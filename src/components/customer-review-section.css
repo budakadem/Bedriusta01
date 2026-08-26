@@ -1,0 +1,52 @@
+.customer-review {
+  --review-wine: #530e0f;
+  --review-wine-active: #6b171a;
+  --review-cream: #fff8ee;
+  --review-paper: #f3ece4;
+  --review-ink: #351311;
+  --review-gold: #dfbf78;
+  padding: clamp(72px, 9vw, 124px) clamp(18px, 4vw, 56px);
+  color: var(--review-ink);
+  background: radial-gradient(circle at 14% 10%, rgba(167, 25, 30, .07), transparent 27%), linear-gradient(180deg, #f8f3ed 0%, #eee4da 100%);
+  border-top: 1px solid #d7c7ba;
+}
+
+.customer-review__inner { width: min(900px, 100%); margin: 0 auto; text-align: center; }
+.customer-review__eyebrow { margin: 0 0 16px; color: #a7191e; font: 800 12px/18px "Karla", sans-serif; letter-spacing: 4px; }
+.customer-review h2 { margin: 0; font: 900 clamp(40px, 6vw, 70px)/.98 "Heebo", sans-serif; letter-spacing: -.045em; text-wrap: balance; }
+.customer-review__subtitle { margin: 22px auto 0; max-width: 620px; color: #5b4e48; font: 500 clamp(17px, 2vw, 21px)/1.55 "Heebo", sans-serif; }
+.customer-review__stars { display: flex; justify-content: center; gap: clamp(4px, 1.2vw, 14px); margin: 34px auto 0; }
+.customer-review__stars button { width: clamp(52px, 9vw, 78px); min-height: clamp(58px, 9vw, 78px); padding: 0; border: 0; border-radius: 8px; color: var(--review-wine); background: transparent; font: 400 clamp(48px, 8vw, 72px)/1 "Heebo", sans-serif; cursor: pointer; transition: transform 160ms cubic-bezier(.22,1,.36,1), color 160ms ease; }
+.customer-review__stars button:hover { transform: translateY(-3px); }
+.customer-review__stars button:focus-visible { outline: 3px solid var(--review-wine); outline-offset: 3px; }
+.customer-review__stars button.is-selected { color: #a7191e; transform: translateY(-2px); }
+.customer-review__hint { margin: 12px 0 0; color: #75665f; font: 700 12px/18px "Karla", sans-serif; }
+.customer-review__result { width: min(760px, 100%); margin: 36px auto 0; padding-top: 32px; border-top: 1px solid #cbb9ab; animation: review-result-in 320ms cubic-bezier(.22,1,.36,1) both; }
+.customer-review__result h3 { margin: 0; color: var(--review-ink); font: 900 clamp(28px, 4vw, 40px)/1.1 "Heebo", sans-serif; }
+.customer-review__result > p { margin: 14px auto 0; max-width: 650px; color: #5b4e48; font: 500 17px/1.6 "Heebo", sans-serif; }
+.customer-review button { font-family: "Heebo", sans-serif; }
+.customer-review__primary { min-height: 58px; margin-top: 26px; padding: 14px 24px; border: 1px solid var(--review-wine); border-radius: 6px; color: var(--review-cream); background: var(--review-wine); font-size: 16px; font-weight: 800; cursor: pointer; transition: transform 180ms cubic-bezier(.22,1,.36,1), background-color 180ms ease; }
+.customer-review__primary:hover { background: var(--review-wine-active); transform: translateY(-2px); }
+.customer-review__public-hint { margin-top: 30px !important; font-size: 14px !important; }
+.customer-review__public-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 14px; }
+.customer-review__public-actions button { min-height: 48px; padding: 10px 18px; border: 1px solid #9f7f55; border-radius: 6px; color: var(--review-wine); background: rgba(255,248,238,.62); font-size: 14px; font-weight: 800; cursor: pointer; }
+.customer-review__public-actions--prominent { margin-top: 26px; }
+.customer-review__public-actions--prominent button { min-height: 58px; min-width: min(290px, 100%); color: var(--review-cream); border-color: var(--review-wine); background: var(--review-wine); font-size: 16px; }
+.customer-review__text-link { min-height: 44px; margin-top: 18px; padding: 8px 4px; border: 0; color: var(--review-wine); background: transparent; font-size: 14px; font-weight: 800; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
+.customer-review__notice { color: #7b2528 !important; font-size: 13px !important; font-weight: 700 !important; }
+@keyframes review-result-in { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 600px) {
+  .customer-review__stars { gap: 1px; }
+  .customer-review__stars button { width: 58px; min-height: 62px; font-size: 52px; }
+  .customer-review__public-actions, .customer-review__public-actions button { width: 100%; }
+}
+
+@media (max-width: 340px) {
+  .customer-review__stars button { width: 52px; font-size: 46px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .customer-review__result { animation: none; }
+  .customer-review * { scroll-behavior: auto !important; transition: none !important; }
+}

@@ -16,9 +16,11 @@ import {
   type MenuDiet
 } from "./menuData";
 import { NotificationCenter } from "./components/NotificationCenter";
+import { CustomerReviewSection } from "./components/CustomerReviewSection";
 import { getJobsPageMetadata, JobsPage, type PageMetadata } from "./components/JobsPage";
 import { PrivacyPage } from "./components/PrivacyPage";
 import { ReservationPage } from "./components/ReservationPage";
+import { getSiteLanguage, setSiteLanguage, subscribeToSiteLanguage, type SiteLanguage } from "./siteLanguage";
 
 const logoImage = "/images/bedriusta-logo.png";
 const portraitImage = "/images/bedri-portrait.png";
@@ -507,7 +509,14 @@ function App() {
             ]}
           >
             <ScrollReveal style={styles.heroRevealLine}>
-              <Text style={styles.editorialHeroEyebrow}>ADANA Ocakbaşı</Text>
+              <Text
+                style={[
+                  styles.editorialHeroEyebrow,
+                  layout.isMobile && styles.editorialHeroEyebrowMobile
+                ]}
+              >
+                ADANA Ocakbaşı
+              </Text>
             </ScrollReveal>
             <ScrollReveal delay={90} style={styles.heroRevealLine}>
               <Text
@@ -761,6 +770,7 @@ function App() {
         </ScrollReveal>
       </View>
 
+      <CustomerReviewSection />
       <QuickActionsSection compact={layout.compactActions} />
       <Footer isMobile={layout.isMobile} />
       <BackToTopButton desktop={!layout.showBottomDock} />
@@ -1620,7 +1630,7 @@ function HeaderUtilities({ compact = false }: { compact?: boolean }) {
   const [languageOpen, setLanguageOpen] = useState(false);
   const [notificationCenterOpen, setNotificationCenterOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] =
-    useState<(typeof languageOptions)[number]["code"]>("TR");
+    useState<(typeof languageOptions)[number]["code"]>(() => getSiteLanguage());
   const languageSelectorRef = useRef<any>(null);
 
   useEffect(() => {
@@ -1710,6 +1720,7 @@ function HeaderUtilities({ compact = false }: { compact?: boolean }) {
                   key={language.code}
                   onPress={() => {
                     setSelectedLanguage(language.code);
+                    setSiteLanguage(language.code);
                     setLanguageOpen(false);
                   }}
                   accessibilityRole="button"
@@ -2374,7 +2385,9 @@ function QuickActionsSection({ compact }: { compact: boolean }) {
 
         <View style={styles.quickActionsGroup}>
           <Text style={styles.quickActionsGroupEyebrow}>SOSYAL MEDYA</Text>
-          <Text style={styles.quickActionsGroupText}>Takip Et · Yorum Yap · Paylaş</Text>
+          <Text style={[styles.quickActionsGroupText, styles.quickActionsSocialPrompt]}>
+            Takip Et · Yorum Yap · Paylaş
+          </Text>
           <HorizontalCardRail
             id="social-action-card-rail"
             accessibilityLabel="Sosyal medya bağlantıları"
@@ -2545,7 +2558,22 @@ function BackToTopButton({ desktop }: { desktop: boolean }) {
 
 function Footer({ isMobile }: { isMobile: boolean }) {
   const [addressCopied, setAddressCopied] = useState(false);
+  const [language, setLanguage] = useState<SiteLanguage>(() => getSiteLanguage());
   const copyToastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const footerCopy = {
+    TR: {
+      label: "BEDRİ USTA · MANNHEIM",
+      lead: "Ustalıkla hazırlanan kebaplar, özenli servis ve sıcak Türk misafirliği."
+    },
+    DE: {
+      label: "BEDRİ USTA · MANNHEIM",
+      lead: "Meisterhaft zubereitete Kebabs, aufmerksamer Service und herzliche türkische Gastfreundschaft."
+    },
+    ENG: {
+      label: "BEDRİ USTA · MANNHEIM",
+      lead: "Expertly prepared kebabs, attentive service and warm Turkish hospitality."
+    }
+  } as const;
   const exploreLinks = [
     { label: "Hakkımızda", href: "/hakkimizda" },
     { label: "Menü", href: "/menu" },
@@ -2562,11 +2590,12 @@ function Footer({ isMobile }: { isMobile: boolean }) {
     { label: "Datenschutz", href: "/datenschutz" },
     { label: "Cookie-Einstellungen", href: "/datenschutz#cookies" },
     { label: "AGB", disabled: true },
-    { label: "FAQ", href: "#faq" }
   ];
 
   useEffect(() => {
+    const unsubscribeLanguage = subscribeToSiteLanguage(setLanguage);
     return () => {
+      unsubscribeLanguage();
       if (copyToastTimer.current) {
         clearTimeout(copyToastTimer.current);
       }
@@ -2589,12 +2618,9 @@ function Footer({ isMobile }: { isMobile: boolean }) {
       <View style={styles.footerFrame}>
         <View style={[styles.footerMasthead, isMobile && styles.footerMastheadMobile]}>
           <View style={styles.footerMastheadCopy}>
-            <Text style={styles.footerEyebrow}>BEDRİ USTA · MANNHEIM</Text>
-            <Text style={[styles.footerTitle, isMobile && styles.footerTitleMobile]}>
-              Mannheim’da sofranın yeni adresi.
-            </Text>
+            <Text style={styles.footerEyebrow}>{footerCopy[language].label}</Text>
             <Text style={styles.footerLead}>
-              Ustalıkla hazırlanan kebaplar, özenli servis ve sıcak Türk misafirliği.
+              {footerCopy[language].lead}
             </Text>
           </View>
           <View style={[styles.footerPrimaryActions, isMobile && styles.footerPrimaryActionsMobile]}>
@@ -2724,12 +2750,6 @@ function Footer({ isMobile }: { isMobile: boolean }) {
 
         <View style={[styles.footerBottom, isMobile && styles.footerBottomMobile]}>
           <View style={[styles.footerBottomCopy, isMobile && styles.footerBottomCopyMobile]}>
-            <Text
-              nativeID="faq"
-              style={[styles.footerFaqText, isMobile && styles.footerFaqTextMobile]}
-            >
-              Rezervasyon ve ziyaret sorularınız için bize ulaşabilirsiniz.
-            </Text>
             <Text style={[styles.copyright, isMobile && styles.copyrightMobile]}>
               © 2026 Bedri Usta. Tüm hakları saklıdır.
             </Text>
@@ -5132,6 +5152,10 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: "#ded0c4"
   } as any,
+  editorialHeroEyebrowMobile: {
+    width: "100%",
+    textAlign: "center"
+  },
   menuEyebrow: {
     color: colors.red,
     fontFamily: "Karla, sans-serif",
@@ -5648,6 +5672,15 @@ const styles = StyleSheet.create({
   },
   quickActionsGroupTextContact: {
     color: "#6b5b54"
+  },
+  quickActionsSocialPrompt: {
+    color: colors.menuInk,
+    fontSize: 21,
+    lineHeight: 28,
+    fontWeight: "900",
+    letterSpacing: 0.2,
+    marginTop: 10,
+    marginBottom: 28
   },
   quickActionRailItem: {
     width: "clamp(190px, 18vw, 218px)",
