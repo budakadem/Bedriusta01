@@ -628,16 +628,16 @@ function App() {
           autoPlay
           loop
         >
-          {[...menuItems, ...menuItems].map((item, index) => {
+          {[...menuItems, ...menuItems, ...menuItems].map((item, index) => {
             const displayIndex = index % menuItems.length;
             const isLoopClone = index >= menuItems.length;
 
             return (
-              <ScrollReveal
-                key={`${item.title}-${isLoopClone ? "loop" : "primary"}`}
-                delay={isLoopClone ? 0 : displayIndex * 85}
+              <View
+                key={`${item.title}-${Math.floor(index / menuItems.length)}`}
                 accessibilityElementsHidden={isLoopClone}
-                style={[styles.scrollRevealGridItem, styles.menuRailItem]}
+                importantForAccessibility={isLoopClone ? "no-hide-descendants" : "auto"}
+                style={styles.menuRailItem}
               >
                 <Pressable
                   style={({ hovered, pressed }: any) => [
@@ -664,7 +664,7 @@ function App() {
                     );
                   }}
                 </Pressable>
-              </ScrollReveal>
+              </View>
             );
           })}
         </HorizontalCardRail>
@@ -2003,12 +2003,65 @@ function HorizontalCardRail({
   const [isOverflowing, setIsOverflowing] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const directionRef = useRef<1 | -1>(1);
+  const manualScrollFrameRef = useRef<number | null>(null);
+  const interactionPausedRef = useRef(false);
   const getLoopSpan = (rail: HTMLElement) => {
-    const cloneIndex = Math.floor(rail.children.length / 2);
+    const cloneIndex = Math.floor(rail.children.length / 3);
     const firstItem = rail.children.item(0) as HTMLElement | null;
     const firstClone = rail.children.item(cloneIndex) as HTMLElement | null;
     return firstItem && firstClone ? firstClone.offsetLeft - firstItem.offsetLeft : 0;
   };
+
+  const jumpWithoutAnimation = (rail: HTMLElement, left: number) => {
+    const previousScrollBehavior = rail.style.scrollBehavior;
+    rail.style.scrollBehavior = "auto";
+    rail.scrollLeft = left;
+    rail.style.scrollBehavior = previousScrollBehavior;
+  };
+
+  const getCardStep = (rail: HTMLElement) => {
+    const firstItem = rail.children.item(0) as HTMLElement | null;
+    const secondItem = rail.children.item(1) as HTMLElement | null;
+    return firstItem && secondItem
+      ? secondItem.offsetLeft - firstItem.offsetLeft
+      : Math.min(rail.clientWidth * 0.78, 360);
+  };
+
+  const animateRailBy = (rail: HTMLElement, distance: number) => {
+    setIsPaused(true);
+
+    if (manualScrollFrameRef.current !== null) {
+      window.cancelAnimationFrame(manualScrollFrameRef.current);
+    }
+
+    const start = rail.scrollLeft;
+    const startedAt = window.performance.now();
+    const duration = 360;
+
+    const animate = (time: number) => {
+      const progress = Math.min((time - startedAt) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 4);
+      rail.scrollLeft = start + distance * eased;
+
+      if (progress < 1) {
+        manualScrollFrameRef.current = window.requestAnimationFrame(animate);
+      } else {
+        manualScrollFrameRef.current = null;
+        setIsPaused(false);
+      }
+    };
+
+    manualScrollFrameRef.current = window.requestAnimationFrame(animate);
+  };
+
+  useEffect(
+    () => () => {
+      if (manualScrollFrameRef.current !== null) {
+        window.cancelAnimationFrame(manualScrollFrameRef.current);
+      }
+    },
+    []
+  );
 
   useEffect(() => {
     const rail = document.getElementById(id);
@@ -2021,8 +2074,12 @@ function HorizontalCardRail({
     const normalizeLoopPosition = () => {
       if (!loop) return;
       const loopSpan = getLoopSpan(rail);
-      if (loopSpan > 0 && rail.scrollLeft >= loopSpan) {
-        rail.scrollLeft -= loopSpan;
+      if (loopSpan <= 0) return;
+
+      if (rail.scrollLeft >= loopSpan * 2) {
+        jumpWithoutAnimation(rail, rail.scrollLeft - loopSpan);
+      } else if (rail.scrollLeft <= 0) {
+        jumpWithoutAnimation(rail, rail.scrollLeft + loopSpan);
       }
     };
 
@@ -2031,7 +2088,13 @@ function HorizontalCardRail({
     Array.from(rail.children).forEach((child) => resizeObserver.observe(child));
     rail.addEventListener("scroll", normalizeLoopPosition, { passive: true });
     window.addEventListener("resize", updateOverflow);
-    const frame = window.requestAnimationFrame(updateOverflow);
+    const frame = window.requestAnimationFrame(() => {
+      updateOverflow();
+      if (loop && rail.scrollLeft <= 1) {
+        const loopSpan = getLoopSpan(rail);
+        if (loopSpan > 0) jumpWithoutAnimation(rail, loopSpan);
+      }
+    });
 
     return () => {
       window.cancelAnimationFrame(frame);
@@ -2042,24 +2105,32 @@ function HorizontalCardRail({
   }, [id, loop]);
 
   useEffect(() => {
-    if (!autoPlay || !isOverflowing || isPaused) return;
+    if (!autoPlay || !isOverflowing || (!loop && isPaused)) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    if (loop) {
+      let frame = 0;
+      let previousTime = window.performance.now();
+
+      const moveContinuously = (time: number) => {
+        const rail = document.getElementById(id);
+        if (!rail) return;
+
+        const elapsed = Math.min(time - previousTime, 64);
+        previousTime = time;
+        if (manualScrollFrameRef.current === null && !interactionPausedRef.current) {
+          rail.scrollLeft += (elapsed / 1000) * 28;
+        }
+        frame = window.requestAnimationFrame(moveContinuously);
+      };
+
+      frame = window.requestAnimationFrame(moveContinuously);
+      return () => window.cancelAnimationFrame(frame);
+    }
 
     const moveRail = () => {
       const rail = document.getElementById(id);
       if (!rail) return;
-
-      if (loop) {
-        const loopSpan = getLoopSpan(rail);
-        if (loopSpan > 0 && rail.scrollLeft >= loopSpan - 2) {
-          rail.scrollLeft -= loopSpan;
-        }
-        rail.scrollBy({
-          left: Math.min(rail.clientWidth * 0.78, 360),
-          behavior: "smooth"
-        });
-        return;
-      }
 
       const maxScroll = Math.max(0, rail.scrollWidth - rail.clientWidth);
       if (rail.scrollLeft >= maxScroll - 4) directionRef.current = -1;
@@ -2086,11 +2157,13 @@ function HorizontalCardRail({
 
     if (loop) {
       const loopSpan = getLoopSpan(rail);
-      const step = Math.min(rail.clientWidth * 0.78, 360);
-      if (direction === -1 && rail.scrollLeft <= step && loopSpan > 0) {
-        rail.scrollLeft += loopSpan;
+      const step = getCardStep(rail);
+      if (loopSpan > 0 && direction === -1 && rail.scrollLeft <= step) {
+        jumpWithoutAnimation(rail, rail.scrollLeft + loopSpan);
+      } else if (loopSpan > 0 && direction === 1 && rail.scrollLeft >= loopSpan * 2 - step) {
+        jumpWithoutAnimation(rail, rail.scrollLeft - loopSpan);
       }
-      rail.scrollBy({ left: direction * step, behavior: "smooth" });
+      animateRailBy(rail, direction * step);
       return;
     }
 
@@ -2111,13 +2184,26 @@ function HorizontalCardRail({
   };
 
   const interactionHandlers = {
-    onPointerDown: () => setIsPaused(true),
-    onPointerUp: () => setIsPaused(false),
-    onPointerCancel: () => setIsPaused(false),
-    onFocusCapture: () => setIsPaused(true),
-    onBlurCapture: () => setIsPaused(false),
-    onTouchStart: () => setIsPaused(true),
-    onTouchEnd: () => setIsPaused(false)
+    onPointerDown: () => {
+      interactionPausedRef.current = true;
+      setIsPaused(true);
+    },
+    onPointerUp: () => {
+      interactionPausedRef.current = false;
+      setIsPaused(false);
+    },
+    onPointerCancel: () => {
+      interactionPausedRef.current = false;
+      setIsPaused(false);
+    },
+    onTouchStart: () => {
+      interactionPausedRef.current = true;
+      setIsPaused(true);
+    },
+    onTouchEnd: () => {
+      interactionPausedRef.current = false;
+      setIsPaused(false);
+    }
   } as any;
 
   return (
@@ -2149,7 +2235,12 @@ function HorizontalCardRail({
       <View
         nativeID={id}
         accessibilityLabel={accessibilityLabel}
-        style={[styles.cardRail, isOverflowing && styles.cardRailOverflowing]}
+        style={[
+          styles.cardRail,
+          loop && styles.cardRailContinuous,
+          isOverflowing && styles.cardRailOverflowing,
+          !isOverflowing && styles.cardRailCentered
+        ]}
         {...({ className: "horizontal-card-rail" } as any)}
       >
         {children}
@@ -2662,8 +2753,8 @@ const colors = {
   quickReadySurface: "#fffaf3",
   quickReadySurfaceActive: "#f0ddb0",
   quickReadyBorder: "#cdb8a7",
-  quickUnavailableSurface: "#7a2e30",
-  quickUnavailableBorder: "#955356",
+  quickUnavailableSurface: "#530e0f",
+  quickUnavailableBorder: "#8a6638",
   sand: "#e7d1ad",
   copper: "#c46632",
   ink: "#0c0705"
@@ -5082,6 +5173,13 @@ const styles = StyleSheet.create({
     scrollbarWidth: "none",
     scrollBehavior: "smooth"
   } as any,
+  cardRailContinuous: {
+    scrollBehavior: "auto",
+    scrollSnapType: "none"
+  } as any,
+  cardRailCentered: {
+    justifyContent: "center"
+  },
   cardRailOverflowing: {
     paddingHorizontal: 58,
     paddingBottom: 10
@@ -5552,25 +5650,27 @@ const styles = StyleSheet.create({
     color: "#6b5b54"
   },
   quickActionRailItem: {
-    minWidth: 0,
-    flexGrow: 1,
-    flexBasis: 0,
+    width: "clamp(190px, 18vw, 218px)",
+    minWidth: 190,
+    flexGrow: 0,
+    flexBasis: "auto",
+    flexShrink: 0,
     scrollSnapAlign: "start"
   } as any,
   quickActionRailItemCompact: {
-    width: "clamp(220px, 74vw, 280px)",
+    width: "clamp(205px, 72vw, 238px)",
+    minWidth: 205,
     flexGrow: 0,
     flexBasis: "auto",
     flexShrink: 0
   } as any,
   quickActionCard: {
     width: "100%",
-    height: "100%",
-    minHeight: 164,
+    aspectRatio: 4 / 5,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: colors.quickReadyBorder,
-    backgroundColor: colors.quickReadySurface,
+    borderColor: "#8a6638",
+    backgroundColor: colors.headerRed,
     paddingVertical: 20,
     paddingHorizontal: 18,
     alignItems: "center",
@@ -5580,20 +5680,20 @@ const styles = StyleSheet.create({
   } as any,
   quickActionCardActive: {
     transform: [{ translateY: -4 }],
-    borderColor: colors.headerRed,
-    backgroundColor: colors.quickReadySurfaceActive,
+    borderColor: "#dfbf78",
+    backgroundColor: colors.headerRed,
     boxShadow: "0 18px 34px rgba(83,14,15,.22)"
   } as any,
   quickActionCardContact: {
-    minHeight: 154,
+    aspectRatio: 4 / 5,
     borderWidth: 1,
-    borderColor: colors.quickReadyBorder,
-    backgroundColor: colors.quickReadySurface
+    borderColor: "#8a6638",
+    backgroundColor: colors.headerRed
   },
   quickActionCardContactActive: {
     transform: [{ translateY: -4 }],
-    borderColor: colors.headerRed,
-    backgroundColor: colors.quickReadySurfaceActive,
+    borderColor: "#dfbf78",
+    backgroundColor: colors.headerRed,
     boxShadow: "0 18px 34px rgba(83,14,15,.18)"
   } as any,
   quickActionCardUnavailable: {
@@ -5607,15 +5707,15 @@ const styles = StyleSheet.create({
     height: 58,
     borderRadius: 999,
     borderWidth: 1,
-    borderColor: "#6c181b",
-    backgroundColor: "#6c181b",
+    borderColor: "rgba(223,191,120,.64)",
+    backgroundColor: "rgba(22,8,7,.2)",
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 15
   },
   quickActionIconFrameContact: {
-    borderColor: "#6c181b",
-    backgroundColor: "#6c181b"
+    borderColor: "rgba(223,191,120,.64)",
+    backgroundColor: "rgba(22,8,7,.2)"
   },
   quickActionIconFrameUnavailable: {
     borderColor: "rgba(223,191,120,.55)",
@@ -5630,7 +5730,7 @@ const styles = StyleSheet.create({
     height: 22
   },
   quickActionLabel: {
-    color: colors.menuInk,
+    color: colors.cream,
     fontFamily: "Heebo, sans-serif",
     fontSize: 17,
     lineHeight: 23,
@@ -5638,13 +5738,13 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   quickActionLabelContact: {
-    color: colors.menuInk
+    color: colors.cream
   },
   quickActionLabelUnavailable: {
     color: "#fff8ef"
   },
   quickActionDetail: {
-    color: "#735d54",
+    color: colors.sand,
     fontFamily: "Karla, sans-serif",
     fontSize: 11,
     lineHeight: 16,
@@ -5655,7 +5755,7 @@ const styles = StyleSheet.create({
     overflowWrap: "anywhere"
   } as any,
   quickActionDetailContact: {
-    color: "#6c181b"
+    color: colors.sand
   },
   quickActionDetailUnavailable: {
     color: "rgba(255,248,239,.72)"
