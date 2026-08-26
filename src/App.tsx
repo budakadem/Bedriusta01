@@ -16,6 +16,9 @@ import {
   type MenuDiet
 } from "./menuData";
 import { NotificationCenter } from "./components/NotificationCenter";
+import { getJobsPageMetadata, JobsPage, type PageMetadata } from "./components/JobsPage";
+import { PrivacyPage } from "./components/PrivacyPage";
+import { ReservationPage } from "./components/ReservationPage";
 
 const logoImage = "/images/bedriusta-logo.png";
 const portraitImage = "/images/bedri-portrait.png";
@@ -27,6 +30,9 @@ const languageGlobeIcon = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent
 )}`;
 const loginUserIcon = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#dfbf78" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.3"/><circle cx="12" cy="8.8" r="3"/><path d="M6.7 18.4c.7-3 2.6-4.5 5.3-4.5s4.6 1.5 5.3 4.5"/></svg>`
+)}`;
+const sharePageIcon = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.5M8.2 13.2l7.6 4.5"/></svg>`
 )}`;
 const quickActionIcon = (content: string) =>
   `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
@@ -73,10 +79,94 @@ const menuLahmacunImage = "https://commons.wikimedia.org/wiki/Special:FilePath/A
 const menuMezeImage = "https://commons.wikimedia.org/wiki/Special:FilePath/Turkish_meze_plate.jpg?width=900";
 const menuDessertImage = "https://commons.wikimedia.org/wiki/Special:FilePath/F%C4%B1st%C4%B1kl%C4%B1_Baklava.jpg?width=900";
 const restaurantAddress = "K1 1-4, 68159 Mannheim, Almanya";
-const restaurantMapDestination = `QULIS - Mannheim, ${restaurantAddress}`;
-const encodedRestaurantDestination = encodeURIComponent(restaurantMapDestination);
-const googleMapsPlaceLink =
-  `https://www.google.com/maps/search/?api=1&query=${encodedRestaurantDestination}`;
+const googleMapsPlaceLink = "https://maps.app.goo.gl/NZHsiEJmyTg9nVgRA";
+const restaurantOpeningHours = [
+  { days: "Pazar — Perşembe", time: "08:00 — 24:00" },
+  { days: "Cuma — Cumartesi", time: "08:00 — 01:00" }
+] as const;
+const defaultShareImage = "/images/mannheim-editorial-hero-v2.webp";
+
+function getRouteMetadata(pathname: string): PageMetadata {
+  if (pathname === "/menu") {
+    return {
+      title: "Menü | Bedri Usta Mannheim",
+      description: "Bedri Usta Mannheim menüsünü, kebapları, taş fırın lezzetlerini, mezeleri ve tatlıları keşfet."
+    };
+  }
+  if (pathname === "/hakkimizda") {
+    return {
+      title: "Hakkımızda | Bedri Usta Mannheim",
+      description: "Bedri Usta’nın ustalık yolculuğunu ve Mannheim’daki Türk misafirperverliği anlayışını keşfet."
+    };
+  }
+  if (pathname === "/politikalarimiz") {
+    return {
+      title: "Politikalarımız | Bedri Usta Mannheim",
+      description: "Bedri Usta Mannheim kalite, hijyen, gıda güvenliği ve veri koruma politikalarını incele."
+    };
+  }
+  if (pathname === "/datenschutz") {
+    return {
+      title: "Datenschutz | Bedri Usta Mannheim",
+      description: "Bedri Usta Mannheim web sitesi, PWA, bildirimler, rezervasyon, iletişim ve iş başvuruları için veri koruma bilgilendirmesi."
+    };
+  }
+  if (pathname === "/datenschutz/bewerbung") {
+    return {
+      title: "Datenschutz | Bedri Usta Mannheim",
+      description: "Bedri Usta Mannheim web sitesi, PWA, bildirimler, rezervasyon, iletişim ve iş başvuruları için veri koruma bilgilendirmesi."
+    };
+  }
+  if (pathname === "/rezervasyon") {
+    return {
+      title: "Rezervasyon | Bedri Usta Mannheim",
+      description: "Bedri Usta Mannheim için kişi sayını, tarihini ve saatini seç; rezervasyonunu veya grup talebini güvenli biçimde hazırla."
+    };
+  }
+  if (pathname === "/jobs" || pathname.startsWith("/jobs/")) return getJobsPageMetadata(pathname);
+
+  return {
+    title: "Bedri Usta Mannheim",
+    description: "Bedri Usta Mannheim’da ustalıkla hazırlanan kebapları, özenli servisi ve sıcak Türk misafirperverliğini keşfet."
+  };
+}
+
+function ensureMeta(selector: string, attributes: Record<string, string>, content: string) {
+  let element = document.head.querySelector<HTMLMetaElement>(selector);
+  if (!element) {
+    element = document.createElement("meta");
+    Object.entries(attributes).forEach(([key, value]) => element?.setAttribute(key, value));
+    document.head.appendChild(element);
+  }
+  element.setAttribute("content", content);
+}
+
+function updatePageMetadata(pathname: string) {
+  const metadata = getRouteMetadata(pathname);
+  const canonicalUrl = new URL(pathname || "/", window.location.origin).toString();
+  const imageUrl = new URL(defaultShareImage, window.location.origin).toString();
+  let canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+
+  document.title = metadata.title;
+  ensureMeta('meta[name="description"]', { name: "description" }, metadata.description);
+  ensureMeta('meta[property="og:title"]', { property: "og:title" }, metadata.title);
+  ensureMeta('meta[property="og:description"]', { property: "og:description" }, metadata.description);
+  ensureMeta('meta[property="og:image"]', { property: "og:image" }, imageUrl);
+  ensureMeta('meta[property="og:url"]', { property: "og:url" }, canonicalUrl);
+  ensureMeta('meta[property="og:type"]', { property: "og:type" }, "website");
+  ensureMeta('meta[property="og:site_name"]', { property: "og:site_name" }, "Bedri Usta Mannheim");
+  ensureMeta('meta[name="twitter:card"]', { name: "twitter:card" }, "summary_large_image");
+  ensureMeta('meta[name="twitter:title"]', { name: "twitter:title" }, metadata.title);
+  ensureMeta('meta[name="twitter:description"]', { name: "twitter:description" }, metadata.description);
+  ensureMeta('meta[name="twitter:image"]', { name: "twitter:image" }, imageUrl);
+
+  if (!canonical) {
+    canonical = document.createElement("link");
+    canonical.rel = "canonical";
+    document.head.appendChild(canonical);
+  }
+  canonical.href = canonicalUrl;
+}
 
 const navItems = [
   { label: "Anasayfa", href: "/" },
@@ -84,13 +174,13 @@ const navItems = [
     label: "Kurumsal",
     items: [
       { label: "Hakkımızda", href: "/hakkimizda" },
-      { label: "Jobs", href: "#jobs" },
+      { label: "Jobs", href: "/jobs" },
       { label: "Politikalarımız", href: "/politikalarimiz" }
     ]
   },
-  { label: "İletişim", href: "#contact" },
+  { label: "İletişim", href: "/#contact" },
   { label: "Menü", href: "/menu" },
-  { label: "Rezervasyon", href: "tel:+902160000000" }
+  { label: "Rezervasyon", href: "/rezervasyon" }
 ];
 
 const languageOptions = [
@@ -102,9 +192,9 @@ const languageOptions = [
 const mobileFooterNavItems = [
   { label: "FAQ", href: "#faq" },
   { label: "Impressum", href: "#policies" },
-  { label: "Datenschutz", href: "#policies" },
-  { label: "Cookie-Einstellungen", href: "#policies" },
-  { label: "Instagram", href: "https://www.instagram.com/bedriustaa" },
+  { label: "Datenschutz", href: "/datenschutz" },
+  { label: "Cookie-Einstellungen", href: "/datenschutz#cookies" },
+  { label: "Instagram", href: "https://www.instagram.com/mannheim_bedriusta" },
   { label: "YouTube", href: "https://www.youtube.com/c/BedriUsta" }
 ];
 
@@ -140,6 +230,17 @@ const proofItems = [
 function navigateToPath(target: string) {
   window.history.pushState({}, "", target);
   window.dispatchEvent(new PopStateEvent("popstate"));
+
+  const hash = target.includes("#") ? `#${target.split("#")[1]}` : "";
+  if (hash) {
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        document.querySelector(hash)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+    return;
+  }
+
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -266,6 +367,10 @@ function App() {
     return () => window.removeEventListener("popstate", handleRouteChange);
   }, []);
 
+  useEffect(() => {
+    updatePageMetadata(pathname.replace(/\/+$/, "") || "/");
+  }, [pathname]);
+
   if (pathname.replace(/\/+$/, "") === "/politikalarimiz") {
     return (
       <View style={[styles.page, styles.pageWithBottomDock]}>
@@ -293,6 +398,53 @@ function App() {
       <View style={[styles.page, styles.pageWithBottomDock]}>
         <Header isMobile={layout.isMobile} />
         <RestaurantMenuPage isMobile={layout.isMobile} />
+        <Footer isMobile={layout.isMobile} />
+        <BackToTopButton desktop={!layout.showBottomDock} />
+        <MobileActionDock desktop={!layout.showBottomDock} />
+      </View>
+    );
+  }
+  if (pathname.replace(/\/+$/, "") === "/datenschutz") {
+    return (
+      <View style={[styles.page, styles.pageWithBottomDock]}>
+        <Header isMobile={layout.isMobile} />
+        <PrivacyPage />
+        <Footer isMobile={layout.isMobile} />
+        <BackToTopButton desktop={!layout.showBottomDock} />
+        <MobileActionDock desktop={!layout.showBottomDock} />
+      </View>
+    );
+  }
+  if (pathname.replace(/\/+$/, "") === "/datenschutz/bewerbung") {
+    return (
+      <View style={[styles.page, styles.pageWithBottomDock]}>
+        <Header isMobile={layout.isMobile} />
+        <PrivacyPage />
+        <Footer isMobile={layout.isMobile} />
+        <BackToTopButton desktop={!layout.showBottomDock} />
+        <MobileActionDock desktop={!layout.showBottomDock} />
+      </View>
+    );
+  }
+  if (pathname.replace(/\/+$/, "") === "/rezervasyon") {
+    return (
+      <View style={[styles.page, styles.pageWithBottomDock]}>
+        <Header isMobile={layout.isMobile} />
+        <ReservationPage />
+        <Footer isMobile={layout.isMobile} />
+        <BackToTopButton desktop={!layout.showBottomDock} />
+        <MobileActionDock desktop={!layout.showBottomDock} />
+      </View>
+    );
+  }
+  if (
+    pathname.replace(/\/+$/, "") === "/jobs" ||
+    pathname.replace(/\/+$/, "").startsWith("/jobs/")
+  ) {
+    return (
+      <View style={[styles.page, styles.pageWithBottomDock]}>
+        <Header isMobile={layout.isMobile} />
+        <JobsPage />
         <Footer isMobile={layout.isMobile} />
         <BackToTopButton desktop={!layout.showBottomDock} />
         <MobileActionDock desktop={!layout.showBottomDock} />
@@ -354,7 +506,7 @@ function App() {
                   layout.isMobile && styles.editorialHeroSubtitleMobile
                 ]}
               >
-                KEBAP & GRILL RESTAURANT
+                KEBAP & GRILL RESTAURANT & CAFE
               </Text>
             </ScrollReveal>
             <ScrollReveal delay={270} style={styles.heroRevealLine}>
@@ -500,24 +652,26 @@ function App() {
         </ScrollReveal>
       </View>
 
-      <View nativeID="contact" style={[styles.section, styles.contactSection]}>
+      <View style={[styles.section, styles.contactSection]}>
         <ScrollReveal style={[styles.contactPanel, layout.isMobile && styles.contactPanelMobile]}>
           <View style={styles.contactCopy}>
             <View style={styles.contactAccentLine} />
             <Text style={styles.contactKicker}>REZERVASYON · MANNHEIM</Text>
             <Text style={[styles.contactTitle, layout.isMobile && styles.contactTitleMobile]}>
-              Bir masa, güzel bir akşam.
+              Özel anlar, güzel sofralar.
             </Text>
             <Text style={styles.contactText}>
-              Aile yemeği, iş buluşması ya da sakin bir akşam için Bedri Usta
-              deneyiminizi şimdiden planlayın.
+              Doğum günü, aile yemeği, iş buluşması ya da sakin bir akşam için
+              Bedri Usta deneyiminizi şimdiden planlayın.
             </Text>
 
             <View style={[styles.contactDetails, layout.isMobile && styles.contactDetailsMobile]}>
-              <View style={styles.contactDetail}>
-                <Text style={styles.contactDetailLabel}>HER GÜN</Text>
-                <Text style={styles.contactDetailValue}>12:00 — 23:30</Text>
-              </View>
+              {restaurantOpeningHours.map((hours) => (
+                <View key={hours.days} style={styles.contactDetail}>
+                  <Text style={styles.contactDetailLabel}>{hours.days.toLocaleUpperCase("tr-TR")}</Text>
+                  <Text style={styles.contactDetailValue}>{hours.time}</Text>
+                </View>
+              ))}
               <View style={styles.contactDetail}>
                 <Text style={styles.contactDetailLabel}>MANNHEIM</Text>
                 <Text style={styles.contactDetailValue}>K1 1-4 · 68159</Text>
@@ -535,9 +689,9 @@ function App() {
               Planınızı seçin, gerisini biz hazırlayalım.
             </Text>
             <Pressable
-              onPress={() => Linking.openURL("tel:+902160000000")}
+              onPress={() => openNavigationTarget("/rezervasyon")}
               accessibilityRole="link"
-              accessibilityLabel="Rezervasyon için ara"
+              accessibilityLabel="Rezervasyon sayfasını aç"
               style={({ hovered, pressed }: any) => [
                 styles.contactAction,
                 styles.contactActionPrimary,
@@ -674,7 +828,7 @@ function RestaurantMenuPage({ isMobile }: { isMobile: boolean }) {
                 isMobile && styles.restaurantMenuHeroLeadMobile
               ]}
             >
-              Mezeden kebaba, taş fırından tatlıya; güncel fiyatlar ve açık alerjen
+              Mezeden kebaba, taş fırından tatlıya; ürünler ve açık alerjen
               bilgileriyle tüm menü tek sayfada.
             </Text>
           </View>
@@ -688,7 +842,7 @@ function RestaurantMenuPage({ isMobile }: { isMobile: boolean }) {
                 isMobile && styles.restaurantMenuEditionMetaMobile
               ]}
             >
-              {restaurantMenuSections.length} bölüm · fiyat ve alerjen bilgileri güncel
+              {restaurantMenuSections.length} bölüm · alerjen bilgileri açıkça belirtilmiştir
             </Text>
           </View>
         </View>
@@ -766,18 +920,6 @@ function RestaurantMenuPage({ isMobile }: { isMobile: boolean }) {
                 isMobile && styles.restaurantMenuUtilityRowMobile
               ]}
             >
-              <Pressable
-                onPress={() => openMenuPdf("bedri-usta-mannheim-menu.pdf")}
-                style={({ hovered, pressed }: any) => [
-                  styles.restaurantMenuUtilityButton,
-                  (hovered || pressed) && styles.restaurantMenuUtilityButtonActive
-                ]}
-                accessibilityRole="link"
-                accessibilityLabel="Menü PDF dosyasını aç"
-              >
-                <Text style={styles.restaurantMenuUtilityIcon}>↗</Text>
-                <Text style={styles.restaurantMenuUtilityText}>MENÜ PDF</Text>
-              </Pressable>
               <Pressable
                 onPress={() => openMenuPdf("bedri-usta-allergen-katki.pdf")}
                 style={({ hovered, pressed }: any) => [
@@ -955,7 +1097,6 @@ function RestaurantMenuPage({ isMobile }: { isMobile: boolean }) {
                             )}
                           </View>
                         </View>
-                        <Text style={styles.restaurantMenuItemPrice}>{item.price}</Text>
                       </View>
 
                       {item.requiresCheck && (
@@ -1185,7 +1326,7 @@ function AboutPage({ isMobile }: { isMobile: boolean }) {
           </Text>
           <View style={[styles.heroActions, isMobile && styles.actionsMobile]}>
             <Button label="Menüyü İncele" onPress={() => openNavigationTarget("/menu")} primary />
-            <Button label="Rezervasyon" href="tel:+902160000000" />
+            <Button label="Rezervasyon" onPress={() => openNavigationTarget("/rezervasyon")} />
           </View>
         </View>
       </View>
@@ -1470,8 +1611,9 @@ function HeaderUtilities({ compact = false }: { compact?: boolean }) {
   return (
     <View
       style={[styles.headerUtilities, compact && styles.headerUtilitiesCompact]}
-      accessibilityLabel="Kullanıcı ve dil seçenekleri"
+      accessibilityLabel="Paylaşım, kullanıcı ve dil seçenekleri"
     >
+      <ShareButton compact={compact} />
       <Pressable
         onPress={() => setNotificationCenterOpen(true)}
         accessibilityRole="button"
@@ -1566,6 +1708,90 @@ function HeaderUtilities({ compact = false }: { compact?: boolean }) {
         visible={notificationCenterOpen}
       />
     </View>
+  );
+}
+
+async function copyCurrentUrl(url: string) {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(url);
+    return;
+  }
+
+  const textArea = document.createElement("textarea");
+  textArea.value = url;
+  textArea.setAttribute("readonly", "");
+  textArea.style.position = "fixed";
+  textArea.style.opacity = "0";
+  document.body.appendChild(textArea);
+  textArea.select();
+  const copied = document.execCommand("copy");
+  textArea.remove();
+  if (!copied) throw new Error("copy-failed");
+}
+
+function ShareButton({ compact = false }: { compact?: boolean }) {
+  const [toastMessage, setToastMessage] = useState("");
+  const toastTimer = useRef<number | null>(null);
+
+  useEffect(() => () => {
+    if (toastTimer.current) window.clearTimeout(toastTimer.current);
+  }, []);
+
+  const showToast = (message: string) => {
+    setToastMessage(message);
+    if (toastTimer.current) window.clearTimeout(toastTimer.current);
+    toastTimer.current = window.setTimeout(() => setToastMessage(""), 2600);
+  };
+
+  const handleShare = async () => {
+    const url = window.location.href;
+    const description = document.querySelector<HTMLMetaElement>('meta[name="description"]')?.content
+      ?? "Bedri Usta Mannheim sayfasını keşfet.";
+    const shareData = { title: document.title, text: description, url };
+
+    if (typeof navigator.share === "function") {
+      try {
+        await navigator.share(shareData);
+        return;
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+      }
+    }
+
+    try {
+      await copyCurrentUrl(url);
+      showToast("Bağlantı kopyalandı");
+    } catch {
+      showToast("Bağlantı kopyalanamadı");
+    }
+  };
+
+  return (
+    <>
+      <Pressable
+        onPress={() => void handleShare()}
+        accessibilityRole="button"
+        accessibilityLabel="Sayfayı paylaş"
+        accessibilityHint="Açık sayfayı paylaşım seçenekleriyle paylaşır"
+        style={({ hovered, pressed }: any) => [
+          styles.headerShare,
+          compact && styles.headerShareCompact,
+          (hovered || pressed) && styles.headerUtilityActive
+        ]}
+      >
+        <Image
+          source={{ uri: sharePageIcon }}
+          style={[styles.headerShareIcon, compact && styles.headerShareIconCompact] as any}
+          resizeMode="contain"
+        />
+      </Pressable>
+      {toastMessage && (
+        <View style={styles.shareToast} accessibilityLiveRegion="polite" accessibilityRole="alert">
+          <View style={styles.shareToastMark} />
+          <Text style={styles.shareToastText}>{toastMessage}</Text>
+        </View>
+      )}
+    </>
   );
 }
 
@@ -1724,32 +1950,21 @@ function QuickActionGlyph({
 }
 
 function QuickActionsSection({ compact }: { compact: boolean }) {
-  const actions: Array<{
+  type QuickActionItem = {
     label: string;
     detail: string;
     icon: QuickActionIconName;
     action?: () => void;
-  }> = [
-    { label: "Menü", detail: "Lezzetleri keşfet", icon: "menu", action: () => openNavigationTarget("/menu") },
-    {
-      label: "Rezervasyon",
-      detail: "Masanızı ayırtın",
-      icon: "reservation",
-      action: () => Linking.openURL("tel:+902160000000")
-    },
+  };
+
+  const socialActions: QuickActionItem[] = [
     {
       label: "Instagram",
-      detail: "@bedriustaa",
+      detail: "@mannheim_bedriusta",
       icon: "instagram",
-      action: () => Linking.openURL("https://www.instagram.com/bedriustaa")
+      action: () => Linking.openURL("https://www.instagram.com/mannheim_bedriusta")
     },
-    { label: "Yol Tarifi", detail: "Mannheim merkez", icon: "directions", action: openMapForAddress },
-    {
-      label: "E-posta",
-      detail: "info@bedriusta.de",
-      icon: "email",
-      action: () => Linking.openURL("mailto:info@bedriusta.de")
-    },
+    { label: "TikTok", detail: "Yakında", icon: "tiktok" },
     {
       label: "YouTube",
       detail: "Videoları izle",
@@ -1757,60 +1972,80 @@ function QuickActionsSection({ compact }: { compact: boolean }) {
       action: () => Linking.openURL("https://www.youtube.com/c/BedriUsta")
     },
     { label: "Pinterest", detail: "Yakında", icon: "pinterest" },
-    { label: "TikTok", detail: "Yakında", icon: "tiktok" },
-    { label: "Twitter", detail: "Yakında", icon: "twitter" },
-    { label: "İletişim", detail: "Bize ulaşın", icon: "contact", action: () => scrollToHash("#contact") },
-    {
-      label: "Telefon",
-      detail: "Hemen arayın",
-      icon: "phone",
-      action: () => Linking.openURL("tel:+902160000000")
-    },
-    {
-      label: "WhatsApp",
-      detail: "Mesaj gönderin",
-      icon: "whatsapp",
-      action: () => Linking.openURL("https://wa.me/902160000000")
-    },
     { label: "Facebook", detail: "Yakında", icon: "facebook" }
   ];
 
+  const contactActions: QuickActionItem[] = [
+    {
+      label: "İletişim Formu",
+      detail: "Yakında aktif",
+      icon: "contact"
+    },
+    {
+      label: "E-posta",
+      detail: "info@bedriusta.de",
+      icon: "email",
+      action: () => Linking.openURL("mailto:info@bedriusta.de")
+    },
+    { label: "WhatsApp", detail: "Numara yakında", icon: "whatsapp" },
+    { label: "Telefon", detail: "Numara yakında", icon: "phone" }
+  ];
+
+  const renderActionCard = (item: QuickActionItem, contact = false) => {
+    const disabled = !item.action;
+    return (
+      <Pressable
+        key={item.label}
+        onPress={item.action}
+        accessibilityRole={disabled ? undefined : "link"}
+        accessibilityState={{ disabled }}
+        style={({ hovered, pressed }: any) => [
+          styles.quickActionCard,
+          contact && styles.quickActionCardContact,
+          disabled && styles.quickActionCardDisabled,
+          !disabled && (hovered || pressed) && (contact ? styles.quickActionCardContactActive : styles.quickActionCardActive)
+        ]}
+      >
+        <View style={[styles.quickActionIconFrame, contact && styles.quickActionIconFrameContact]}>
+          <QuickActionGlyph type={item.icon} />
+        </View>
+        <Text style={[styles.quickActionLabel, contact && styles.quickActionLabelContact]}>{item.label}</Text>
+        <Text style={[styles.quickActionDetail, contact && styles.quickActionDetailContact]}>{item.detail}</Text>
+      </Pressable>
+    );
+  };
+
   return (
-    <View style={styles.quickActionsSection}>
-      <ScrollReveal style={styles.quickActionsInner}>
+    <>
+      <View style={styles.quickActionsSection}>
+        <ScrollReveal style={styles.quickActionsInner}>
         <Text style={styles.quickActionsEyebrow}>HIZLI ERİŞİM</Text>
-        <Text style={styles.quickActionsTitle}>Tüm bağlantılar tek yerde.</Text>
+        <Text style={styles.quickActionsTitle}>Sosyal medyada takip edin, bize doğrudan ulaşın.</Text>
         <Text style={styles.quickActionsIntro}>
-          Menüden yol tarifine, rezervasyondan sosyal kanallara kadar Bedri Usta
-          Mannheim'a ulaşmanın en kısa yolları.
+          Bedri Usta Mannheim'ın sosyal kanallarını keşfedin; sorularınız ve
+          talepleriniz için bize doğrudan ulaşın.
         </Text>
 
-        <View style={[styles.quickActionsGrid, compact && styles.quickActionsGridCompact]}>
-          {actions.map((item) => {
-            const disabled = !item.action;
-            return (
-              <Pressable
-                key={item.label}
-                onPress={item.action}
-                accessibilityRole={disabled ? undefined : "link"}
-                accessibilityState={{ disabled }}
-                style={({ hovered, pressed }: any) => [
-                  styles.quickActionCard,
-                  disabled && styles.quickActionCardDisabled,
-                  !disabled && (hovered || pressed) && styles.quickActionCardActive
-                ]}
-              >
-                <View style={styles.quickActionIconFrame}>
-                  <QuickActionGlyph type={item.icon} />
-                </View>
-                <Text style={styles.quickActionLabel}>{item.label}</Text>
-                <Text style={styles.quickActionDetail}>{item.detail}</Text>
-              </Pressable>
-            );
-          })}
+        <View style={styles.quickActionsGroup}>
+          <Text style={styles.quickActionsGroupEyebrow}>SOSYAL MEDYA</Text>
+          <Text style={styles.quickActionsGroupText}>Mutfaktan anları, yenilikleri ve duyuruları takip edin.</Text>
+          <View style={[styles.quickActionsGrid, compact && styles.quickActionsGridCompact]}>
+            {socialActions.map((item) => renderActionCard(item))}
+          </View>
         </View>
-      </ScrollReveal>
-    </View>
+        </ScrollReveal>
+      </View>
+
+      <View nativeID="contact" style={styles.quickActionsContactSection}>
+        <ScrollReveal style={styles.quickActionsContactInner}>
+          <Text style={[styles.quickActionsGroupEyebrow, styles.quickActionsGroupEyebrowContact]}>İLETİŞİM</Text>
+          <Text style={[styles.quickActionsGroupText, styles.quickActionsGroupTextContact]}>Sorularınız ve talepleriniz için doğrudan bağlantılar.</Text>
+          <View style={[styles.quickActionsGrid, styles.quickActionsContactGrid, compact && styles.quickActionsContactGridCompact]}>
+            {contactActions.map((item) => renderActionCard(item, true))}
+          </View>
+        </ScrollReveal>
+      </View>
+    </>
   );
 }
 
@@ -1824,12 +2059,12 @@ function MobileActionDock({ desktop }: { desktop: boolean }) {
     {
       label: "Rezervasyon",
       icon: "reservation",
-      action: () => Linking.openURL("tel:+902160000000")
+      action: () => openNavigationTarget("/rezervasyon")
     },
     {
       label: "Instagram",
       icon: "instagram",
-      action: () => Linking.openURL("https://www.instagram.com/bedriustaa")
+      action: () => Linking.openURL("https://www.instagram.com/mannheim_bedriusta")
     },
     { label: "Yol Tarifi", icon: "directions", action: openMapForAddress }
   ];
@@ -1945,17 +2180,18 @@ function Footer({ isMobile }: { isMobile: boolean }) {
     { label: "Hakkımızda", href: "/hakkimizda" },
     { label: "Menü", href: "/menu" },
     { label: "Politikalarımız", href: "/politikalarimiz" },
-    { label: "Kariyer", href: "#jobs" }
+    { label: "Kariyer", href: "/jobs" }
   ];
   const socialLinks = [
-    { label: "Instagram", href: "https://www.instagram.com/bedriustaa" },
+    { label: "Instagram", href: "https://www.instagram.com/mannheim_bedriusta" },
     { label: "YouTube", href: "https://www.youtube.com/c/BedriUsta" },
     { label: "E-posta", href: "mailto:info@bedriusta.de" }
   ];
-  const legalLinks = [
+  const legalLinks: Array<{ label: string; href?: string; disabled?: boolean }> = [
     { label: "Impressum", href: "#policies" },
-    { label: "Datenschutz", href: "#policies" },
-    { label: "Cookie-Einstellungen", href: "#policies" },
+    { label: "Datenschutz", href: "/datenschutz" },
+    { label: "Cookie-Einstellungen", href: "/datenschutz#cookies" },
+    { label: "AGB", disabled: true },
     { label: "FAQ", href: "#faq" }
   ];
 
@@ -1993,7 +2229,7 @@ function Footer({ isMobile }: { isMobile: boolean }) {
           </View>
           <View style={[styles.footerPrimaryActions, isMobile && styles.footerPrimaryActionsMobile]}>
             <Pressable
-              onPress={() => Linking.openURL("tel:+902160000000")}
+              onPress={() => openNavigationTarget("/rezervasyon")}
               style={({ hovered, pressed }: any) => [
                 styles.footerPrimaryAction,
                 (hovered || pressed) && styles.footerPrimaryActionActive
@@ -2027,12 +2263,16 @@ function Footer({ isMobile }: { isMobile: boolean }) {
           <View style={styles.footerColumn}>
             <Text style={styles.footerColumnNumber}>01</Text>
             <Text style={styles.footerColumnTitle}>Ziyaret</Text>
-            <Text style={styles.footerColumnMuted}>Pazartesi — Pazar</Text>
-            <Text style={styles.footerColumnStrong}>12:00 — 23:30</Text>
+            {restaurantOpeningHours.map((hours, index) => (
+              <View key={hours.days} style={index > 0 ? styles.footerHoursSecondary : undefined}>
+                <Text style={styles.footerColumnMuted}>{hours.days}</Text>
+                <Text style={styles.footerColumnStrong}>{hours.time}</Text>
+              </View>
+            ))}
             <Pressable
               onPress={openMapForAddress}
               accessibilityRole="link"
-              accessibilityLabel="QULIS Mannheim adresini haritada aç"
+              accessibilityLabel="Bedri Usta Mannheim adresini haritada aç"
               style={({ hovered, pressed }: any) => [
                 styles.footerAddress,
                 (hovered || pressed) && styles.footerAddressActive
@@ -2058,7 +2298,6 @@ function Footer({ isMobile }: { isMobile: boolean }) {
             {exploreLinks.map((item) => (
               <Pressable
                 key={item.label}
-                nativeID={item.href === "#jobs" ? "jobs" : undefined}
                 onPress={() => openNavigationTarget(item.href)}
                 style={({ hovered, pressed }: any) => [
                   styles.footerNavLink,
@@ -2096,14 +2335,18 @@ function Footer({ isMobile }: { isMobile: boolean }) {
             {legalLinks.map((item) => (
               <Pressable
                 key={item.label}
-                onPress={() => openNavigationTarget(item.href)}
+                onPress={item.href ? () => openNavigationTarget(item.href as string) : undefined}
+                disabled={item.disabled}
+                accessibilityRole={item.disabled ? undefined : "link"}
+                accessibilityState={{ disabled: item.disabled }}
                 style={({ hovered, pressed }: any) => [
                   styles.footerNavLink,
-                  (hovered || pressed) && styles.footerNavLinkActive
+                  item.disabled && styles.footerNavLinkDisabled,
+                  !item.disabled && (hovered || pressed) && styles.footerNavLinkActive
                 ]}
               >
                 <Text style={styles.footerNavLinkText}>{item.label}</Text>
-                <Text style={styles.footerNavLinkArrow}>→</Text>
+                <Text style={styles.footerNavLinkArrow}>{item.disabled ? "YAKINDA" : "→"}</Text>
               </Pressable>
             ))}
           </View>
@@ -2196,7 +2439,7 @@ const styles = StyleSheet.create({
   } as any,
   headerRailMobile: {
     minHeight: 58,
-    paddingHorizontal: 14
+    paddingHorizontal: 8
   },
   navSide: {
     width: "38%",
@@ -2213,9 +2456,65 @@ const styles = StyleSheet.create({
     zIndex: 44
   },
   headerUtilitiesCompact: {
-    width: 80,
+    width: 104,
     justifyContent: "flex-end",
-    gap: 5
+    gap: 3
+  },
+  headerShare: {
+    width: 36,
+    height: 36,
+    minHeight: 36,
+    paddingHorizontal: 0,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: "rgba(255,247,223,.24)",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  headerShareCompact: {
+    width: 30,
+    height: 30,
+    minHeight: 30
+  },
+  headerShareIcon: {
+    width: 20,
+    height: 20
+  },
+  headerShareIconCompact: {
+    width: 17,
+    height: 17
+  },
+  shareToast: {
+    position: "fixed",
+    top: 100,
+    right: 18,
+    minHeight: 46,
+    maxWidth: "calc(100vw - 36px)",
+    paddingVertical: 11,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderColor: "rgba(223,191,120,.68)",
+    borderRadius: 4,
+    backgroundColor: colors.headerRed,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    boxShadow: "0 14px 34px rgba(24,5,4,.32)",
+    zIndex: 9999
+  } as any,
+  shareToastMark: {
+    width: 7,
+    height: 7,
+    borderRadius: 999,
+    backgroundColor: "#dfbf78"
+  },
+  shareToastText: {
+    color: "#fff8ee",
+    fontFamily: "Karla, sans-serif",
+    fontSize: 12,
+    lineHeight: 17,
+    fontWeight: "800",
+    letterSpacing: 0.35
   },
   headerLogin: {
     width: 36,
@@ -2230,9 +2529,9 @@ const styles = StyleSheet.create({
     position: "relative"
   } as any,
   headerLoginCompact: {
-    width: 32,
-    height: 32,
-    minHeight: 32,
+    width: 30,
+    height: 30,
+    minHeight: 30,
     paddingHorizontal: 0
   },
   headerLoginIcon: {
@@ -2240,8 +2539,8 @@ const styles = StyleSheet.create({
     height: 27
   },
   headerLoginIconCompact: {
-    width: 24,
-    height: 24
+    width: 22,
+    height: 22
   },
   headerNotificationDot: {
     position: "absolute",
@@ -2275,7 +2574,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8
   },
   languageMarkCompact: {
-    minWidth: 39,
+    minWidth: 38,
     height: 32,
     paddingHorizontal: 5,
     gap: 3
@@ -3361,14 +3660,6 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     overflowWrap: "anywhere"
   } as any,
-  restaurantMenuItemPrice: {
-    flexShrink: 0,
-    color: colors.red,
-    fontFamily: "Heebo, sans-serif",
-    fontSize: 17,
-    lineHeight: 23,
-    fontWeight: "900"
-  },
   restaurantMenuItemMeta: {
     flexDirection: "row",
     alignItems: "center",
@@ -4868,6 +5159,53 @@ const styles = StyleSheet.create({
   quickActionsGridCompact: {
     gridTemplateColumns: "repeat(2, minmax(0, 1fr))"
   } as any,
+  quickActionsGroup: {
+    width: "100%"
+  },
+  quickActionsContactSection: {
+    width: "100%",
+    backgroundColor: colors.headerRed,
+    paddingVertical: 72,
+    paddingHorizontal: 32,
+    borderTopWidth: 1,
+    borderTopColor: "#8a6638",
+    scrollMarginTop: 88
+  } as any,
+  quickActionsContactInner: {
+    width: "100%",
+    maxWidth: 1180,
+    marginHorizontal: "auto"
+  },
+  quickActionsGroupEyebrow: {
+    color: colors.red,
+    fontFamily: "Karla, sans-serif",
+    fontSize: 11,
+    lineHeight: 16,
+    letterSpacing: 2.8,
+    fontWeight: "800",
+    textAlign: "center"
+  },
+  quickActionsGroupEyebrowContact: {
+    color: "#dfbf78"
+  },
+  quickActionsGroupText: {
+    color: "#6b5b54",
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 14,
+    lineHeight: 22,
+    textAlign: "center",
+    marginTop: 7,
+    marginBottom: 22
+  },
+  quickActionsGroupTextContact: {
+    color: "rgba(255,250,242,.82)"
+  },
+  quickActionsContactGrid: {
+    gridTemplateColumns: "repeat(4, minmax(0, 1fr))"
+  } as any,
+  quickActionsContactGridCompact: {
+    gridTemplateColumns: "minmax(0, 1fr)"
+  } as any,
   quickActionCard: {
     minHeight: 164,
     borderRadius: 8,
@@ -4887,6 +5225,18 @@ const styles = StyleSheet.create({
     backgroundColor: "#651316",
     boxShadow: "0 18px 34px rgba(83,14,15,.22)"
   } as any,
+  quickActionCardContact: {
+    minHeight: 154,
+    borderWidth: 2,
+    borderColor: "#6c181b",
+    backgroundColor: "#dfbf78"
+  },
+  quickActionCardContactActive: {
+    transform: [{ translateY: -4 }],
+    borderColor: "#6c181b",
+    backgroundColor: "#ead092",
+    boxShadow: "0 18px 34px rgba(83,14,15,.18)"
+  } as any,
   quickActionCardDisabled: {
     opacity: 0.58
   },
@@ -4900,6 +5250,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 15
+  },
+  quickActionIconFrameContact: {
+    borderColor: "#6c181b",
+    backgroundColor: "#6c181b"
   },
   quickActionGlyph: {
     width: 31,
@@ -4917,6 +5271,9 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     textAlign: "center"
   },
+  quickActionLabelContact: {
+    color: "#2a0809"
+  },
   quickActionDetail: {
     color: "rgba(255,255,255,.62)",
     fontFamily: "Karla, sans-serif",
@@ -4925,7 +5282,11 @@ const styles = StyleSheet.create({
     letterSpacing: 0.8,
     fontWeight: "700",
     textAlign: "center",
-    marginTop: 5
+    marginTop: 5,
+    overflowWrap: "anywhere"
+  } as any,
+  quickActionDetailContact: {
+    color: "#6c181b"
   },
   mobileActionDock: {
     position: "fixed",
@@ -5253,6 +5614,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 22
   },
+  footerHoursSecondary: {
+    marginTop: 12
+  },
   footerColumnStrong: {
     color: "#fffaf2",
     fontFamily: "Heebo, sans-serif",
@@ -5319,6 +5683,9 @@ const styles = StyleSheet.create({
   footerNavLinkActive: {
     backgroundColor: "rgba(223,191,120,.045)",
     transform: [{ translateX: 4 }]
+  },
+  footerNavLinkDisabled: {
+    opacity: 0.56
   },
   footerNavLinkText: {
     color: "rgba(255,250,242,.78)",
