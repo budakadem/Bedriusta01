@@ -22,7 +22,7 @@ import { PrivacyPage } from "./components/PrivacyPage";
 import { ReservationPage } from "./components/ReservationPage";
 import { getSiteLanguage, setSiteLanguage, subscribeToSiteLanguage, type SiteLanguage } from "./siteLanguage";
 
-const logoImage = "/images/bedriusta-logo.png";
+const logoImage = "/images/brand/bedri-usta-logo-white-cropped.png";
 const portraitImage = "/images/bedri-portrait.png";
 const heroVideo = "/videos/hero-deneme02.mp4";
 const editorialHeroImage = "/images/mannheim-editorial-hero-v2.webp";
@@ -34,6 +34,7 @@ const quickActionIcons = {
   menu: "/icons/ui/menu.svg",
   reservation: "/icons/ui/reservation.svg",
   instagram: "/icons/social/instagram.svg",
+  instagramDock: "/icons/ui/instagram-outline.svg",
   directions: "/icons/ui/directions.svg",
   email: "/icons/ui/email.svg",
   youtube: "/icons/social/youtube.svg",
@@ -2416,7 +2417,7 @@ function MobileActionDock({ desktop }: { desktop: boolean }) {
     },
     {
       label: "Instagram",
-      icon: "instagram",
+      icon: "instagramDock",
       action: () => Linking.openURL("https://www.instagram.com/mannheim_bedriusta")
     },
     { label: "Yol Tarifi", icon: "directions", action: openMapForAddress }
@@ -3286,6 +3287,7 @@ const styles = StyleSheet.create({
   logo: {
     width: 88,
     height: 108,
+    backgroundColor: "#fff8e8",
     transform: [{ translateY: 12 }]
   },
   editorialHero: {
