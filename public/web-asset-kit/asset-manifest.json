@@ -1,0 +1,35 @@
+{
+  "package": "Bedri Usta Web Asset Kit",
+  "version": 1,
+  "brand": {
+    "headerLogo": "brand/bedri-usta-logo-header.png",
+    "transparentLogo": "brand/bedri-usta-logo-transparent.png"
+  },
+  "appIcons": {
+    "favicon32": "app-icons/favicon-32.png",
+    "appleTouch180": "app-icons/apple-touch-icon-180.png",
+    "pwa192": "app-icons/pwa-192.png",
+    "pwa512": "app-icons/pwa-512.png",
+    "pwaMaskable512": "app-icons/pwa-maskable-512.png"
+  },
+  "styles": [
+    "css/bedri-usta-tokens.css",
+    "css/bedri-usta-components.css"
+  ],
+  "primaryImages": {
+    "editorialHero": "images/editorial/mannheim-editorial-hero.webp",
+    "about": "images/editorial/bedri-usta-about.webp",
+    "portrait": "images/people/bedri-portrait.png",
+    "careers": "images/people/mannheim-careers-team.jpg"
+  },
+  "menuImages": [
+    "images/menu/menu-adana-portrait.webp",
+    "images/menu/menu-meze-portrait.webp",
+    "images/menu/menu-doner-portrait.webp",
+    "images/menu/menu-lahmacun-portrait.webp",
+    "images/menu/menu-tava-portrait.webp",
+    "images/menu/menu-kahvalti-portrait.webp",
+    "images/menu/menu-dessert-portrait.webp"
+  ],
+  "example": "examples/index.html"
+}

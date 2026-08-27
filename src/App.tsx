@@ -696,7 +696,7 @@ function App() {
           <View style={styles.contactCopy}>
             <View style={styles.contactAccentLine} />
             <Text style={[styles.contactKicker, layout.isMobile && styles.contactKickerMobile]}>
-              REZERVASYON · EVENT · MANNHEIM
+              REZERVASYON · EVENTS · MANNHEIM
             </Text>
             <Text style={[styles.contactTitle, layout.isMobile && styles.contactTitleMobile]}>
               Özel anlar, özenle hazırlanan sofralarda hatırlanır.

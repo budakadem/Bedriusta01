@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bedri Usta Web Asset Kit</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="../app-icons/favicon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../app-icons/apple-touch-icon-180.png" />
+    <link rel="stylesheet" href="../css/bedri-usta-tokens.css" />
+    <link rel="stylesheet" href="../css/bedri-usta-components.css" />
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; padding: 40px 20px; color: var(--bu-ink-900); background: var(--bu-paper-100); font-family: var(--bu-font-display); }
+      main { width: min(980px, 100%); margin: 0 auto; }
+      .logo { width: 154px; height: auto; display: block; margin: 0 auto 40px; }
+      .row { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin: 24px 0 42px; }
+      h1, h2 { text-align: center; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <img class="logo" src="../brand/bedri-usta-logo-header.png" alt="Bedri Usta" />
+      <h1>Yeniden kullanılabilir marka öğeleri</h1>
+
+      <div class="row">
+        <a class="bu-button bu-button--primary" href="#">Rezervasyon</a>
+        <a class="bu-button bu-button--gold" href="#">Menüyü incele</a>
+        <a class="bu-button bu-button--outline" href="#">Haritada aç ↗</a>
+      </div>
+
+      <h2>Sosyal kart</h2>
+      <div class="row">
+        <a class="bu-quick-card" href="#">
+          <span class="bu-quick-card__icon"><img src="../icons/ui/instagram-outline.svg" alt="" /></span>
+          <strong>Instagram</strong>
+          <small>@mannheim_bedriusta</small>
+        </a>
+      </div>
+
+      <h2>Değerlendirme butonları</h2>
+      <div class="row">
+        <a class="bu-platform-button" href="#">
+          <img src="../icons/social/google-review.svg" alt="" />
+          <span class="bu-platform-button__copy"><span>Google'da değerlendir</span><span class="bu-platform-button__stars">★★★★★</span></span>
+        </a>
+        <a class="bu-platform-button" href="#">
+          <img src="../icons/social/tripadvisor-review.svg" alt="" />
+          <span class="bu-platform-button__copy"><span>Tripadvisor'da değerlendir</span><span class="bu-platform-button__stars">★★★★★</span></span>
+        </a>
+      </div>
+    </main>
+  </body>
+</html>
+

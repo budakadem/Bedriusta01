@@ -1,0 +1,20 @@
+:root {
+  --bu-wine-950: #160807;
+  --bu-burgundy-800: #530e0f;
+  --bu-burgundy-700: #6b171a;
+  --bu-red-600: #a7191e;
+  --bu-cream-50: #fff8ee;
+  --bu-ivory-25: #fffdf8;
+  --bu-paper-100: #f3ece4;
+  --bu-ink-900: #351311;
+  --bu-sand-300: #e7d1ad;
+  --bu-gold-400: #dfbf78;
+  --bu-border-gold: #8a6638;
+  --bu-font-display: "Heebo", Arial, sans-serif;
+  --bu-font-label: "Karla", Arial, sans-serif;
+  --bu-radius-action: 6px;
+  --bu-radius-card: 8px;
+  --bu-focus-ring: 0 0 0 3px var(--bu-gold-400);
+  --bu-shadow-action: 0 18px 34px rgba(83, 14, 15, 0.22);
+}
+
