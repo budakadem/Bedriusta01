@@ -184,7 +184,7 @@ const mobileLegalNavItems: Array<{ label: string; href?: string; disabled?: bool
 const menuItems = [
   {
     title: "Adana",
-    text: "Zırh kıyma, seçkin baharatlar ve dengeli acıyla hazırlanan imza lezzet.",
+    text: "Zırh kıyma, özenle seçilen baharatlar ve yılların ustalığıyla hazırlanan Bedri Usta klasiği.",
     image: menuKebabImage
   },
   {
@@ -193,8 +193,8 @@ const menuItems = [
     image: menuMezeImage
   },
   {
-    title: "Döner",
-    text: "Ustalıkla pişirilen, ince kesilen ve sıcak servis edilen güçlü bir klasik.",
+    title: "Yaprak Döner",
+    text: "Kat kat dizilen et yapraklarının ustalıkla pişirilip ince kesilmesiyle hazırlanan güçlü bir klasik.",
     image: menuDonerImage
   },
   {
@@ -219,7 +219,7 @@ const menuItems = [
   },
   {
     title: "Café",
-    text: "Seçkin pastalar, Türk kahvesi ve ferah alkolsüz içeceklerle zarif bir mola.",
+    text: "Kahveden pastaya, sıcak ve soğuk içeceklerle Mannheim’ın yeni buluşma noktası.",
     image: menuCafeImage
   }
 ];
