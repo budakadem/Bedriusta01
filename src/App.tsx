@@ -219,7 +219,7 @@ const menuItems = [
   },
   {
     title: "Café",
-    text: "Ev yapımı pastalar, Türk kahvesi ve ferah alkolsüz içeceklerle zarif bir mola.",
+    text: "Seçkin pastalar, Türk kahvesi ve ferah alkolsüz içeceklerle zarif bir mola.",
     image: menuCafeImage
   }
 ];

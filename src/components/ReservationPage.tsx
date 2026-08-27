@@ -324,7 +324,7 @@ export function ReservationPage() {
           <button className="reservation-back" type="button" onClick={() => window.history.back()} aria-label="Önceki sayfaya dön">← Geri dön</button>
           <p className="reservation-kicker">BEDRİ USTA MANNHEIM</p>
           <h1>Rezervasyon</h1>
-          <p>Restaurant &amp; Café mit Kinderspielplatz</p>
+          <p>Restaurant &amp; Café</p>
         </div>
       </header>
 
