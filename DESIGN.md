@@ -183,6 +183,13 @@ Sistem tonal katmanlama ile ambient gölgeleri birlikte kullanır. Bordo-krem y�
 - **Dock:** Menü, rezervasyon ve yön gibi yüksek frekanslı eylemler safe-area korumalı sabit alt barda kalır.
 - **Motion:** 180–220ms etkileşim tepkisi ve içerik için 560ms ölçülü reveal; `prefers-reduced-motion` daima desteklenir.
 
+### Quick Access Links
+
+- **Structure:** Sosyal medya ve iletişim ayrı bölümlerde; yatay carousel olmadan masaüstünde ortalanmış 4 küçük kart, tablet ve telefonda 2 sütunlu sabit grid kullanır.
+- **Tile:** En fazla 218px genişliğinde, 4:5 oranlı Mannheim Bordosu yüzey; altın çizgili ikon, başlık ve durum metni kartın merkezinde hizalanır.
+- **Availability:** Hazır olmayan bağlantılar aynı marka rengini korur; yalnız durum metni ve devre dışı etkileşim ile ayrılır.
+- **Social Set:** Instagram, TikTok, YouTube ve Facebook. Pinterest, LinkedIn ve X ana hızlı erişim alanına eklenmez.
+
 ## Do's and Don'ts
 
 ### Do:

@@ -33,17 +33,16 @@ const sharePageIcon = "/icons/ui/share.svg";
 const quickActionIcons = {
   menu: "/icons/ui/menu.svg",
   reservation: "/icons/ui/reservation.svg",
-  instagram: "/icons/social/instagram.svg",
+  instagram: "/icons/ui/instagram-outline.svg",
   instagramDock: "/icons/ui/instagram-outline.svg",
   directions: "/icons/ui/directions.svg",
   email: "/icons/ui/email.svg",
-  youtube: "/icons/social/youtube.svg",
+  youtube: "/icons/ui/youtube-outline.svg",
   contact: "/icons/ui/contact.svg",
   phone: "/icons/ui/phone.svg",
   whatsapp: "/icons/ui/whatsapp.svg",
-  facebook: "/icons/social/facebook.svg",
-  pinterest: "/icons/social/pinterest.svg",
-  tiktok: "/icons/social/tiktok.svg",
+  facebook: "/icons/ui/facebook-outline.svg",
+  tiktok: "/icons/ui/tiktok-outline.svg",
   twitter: "/icons/ui/x.svg"
 } as const;
 type QuickActionIconName = keyof typeof quickActionIcons;
@@ -751,7 +750,7 @@ function App() {
       </View>
 
       <CustomerReviewSection />
-      <QuickActionsSection compact={layout.compactActions} />
+      <QuickActionsSection compact={layout.compactActions} tablet={layout.isTablet} />
       <Footer isMobile={layout.isMobile} />
       <BackToTopButton desktop={!layout.showBottomDock} />
       <MobileActionDock desktop={!layout.showBottomDock} />
@@ -2261,7 +2260,7 @@ function HorizontalCardRail({
   );
 }
 
-function QuickActionsSection({ compact }: { compact: boolean }) {
+function QuickActionsSection({ compact, tablet }: { compact: boolean; tablet: boolean }) {
   type QuickActionItem = {
     label: string;
     detail: string;
@@ -2283,7 +2282,6 @@ function QuickActionsSection({ compact }: { compact: boolean }) {
       icon: "youtube",
       action: () => Linking.openURL("https://www.youtube.com/c/BedriUsta")
     },
-    { label: "Pinterest", detail: "Yakında", icon: "pinterest" },
     { label: "Facebook", detail: "Yakında", icon: "facebook" }
   ];
 
@@ -2327,24 +2325,26 @@ function QuickActionsSection({ compact }: { compact: boolean }) {
         >
           <QuickActionGlyph type={item.icon} />
         </View>
-        <Text
-          style={[
-            styles.quickActionLabel,
-            contact && styles.quickActionLabelContact,
-            disabled && styles.quickActionLabelUnavailable
-          ]}
-        >
-          {item.label}
-        </Text>
-        <Text
-          style={[
-            styles.quickActionDetail,
-            contact && styles.quickActionDetailContact,
-            disabled && styles.quickActionDetailUnavailable
-          ]}
-        >
-          {item.detail}
-        </Text>
+        <View style={styles.quickActionCardCopy}>
+          <Text
+            style={[
+              styles.quickActionLabel,
+              contact && styles.quickActionLabelContact,
+              disabled && styles.quickActionLabelUnavailable
+            ]}
+          >
+            {item.label}
+          </Text>
+          <Text
+            style={[
+              styles.quickActionDetail,
+              contact && styles.quickActionDetailContact,
+              disabled && styles.quickActionDetailUnavailable
+            ]}
+          >
+            {item.detail}
+          </Text>
+        </View>
       </Pressable>
     );
   };
@@ -2365,21 +2365,16 @@ function QuickActionsSection({ compact }: { compact: boolean }) {
           <Text style={[styles.quickActionsGroupText, styles.quickActionsSocialPrompt]}>
             Takip Et · Yorum Yap · Paylaş
           </Text>
-          <HorizontalCardRail
-            id="social-action-card-rail"
+          <View
             accessibilityLabel="Sosyal medya bağlantıları"
-            tone="paper"
-            autoPlay={compact}
+            style={[
+              styles.quickActionsGrid,
+              tablet && styles.quickActionsGridTablet,
+              compact && styles.quickActionsGridCompact
+            ]}
           >
-            {socialActions.map((item) => (
-              <View
-                key={item.label}
-                style={[styles.quickActionRailItem, compact && styles.quickActionRailItemCompact]}
-              >
-                {renderActionCard(item)}
-              </View>
-            ))}
-          </HorizontalCardRail>
+            {socialActions.map((item) => renderActionCard(item))}
+          </View>
         </View>
         </ScrollReveal>
       </View>
@@ -2388,21 +2383,16 @@ function QuickActionsSection({ compact }: { compact: boolean }) {
         <ScrollReveal style={styles.quickActionsContactInner}>
           <Text style={[styles.quickActionsGroupEyebrow, styles.quickActionsGroupEyebrowContact]}>İLETİŞİM</Text>
           <Text style={[styles.quickActionsGroupText, styles.quickActionsGroupTextContact]}>Sorularınız ve talepleriniz için doğrudan bağlantılar.</Text>
-          <HorizontalCardRail
-            id="contact-action-card-rail"
+          <View
             accessibilityLabel="İletişim bağlantıları"
-            tone="paper"
-            autoPlay={compact}
+            style={[
+              styles.quickActionsGrid,
+              tablet && styles.quickActionsGridTablet,
+              compact && styles.quickActionsGridCompact
+            ]}
           >
-            {contactActions.map((item) => (
-              <View
-                key={item.label}
-                style={[styles.quickActionRailItem, compact && styles.quickActionRailItemCompact]}
-              >
-                {renderActionCard(item, true)}
-              </View>
-            ))}
-          </HorizontalCardRail>
+            {contactActions.map((item) => renderActionCard(item, true))}
+          </View>
         </ScrollReveal>
       </View>
     </>
@@ -5671,30 +5661,33 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 28
   },
-  quickActionRailItem: {
-    width: "clamp(190px, 18vw, 218px)",
-    minWidth: 190,
-    flexGrow: 0,
-    flexBasis: "auto",
-    flexShrink: 0,
-    scrollSnapAlign: "start"
+  quickActionsGrid: {
+    width: "100%",
+    minWidth: 0,
+    display: "grid",
+    gridTemplateColumns: "repeat(4, minmax(190px, 218px))",
+    justifyContent: "center",
+    gap: 18
   } as any,
-  quickActionRailItemCompact: {
-    width: "clamp(205px, 72vw, 238px)",
-    minWidth: 205,
-    flexGrow: 0,
-    flexBasis: "auto",
-    flexShrink: 0
+  quickActionsGridTablet: {
+    gridTemplateColumns: "repeat(2, minmax(190px, 218px))",
+    gap: 16
+  } as any,
+  quickActionsGridCompact: {
+    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+    gap: 10
   } as any,
   quickActionCard: {
     width: "100%",
+    minWidth: 0,
+    maxWidth: 218,
     aspectRatio: 4 / 5,
     borderRadius: 8,
     borderWidth: 1,
     borderColor: "#8a6638",
     backgroundColor: colors.headerRed,
-    paddingVertical: 20,
-    paddingHorizontal: 18,
+    paddingVertical: "clamp(16px, 2vw, 20px)",
+    paddingHorizontal: "clamp(12px, 1.8vw, 18px)",
     alignItems: "center",
     justifyContent: "center",
     transitionDuration: "180ms",
@@ -5724,9 +5717,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.quickUnavailableSurface,
     opacity: 1
   },
+  quickActionCardCopy: {
+    width: "100%",
+    minWidth: 0,
+    alignItems: "center"
+  },
   quickActionIconFrame: {
-    width: 58,
-    height: 58,
+    width: "clamp(48px, 5vw, 58px)",
+    height: "clamp(48px, 5vw, 58px)",
     borderRadius: 999,
     borderWidth: 1,
     borderColor: "rgba(223,191,120,.64)",
@@ -5734,7 +5732,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 15
-  },
+  } as any,
   quickActionIconFrameContact: {
     borderColor: "rgba(223,191,120,.64)",
     backgroundColor: "rgba(22,8,7,.2)"
@@ -5744,9 +5742,9 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(22,8,7,.2)"
   },
   quickActionGlyph: {
-    width: 31,
-    height: 31
-  },
+    width: "clamp(25px, 3vw, 31px)",
+    height: "clamp(25px, 3vw, 31px)"
+  } as any,
   quickActionGlyphCompact: {
     width: 22,
     height: 22
@@ -5754,11 +5752,11 @@ const styles = StyleSheet.create({
   quickActionLabel: {
     color: colors.cream,
     fontFamily: "Heebo, sans-serif",
-    fontSize: 17,
-    lineHeight: 23,
+    fontSize: "clamp(15px, 2vw, 18px)",
+    lineHeight: "clamp(21px, 2.5vw, 25px)",
     fontWeight: "800",
     textAlign: "center"
-  },
+  } as any,
   quickActionLabelContact: {
     color: colors.cream
   },
@@ -5768,9 +5766,9 @@ const styles = StyleSheet.create({
   quickActionDetail: {
     color: colors.sand,
     fontFamily: "Karla, sans-serif",
-    fontSize: 11,
-    lineHeight: 16,
-    letterSpacing: 0.8,
+    fontSize: "clamp(9px, 1.4vw, 11px)",
+    lineHeight: "clamp(14px, 1.8vw, 16px)",
+    letterSpacing: 0.6,
     fontWeight: "700",
     textAlign: "center",
     marginTop: 5,
