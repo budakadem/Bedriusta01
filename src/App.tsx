@@ -53,6 +53,7 @@ const menuTavaImage = "/images/menu-tava-portrait.webp";
 const menuBreakfastImage = "/images/menu-kahvalti-portrait.webp";
 const menuMezeImage = "/images/menu-meze-portrait.webp";
 const menuDessertImage = "/images/menu-dessert-portrait.webp";
+const menuCafeImage = "/images/menu-cafe-portrait-v1.webp";
 const restaurantAddress = "K1 1-4, 68159 Mannheim, Almanya";
 const googleMapsPlaceLink = "https://maps.app.goo.gl/NZHsiEJmyTg9nVgRA";
 const restaurantOpeningHours = [
@@ -215,6 +216,11 @@ const menuItems = [
     title: "Tatlı",
     text: "Yemeğin sonunda dengeli, sıcak ve zarif bir kapanış hissi.",
     image: menuDessertImage
+  },
+  {
+    title: "Café",
+    text: "Ev yapımı pastalar, Türk kahvesi ve ferah alkolsüz içeceklerle zarif bir mola.",
+    image: menuCafeImage
   }
 ];
 
@@ -2153,7 +2159,7 @@ function HorizontalCardRail({
         const elapsed = Math.min(time - previousTime, 64);
         previousTime = time;
         if (manualScrollFrameRef.current === null && !interactionPausedRef.current) {
-          rail.scrollLeft += (elapsed / 1000) * 28;
+          rail.scrollLeft += (elapsed / 1000) * 42;
         }
         frame = window.requestAnimationFrame(moveContinuously);
       };

@@ -51,7 +51,7 @@ Hakkımızda anlatımının altında dört bilgi kartı bulunur:
 
 Kartlar mobilde iki sütun, uygun genişlikte esnek satırlar halinde çalışır. Sabit genişlik kullanılmadığı için küçük ekranlarda yatay taşma oluşturmaz.
 
-### 6. Menümüzdeki yedi kayan görsel
+### 6. Menümüzdeki sekiz kayan görsel
 
 Kullanılan gerçek kartlar ve ZIP içindeki dosyaları:
 
@@ -62,16 +62,17 @@ Kullanılan gerçek kartlar ve ZIP içindeki dosyaları:
 5. Tava — `images/menu/menu-tava-portrait.webp`
 6. Kahvaltı — `images/menu/menu-kahvalti-portrait.webp`
 7. Tatlı — `images/menu/menu-dessert-portrait.webp`
+8. Café — `images/menu/menu-cafe-portrait.webp`
 
 Teknik çalışma mantığı:
 
 - Kartlar dikey `4:5` görsel oranını korur ve fotoğraflar WebP biçimindedir.
 - Ekrana sığmayan kartlar yatay bir ray içinde gösterilir; sağ ve sol oklar yalnız taşma varsa görünür.
-- Yedi gerçek kart kesintisiz döngü oluşturmak için DOM içinde üç kez sıralanır. Böylece rayda toplam 21 fiziksel öğe bulunur.
-- İkinci ve üçüncü yedi kart yalnız döngü kopyasıdır; ekran okuyucularına gerçek içerikmiş gibi tekrar okunmaması için erişilebilirlik ağacından gizlenir.
+- Sekiz gerçek kart kesintisiz döngü oluşturmak için DOM içinde üç kez sıralanır. Böylece rayda toplam 24 fiziksel öğe bulunur.
+- İkinci ve üçüncü sekiz kart yalnız döngü kopyasıdır; ekran okuyucularına gerçek içerikmiş gibi tekrar okunmaması için erişilebilirlik ağacından gizlenir.
 - Sayfa açıldığında kaydırma konumu orta kopya grubuna yerleştirilir.
 - Otomatik hareket belirli saniyelerde sıçrayarak değil, `requestAnimationFrame` ile kesintisiz çalışır.
-- Sürekli hız saniyede yaklaşık `28px` değerindedir.
+- Sürekli hız saniyede yaklaşık `42px` değerindedir. Önceki `28px/sn` hızı bazı ekranlarda hareketsiz algılandığı için daha görünür hale getirildi.
 - Ray ikinci kopya grubunun sınırına ulaşınca aynı görsel konuma animasyonsuz taşınır. Kullanıcı bu konum düzeltmesini görmez; son karttan ilk karta geri sıçrama hissi oluşmaz.
 - Sağ veya sol oka basıldığında tam bir kart genişliği ilerlenir.
 - Manuel ok animasyonu `360ms` sürer ve yumuşak ease-out hareketi kullanır.

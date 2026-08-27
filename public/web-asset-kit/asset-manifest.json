@@ -29,7 +29,8 @@
     "images/menu/menu-lahmacun-portrait.webp",
     "images/menu/menu-tava-portrait.webp",
     "images/menu/menu-kahvalti-portrait.webp",
-    "images/menu/menu-dessert-portrait.webp"
+    "images/menu/menu-dessert-portrait.webp",
+    "images/menu/menu-cafe-portrait.webp"
   ],
   "example": "examples/index.html"
 }
