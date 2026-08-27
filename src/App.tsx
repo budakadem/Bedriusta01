@@ -351,6 +351,8 @@ function ScrollReveal({
 function App() {
   const { width } = useWindowDimensions();
   const [pathname, setPathname] = useState(() => window.location.pathname);
+  const [reservationAddressCopied, setReservationAddressCopied] = useState(false);
+  const reservationCopyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const layout = useMemo(
     () => ({
       isMobile: width < 1180,
@@ -364,8 +366,19 @@ function App() {
   useEffect(() => {
     const handleRouteChange = () => setPathname(window.location.pathname);
     window.addEventListener("popstate", handleRouteChange);
-    return () => window.removeEventListener("popstate", handleRouteChange);
+    return () => {
+      window.removeEventListener("popstate", handleRouteChange);
+      if (reservationCopyTimer.current) clearTimeout(reservationCopyTimer.current);
+    };
   }, []);
+
+  const handleReservationCopyAddress = async () => {
+    await copyAddress(() => {
+      setReservationAddressCopied(true);
+      if (reservationCopyTimer.current) clearTimeout(reservationCopyTimer.current);
+      reservationCopyTimer.current = setTimeout(() => setReservationAddressCopied(false), 2600);
+    });
+  };
 
   useEffect(() => {
     updatePageMetadata(pathname.replace(/\/+$/, "") || "/");
@@ -597,6 +610,10 @@ function App() {
                 <Text style={styles.storyFactValue}>50+ yıl</Text>
                 <Text style={styles.storyFactLabel}>Ocakbaşı tecrübesi</Text>
               </View>
+              <View style={styles.storyFact}>
+                <Text style={styles.storyFactValue}>2026</Text>
+                <Text style={styles.storyFactLabel}>Mannheim</Text>
+              </View>
             </View>
           </ScrollReveal>
         </View>
@@ -701,6 +718,36 @@ function App() {
                 <Text style={styles.contactDetailValue}>K1 1-4 · 68159</Text>
               </View>
             </View>
+            <View style={styles.contactAddressActions}>
+              <Pressable
+                onPress={handleReservationCopyAddress}
+                accessibilityRole="button"
+                accessibilityLabel="Bedri Usta Mannheim adresini kopyala"
+                style={({ hovered, pressed }: any) => [
+                  styles.contactAddressAction,
+                  (hovered || pressed) && styles.contactAddressActionActive
+                ]}
+              >
+                <Text style={styles.contactAddressActionText}>Adresi kopyala</Text>
+              </Pressable>
+              <Text style={styles.contactAddressDivider}>·</Text>
+              <Pressable
+                onPress={openMapForAddress}
+                accessibilityRole="link"
+                accessibilityLabel="Bedri Usta Mannheim adresini haritada aç"
+                style={({ hovered, pressed }: any) => [
+                  styles.contactAddressAction,
+                  (hovered || pressed) && styles.contactAddressActionActive
+                ]}
+              >
+                <Text style={styles.contactAddressActionText}>Haritada aç ↗</Text>
+              </Pressable>
+            </View>
+            {reservationAddressCopied && (
+              <Text style={styles.contactAddressCopied} accessibilityLiveRegion="polite">
+                Adres kopyalandı.
+              </Text>
+            )}
           </View>
 
           <View
@@ -2363,7 +2410,7 @@ function QuickActionsSection({ compact, tablet }: { compact: boolean; tablet: bo
         <View style={styles.quickActionsGroup}>
           <Text style={styles.quickActionsGroupEyebrow}>SOSYAL MEDYA</Text>
           <Text style={[styles.quickActionsGroupText, styles.quickActionsSocialPrompt]}>
-            Takip Et · Yorum Yap · Paylaş
+            Takip Et · Beğen · Yorum Yap · Paylaş
           </Text>
           <View
             accessibilityLabel="Sosyal medya bağlantıları"
@@ -5469,6 +5516,44 @@ const styles = StyleSheet.create({
     lineHeight: 21,
     fontWeight: "800",
     marginTop: 4
+  },
+  contactAddressActions: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
+    gap: 9,
+    marginTop: 20
+  },
+  contactAddressAction: {
+    minHeight: 44,
+    justifyContent: "center",
+    borderBottomWidth: 1,
+    borderBottomColor: "transparent"
+  },
+  contactAddressActionActive: {
+    borderBottomColor: colors.red
+  },
+  contactAddressActionText: {
+    color: colors.red,
+    fontFamily: "Karla, sans-serif",
+    fontSize: 12,
+    lineHeight: 18,
+    fontWeight: "800",
+    letterSpacing: 0.35
+  },
+  contactAddressDivider: {
+    color: "#a98f81",
+    fontFamily: "Karla, sans-serif",
+    fontSize: 14,
+    lineHeight: 18
+  },
+  contactAddressCopied: {
+    color: "#6b171a",
+    fontFamily: "Karla, sans-serif",
+    fontSize: 11,
+    lineHeight: 16,
+    fontWeight: "800",
+    marginTop: 2
   },
   contactActionColumn: {
     width: "clamp(330px, 35vw, 410px)",
