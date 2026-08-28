@@ -1,5 +1,5 @@
 .contact-tiles {
-  margin: 0 0 30px;
+  margin: 24px 0 0;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 12px;
@@ -7,7 +7,7 @@
 .contact-tile {
   display: block;
   min-width: 0;
-  padding: 16px 18px;
+  padding: 18px 20px;
   border: 1px solid var(--reservation-line);
   border-radius: 2px;
   background: var(--reservation-paper);
@@ -15,7 +15,8 @@
   text-align: left;
   text-decoration: none;
   cursor: pointer;
-  transition: border-color 150ms ease, background 150ms ease, transform 150ms ease;
+  box-shadow: 0 8px 20px rgba(57, 30, 23, .045);
+  transition: border-color 150ms ease, background 150ms ease, transform 150ms ease, box-shadow 150ms ease;
 }
 .contact-tile__label {
   display: block;
@@ -40,7 +41,8 @@
   a.contact-tile:hover, button.contact-tile:hover:not(.contact-tile--muted) {
     border-color: var(--reservation-burgundy);
     background: #fff;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(57, 30, 23, .1);
   }
 }
 

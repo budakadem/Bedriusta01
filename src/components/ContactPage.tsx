@@ -96,25 +96,6 @@ export function ContactPage() {
 
       <section className="reservation-content">
         <div className="reservation-shell reservation-shell--form">
-          <div className="contact-tiles">
-            <button type="button" className="contact-tile" onClick={scrollToForm}>
-              <span className="contact-tile__label">İletişim Formu</span>
-              <span className="contact-tile__value">Mesaj gönder</span>
-            </button>
-            <a className="contact-tile" href="mailto:info@bedriusta.de">
-              <span className="contact-tile__label">E-posta</span>
-              <span className="contact-tile__value">info@bedriusta.de</span>
-            </a>
-            <div className="contact-tile contact-tile--muted">
-              <span className="contact-tile__label">WhatsApp</span>
-              <span className="contact-tile__value">Numara yakında</span>
-            </div>
-            <div className="contact-tile contact-tile--muted">
-              <span className="contact-tile__label">Telefon</span>
-              <span className="contact-tile__value">Numara yakında</span>
-            </div>
-          </div>
-
           <div className="reservation-form">
             <div className="reservation-steps">
               <section className="reservation-section" aria-labelledby="contact-info">
@@ -205,6 +186,25 @@ export function ContactPage() {
                   </section>
                 </form>
               )}
+            </div>
+          </div>
+
+          <div className="contact-tiles">
+            <button type="button" className="contact-tile" onClick={scrollToForm}>
+              <span className="contact-tile__label">İletişim Formu</span>
+              <span className="contact-tile__value">Mesaj gönder</span>
+            </button>
+            <a className="contact-tile" href="mailto:info@bedriusta.de">
+              <span className="contact-tile__label">E-posta</span>
+              <span className="contact-tile__value">info@bedriusta.de</span>
+            </a>
+            <div className="contact-tile contact-tile--muted">
+              <span className="contact-tile__label">WhatsApp</span>
+              <span className="contact-tile__value">Numara yakında</span>
+            </div>
+            <div className="contact-tile contact-tile--muted">
+              <span className="contact-tile__label">Telefon</span>
+              <span className="contact-tile__value">Numara yakında</span>
             </div>
           </div>
         </div>
