@@ -186,9 +186,8 @@ export function ImpressumPage() {
               <p>
                 Bir tüketici hakem kurulu (Verbraucherschlichtungsstelle) önünde anlaşmazlık çözümü
                 sürecine katılmakla yükümlü değiliz ve şu an için bu tür bir sürece katılmaya hazır
-                değiliz. Bir anlaşmazlık durumunda önce doğrudan{" "}
-                <a href="mailto:info@bedriusta.de">info@bedriusta.de</a> üzerinden bizimle iletişime
-                geçmeni rica ederiz.
+                değiliz. Bir anlaşmazlık durumunda önce doğrudan bize yazmanı rica ederiz:{" "}
+                <a href="mailto:info@bedriusta.de">info@bedriusta.de</a>
               </p>
             </section>
 

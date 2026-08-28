@@ -174,9 +174,8 @@ export function AgbPage() {
               <p>
                 Bu şartların herhangi bir hükmünün geçersiz olması, diğer hükümlerin geçerliliğini
                 etkilemez. Bu şartlarda değişiklik yapma hakkımız saklıdır; güncel sürüm her zaman bu
-                sayfada yayınlanır. Sorularınız için{" "}
-                <a href="mailto:info@bedriusta.de">info@bedriusta.de</a> adresinden bize
-                ulaşabilirsiniz.
+                sayfada yayınlanır. Sorularınız için bize yazabilirsiniz:{" "}
+                <a href="mailto:info@bedriusta.de">info@bedriusta.de</a>
               </p>
             </section>
 
