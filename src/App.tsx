@@ -60,6 +60,7 @@ const menuDessertImage = "/images/menu-dessert-portrait.webp";
 const menuCafeImage = "/images/menu-cafe-portrait-v1.webp";
 const menuVeganVegetarianImage = "/images/menu-vegan-vegetarisch-portrait-v1.jpg";
 const restaurantAddress = "K1 1-4, 68159 Mannheim, Almanya";
+const restaurantAddressWithName = `Bedri Usta ${restaurantAddress}`;
 const googleMapsPlaceLink = "https://maps.app.goo.gl/NZHsiEJmyTg9nVgRA";
 const restaurantOpeningHours = [
   { days: "Pazar — Perşembe", time: "08:00 — 24:00" },
@@ -302,13 +303,13 @@ function openNavigationTarget(href: string) {
 
 async function copyAddress(onCopied?: () => void) {
   if (navigator?.clipboard?.writeText) {
-    await navigator.clipboard.writeText(restaurantAddress);
+    await navigator.clipboard.writeText(restaurantAddressWithName);
     onCopied?.();
     return;
   }
 
   const textArea = document.createElement("textarea");
-  textArea.value = restaurantAddress;
+  textArea.value = restaurantAddressWithName;
   textArea.setAttribute("readonly", "");
   textArea.style.position = "fixed";
   textArea.style.left = "-9999px";
