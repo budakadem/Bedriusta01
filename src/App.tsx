@@ -700,6 +700,8 @@ function App() {
                 style={styles.menuRailItem}
               >
                 <Pressable
+                  onPress={() => openNavigationTarget("/menu")}
+                  accessibilityRole="link"
                   style={({ hovered, pressed }: any) => [
                     styles.menuCard,
                     (hovered || pressed) && styles.menuCardActive
@@ -1452,10 +1454,6 @@ function AboutPage({ isMobile }: { isMobile: boolean }) {
             Bedri Usta’nın yarım asrı aşan deneyimi, Mannheim’da Adana ocakbaşı
             kültürüyle buluşuyor. Aynı özen, aynı ustalık, yeni bir şehir.
           </Text>
-          <View style={[styles.heroActions, isMobile && styles.actionsMobile]}>
-            <Button label="Menüyü İncele" onPress={() => openNavigationTarget("/menu")} primary />
-            <Button label="Rezervasyon" onPress={() => openNavigationTarget("/rezervasyon")} />
-          </View>
         </View>
       </View>
     </>
@@ -2654,7 +2652,7 @@ function Footer({ isMobile }: { isMobile: boolean }) {
     { label: "Hakkımızda", href: "/hakkimizda" },
     { label: "Menü", href: "/menu" },
     { label: "Politikalarımız", href: "/politikalarimiz" },
-    { label: "Kariyer", href: "/jobs" }
+    { label: "Jobs", href: "/jobs" }
   ];
   const socialLinks = [
     { label: "Instagram", href: "https://www.instagram.com/mannheim_bedriusta" },

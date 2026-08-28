@@ -45,6 +45,8 @@ const translations: Record<string, Translation> = {
   "Doğum günü, aile yemeği, iş buluşması ya da sakin bir akşam için Bedri Usta deneyiminizi şimdiden planlayın.": { DE: "Planen Sie Ihr Bedri-Usta-Erlebnis für einen Geburtstag, ein Familienessen, ein Geschäftstreffen oder einen entspannten Abend.", ENG: "Plan your Bedri Usta experience for a birthday, family dinner, business meeting or a relaxed evening." },
   "Bedri Usta Mannheim adresini kopyala": { DE: "Adresse von Bedri Usta Mannheim kopieren", ENG: "Copy Bedri Usta Mannheim address" },
   "Adresi kopyala": { DE: "Adresse kopieren", ENG: "Copy address" },
+  "Kahvaltı": { DE: "Frühstück", ENG: "Breakfast" },
+  "K1 1-4, 68159 Mannheim, Almanya": { DE: "K1 1-4, 68159 Mannheim, Deutschland", ENG: "K1 1-4, 68159 Mannheim, Germany" },
   "Bedri Usta Mannheim adresini haritada aç": { DE: "Bedri Usta Mannheim auf der Karte öffnen", ENG: "Open Bedri Usta Mannheim on the map" },
   "Haritada aç ↗": { DE: "Karte öffnen ↗", ENG: "Open map ↗" },
   "Adres kopyalandı.": { DE: "Adresse kopiert.", ENG: "Address copied." },
