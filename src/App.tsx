@@ -700,8 +700,6 @@ function App() {
                 style={styles.menuRailItem}
               >
                 <Pressable
-                  onPress={() => openNavigationTarget("/menu")}
-                  accessibilityRole="link"
                   style={({ hovered, pressed }: any) => [
                     styles.menuCard,
                     (hovered || pressed) && styles.menuCardActive
