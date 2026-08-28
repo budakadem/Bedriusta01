@@ -81,6 +81,12 @@ function getRouteMetadata(pathname: string, language: SiteLanguage = "TR"): Page
       description: "Bedri Usta’nın ustalık yolculuğunu ve Mannheim’daki Türk misafirperverliği anlayışını keşfet."
     };
   }
+  if (pathname === "/iletisim") {
+    return {
+      title: "İletişim | Bedri Usta Mannheim",
+      description: "Bedri Usta Mannheim ile iletişime geç; adres, çalışma saatleri, telefon, e-posta ve sosyal medya kanallarını tek sayfada bul."
+    };
+  }
   if (pathname === "/politikalarimiz") {
     return {
       title: "Politikalarımız | Bedri Usta Mannheim",
@@ -176,7 +182,7 @@ const navItems = [
       { label: "Politikalarımız", href: "/politikalarimiz" }
     ]
   },
-  { label: "İletişim", href: "/#contact" },
+  { label: "İletişim", href: "/iletisim" },
   { label: "Menü", href: "/menu" },
   { label: "Rezervasyon", href: "/rezervasyon" }
 ];
@@ -192,7 +198,7 @@ const mobilePrimaryNavItems = [
   { label: "Hakkımızda", href: "/hakkimizda" },
   { label: "Jobs", href: "/jobs" },
   { label: "Politikalarımız", href: "/politikalarimiz" },
-  { label: "İletişim", href: "/#contact" },
+  { label: "İletişim", href: "/iletisim" },
   { label: "FAQ", href: "/#contact" }
 ];
 
@@ -434,6 +440,17 @@ function App() {
       <View style={[styles.page, styles.pageWithBottomDock]}>
         <Header isMobile={layout.isMobile} />
         <AboutPage isMobile={layout.isMobile} />
+        <Footer isMobile={layout.isMobile} />
+        <BackToTopButton desktop={!layout.showBottomDock} />
+        <MobileActionDock desktop={!layout.showBottomDock} />
+      </View>
+    );
+  }
+  if (pathname.replace(/\/+$/, "") === "/iletisim") {
+    return (
+      <View style={[styles.page, styles.pageWithBottomDock]}>
+        <Header isMobile={layout.isMobile} />
+        <ContactPage isMobile={layout.isMobile} tablet={layout.isTablet} compact={layout.compactActions} />
         <Footer isMobile={layout.isMobile} />
         <BackToTopButton desktop={!layout.showBottomDock} />
         <MobileActionDock desktop={!layout.showBottomDock} />
@@ -1315,6 +1332,123 @@ function RestaurantMenuPage({ isMobile }: { isMobile: boolean }) {
           </View>
         </View>
       </View>
+    </>
+  );
+}
+
+function ContactPage({ isMobile, tablet, compact }: { isMobile: boolean; tablet: boolean; compact: boolean }) {
+  const language = useSiteLanguage();
+  const [addressCopied, setAddressCopied] = useState(false);
+  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    const previousTitle = document.title;
+    document.title = translateSiteText("İletişim | Bedri Usta Mannheim", language);
+
+    return () => {
+      document.title = previousTitle;
+    };
+  }, [language]);
+
+  useEffect(() => () => {
+    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+  }, []);
+
+  const handleCopyAddress = async () => {
+    await copyAddress(() => {
+      setAddressCopied(true);
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+      copyTimerRef.current = setTimeout(() => setAddressCopied(false), 2600);
+    });
+  };
+
+  return (
+    <>
+      <View style={[styles.restaurantMenuHero, isMobile && styles.restaurantMenuHeroMobile]}>
+        <View style={styles.restaurantMenuHeroGlow} />
+        <View style={[styles.restaurantMenuHeroInner, isMobile && styles.restaurantMenuHeroInnerMobile]}>
+          <View style={styles.restaurantMenuHeroCopy}>
+            <Text style={styles.restaurantMenuEyebrow}>İLETİŞİM · BEDRİ USTA MANNHEIM</Text>
+            <Text
+              style={[
+                styles.restaurantMenuHeroTitle,
+                isMobile && styles.restaurantMenuHeroTitleMobile
+              ]}
+            >
+              Sana ulaşmanın en kolay yolu burada.
+            </Text>
+            <Text
+              style={[
+                styles.restaurantMenuHeroLead,
+                isMobile && styles.restaurantMenuHeroLeadMobile
+              ]}
+            >
+              Sorularınız, rezervasyon talepleriniz veya geri bildirimleriniz için bize
+              doğrudan ulaşabilir; adresimizi, çalışma saatlerimizi ve sosyal medya
+              kanallarımızı burada bulabilirsiniz.
+            </Text>
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.contactSection}>
+        <View style={[styles.contactPanel, isMobile && styles.contactPanelMobile]}>
+          <View style={styles.contactCopy}>
+            <View style={styles.contactAccentLine} />
+            <Text style={[styles.contactKicker, isMobile && styles.contactKickerMobile]}>
+              ADRES · ÇALIŞMA SAATLERİ
+            </Text>
+            <Text style={[styles.contactTitle, isMobile && styles.contactTitleMobile]}>
+              Bize Mannheim şehir merkezinde ulaşabilirsiniz.
+            </Text>
+
+            <View style={[styles.contactDetails, isMobile && styles.contactDetailsMobile]}>
+              {restaurantOpeningHours.map((hours) => (
+                <View key={hours.days} style={styles.contactDetail}>
+                  <Text style={styles.contactDetailLabel}>{hours.days}</Text>
+                  <Text style={styles.contactDetailValue}>{hours.time}</Text>
+                </View>
+              ))}
+              <View style={styles.contactDetail}>
+                <Text style={styles.contactDetailLabel}>MANNHEIM</Text>
+                <Text style={styles.contactDetailValue}>K1 1-4 · 68159</Text>
+              </View>
+            </View>
+            <View style={styles.contactAddressActions}>
+              <Pressable
+                onPress={handleCopyAddress}
+                accessibilityRole="button"
+                accessibilityLabel="Bedri Usta Mannheim adresini kopyala"
+                style={({ hovered, pressed }: any) => [
+                  styles.contactAddressAction,
+                  (hovered || pressed) && styles.contactAddressActionActive
+                ]}
+              >
+                <Text style={styles.contactAddressActionText}>Adresi kopyala</Text>
+              </Pressable>
+              <Text style={styles.contactAddressDivider}>·</Text>
+              <Pressable
+                onPress={openMapForAddress}
+                accessibilityRole="link"
+                accessibilityLabel="Bedri Usta Mannheim adresini haritada aç"
+                style={({ hovered, pressed }: any) => [
+                  styles.contactAddressAction,
+                  (hovered || pressed) && styles.contactAddressActionActive
+                ]}
+              >
+                <Text style={styles.contactAddressActionText}>Haritada aç ↗</Text>
+              </Pressable>
+            </View>
+            {addressCopied && (
+              <Text style={styles.contactAddressCopied} accessibilityLiveRegion="polite">
+                Adres kopyalandı.
+              </Text>
+            )}
+          </View>
+        </View>
+      </View>
+
+      <QuickActionsSection compact={compact} tablet={tablet} />
     </>
   );
 }

@@ -21,6 +21,11 @@ const pages = [
     description: "Bedri Usta’nın ustalık yolculuğunu ve Mannheim’daki Türk misafirperverliği anlayışını keşfet."
   },
   {
+    route: "/iletisim",
+    title: "İletişim | Bedri Usta Mannheim",
+    description: "Bedri Usta Mannheim ile iletişime geç; adres, çalışma saatleri, telefon, e-posta ve sosyal medya kanallarını tek sayfada bul."
+  },
+  {
     route: "/politikalarimiz",
     title: "Politikalarımız | Bedri Usta Mannheim",
     description: "Bedri Usta Mannheim kalite, hijyen, gıda güvenliği ve veri koruma politikalarını incele."
