@@ -44,6 +44,12 @@
 .privacy-cookie-manage { margin-top: 19px; min-height: 44px; padding: 0 20px; border: 1px solid var(--privacy-red); border-radius: 999px; color: var(--privacy-red); background: transparent; cursor: pointer; font: 800 11px/1.4 "Karla", sans-serif; letter-spacing: .07em; text-transform: uppercase; }
 .privacy-cookie-manage:hover { color: #fff; background: var(--privacy-red); }
 .privacy-cookie-manage:focus-visible { outline: 3px solid var(--privacy-gold); outline-offset: 4px; }
+.legal-pending { display: inline-block; margin: 2px 0; padding: 3px 11px; border: 1px solid #e2a19a; border-radius: 999px; color: #a8231a; background: #fdeceb; font: 800 10px/1.6 "Karla", sans-serif; letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; }
+.legal-fields { margin-top: 14px; display: grid; gap: 9px; }
+.legal-field { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; font-size: 14px; color: #554842; }
+.legal-field-label { min-width: 0; color: var(--privacy-ink); font-weight: 800; }
+.legal-field-value { margin: 0; }
+.legal-intro-note { margin-top: 19px; padding: 14px 16px; border-left: 4px solid #e2a19a; color: #7a2b23; background: #fdeceb; font-size: 12px; line-height: 1.65; }
 .privacy-recruitment-grid { margin-top: 25px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid #d8ccc3; border-left: 1px solid #d8ccc3; }
 .privacy-recruitment-grid > div { min-width: 0; padding: 20px; border-right: 1px solid #d8ccc3; border-bottom: 1px solid #d8ccc3; background: #fffdfa; }
 .privacy-recruitment-grid strong, .privacy-recruitment-retention strong { color: var(--privacy-red); font-size: 13px; }

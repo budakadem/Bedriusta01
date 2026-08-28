@@ -44,6 +44,16 @@ const pages = [
     route: "/jobs",
     title: "Ekibimize Katıl | Bedri Usta Mannheim",
     description: "Bedri Usta Mannheim açık pozisyonlarını keşfet ve hızlıca başvur."
+  },
+  {
+    route: "/impressum",
+    title: "Impressum | Bedri Usta Mannheim",
+    description: "Bedri Usta Mannheim için § 5 DDG ve § 18 Abs. 2 MStV kapsamındaki yasal işletme bilgilendirmesi."
+  },
+  {
+    route: "/agb",
+    title: "AGB | Bedri Usta Mannheim",
+    description: "Bedri Usta Mannheim rezervasyon ve restoran ziyareti için geçerli genel işlem şartları."
   }
 ];
 

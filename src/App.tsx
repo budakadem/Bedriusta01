@@ -17,6 +17,8 @@ import {
 } from "./menuData";
 import { NotificationCenter } from "./components/NotificationCenter";
 import { openCookiePreferences } from "./components/CookieNotice";
+import { ImpressumPage } from "./components/ImpressumPage";
+import { AgbPage } from "./components/AgbPage";
 import { CustomerReviewSection } from "./components/CustomerReviewSection";
 import { getJobsPageMetadata, JobsPage, type PageMetadata } from "./components/JobsPage";
 import { PrivacyPage } from "./components/PrivacyPage";
@@ -103,6 +105,18 @@ function getRouteMetadata(pathname: string, language: SiteLanguage = "TR"): Page
     };
   }
   if (pathname === "/jobs" || pathname.startsWith("/jobs/")) return getJobsPageMetadata(pathname, language);
+  if (pathname === "/impressum") {
+    return {
+      title: "Impressum | Bedri Usta Mannheim",
+      description: "Bedri Usta Mannheim için § 5 DDG ve § 18 Abs. 2 MStV kapsamındaki yasal işletme bilgilendirmesi."
+    };
+  }
+  if (pathname === "/agb") {
+    return {
+      title: "AGB | Bedri Usta Mannheim",
+      description: "Bedri Usta Mannheim rezervasyon ve restoran ziyareti için geçerli genel işlem şartları."
+    };
+  }
 
   return {
     title: "Bedri Usta Mannheim",
@@ -182,10 +196,10 @@ const mobilePrimaryNavItems = [
 ];
 
 const mobileLegalNavItems: Array<{ label: string; href?: string; disabled?: boolean; action?: () => void }> = [
-  { label: "Impressum", href: "/#policies" },
+  { label: "Impressum", href: "/impressum" },
   { label: "Datenschutz", href: "/datenschutz" },
   { label: "Cookie-Einstellungen", href: "/datenschutz#cookies", action: openCookiePreferences },
-  { label: "AGB", disabled: true }
+  { label: "AGB", href: "/agb" }
 ];
 
 const menuItems = [
@@ -452,6 +466,28 @@ function App() {
       <View style={[styles.page, styles.pageWithBottomDock]}>
         <Header isMobile={layout.isMobile} />
         <PrivacyPage />
+        <Footer isMobile={layout.isMobile} />
+        <BackToTopButton desktop={!layout.showBottomDock} />
+        <MobileActionDock desktop={!layout.showBottomDock} />
+      </View>
+    );
+  }
+  if (pathname.replace(/\/+$/, "") === "/impressum") {
+    return (
+      <View style={[styles.page, styles.pageWithBottomDock]}>
+        <Header isMobile={layout.isMobile} />
+        <ImpressumPage />
+        <Footer isMobile={layout.isMobile} />
+        <BackToTopButton desktop={!layout.showBottomDock} />
+        <MobileActionDock desktop={!layout.showBottomDock} />
+      </View>
+    );
+  }
+  if (pathname.replace(/\/+$/, "") === "/agb") {
+    return (
+      <View style={[styles.page, styles.pageWithBottomDock]}>
+        <Header isMobile={layout.isMobile} />
+        <AgbPage />
         <Footer isMobile={layout.isMobile} />
         <BackToTopButton desktop={!layout.showBottomDock} />
         <MobileActionDock desktop={!layout.showBottomDock} />
@@ -728,7 +764,7 @@ function App() {
             <View style={[styles.contactDetails, layout.isMobile && styles.contactDetailsMobile]}>
               {restaurantOpeningHours.map((hours) => (
                 <View key={hours.days} style={styles.contactDetail}>
-                  <Text style={styles.contactDetailLabel}>{hours.days.toLocaleUpperCase("tr-TR")}</Text>
+                  <Text style={styles.contactDetailLabel}>{hours.days}</Text>
                   <Text style={styles.contactDetailValue}>{hours.time}</Text>
                 </View>
               ))}
@@ -1732,7 +1768,7 @@ function HeaderUtilities({ compact = false }: { compact?: boolean }) {
         <Pressable
           onPress={() => setLanguageOpen((open) => !open)}
           accessibilityRole="button"
-          accessibilityLabel={`Dil seçimi, seçili dil ${selectedLanguage}`}
+          accessibilityLabel={`${translateSiteText("Dil seçimi, seçili dil", selectedLanguage)} ${selectedLanguage}`}
           accessibilityState={{ expanded: languageOpen }}
           style={({ hovered, pressed }: any) => [
             styles.languageMark,
@@ -2626,10 +2662,10 @@ function Footer({ isMobile }: { isMobile: boolean }) {
     { label: "E-posta", href: "mailto:info@bedriusta.de" }
   ];
   const legalLinks: Array<{ label: string; href?: string; disabled?: boolean; action?: () => void }> = [
-    { label: "Impressum", href: "#policies" },
+    { label: "Impressum", href: "/impressum" },
     { label: "Datenschutz", href: "/datenschutz" },
     { label: "Cookie-Einstellungen", href: "/datenschutz#cookies", action: openCookiePreferences },
-    { label: "AGB", disabled: true },
+    { label: "AGB", href: "/agb" },
     { label: "FAQ", href: "/#contact" }
   ];
 
@@ -5533,8 +5569,9 @@ const styles = StyleSheet.create({
     fontSize: 9,
     lineHeight: 14,
     letterSpacing: 2.1,
-    fontWeight: "800"
-  },
+    fontWeight: "800",
+    textTransform: "uppercase"
+  } as any,
   contactDetailValue: {
     color: colors.ink,
     fontFamily: "Heebo, sans-serif",

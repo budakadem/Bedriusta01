@@ -102,6 +102,8 @@ export const formTranslations: Record<string, { DE: string; ENG: string }> = {
   "Tarih": { DE: "Datum", ENG: "Date" },
   "Saat": { DE: "Uhrzeit", ENG: "Time" },
   "Kişi": { DE: "Personen", ENG: "Guests" },
+  "kişi": { DE: "Personen", ENG: "guests" },
+  "kişiden fazla, grup talebi": { DE: "Personen, Gruppenanfrage", ENG: "guests, group request" },
   "Referans": { DE: "Referenz", ENG: "Reference" },
   "Ana sayfaya dön": { DE: "Zur Startseite", ENG: "Back to home" },
   "Önceki sayfaya dön": { DE: "Zur vorherigen Seite", ENG: "Back to previous page" },

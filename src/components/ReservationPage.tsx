@@ -347,7 +347,7 @@ export function ReservationPage() {
                   <select value={form.partySize} onChange={(event) => changePartySize(event.target.value)} aria-invalid={Boolean(errors.partySize)}>
                     <option value="">Seçiniz</option>
                     {Array.from({ length: reservationDefaults.groupThreshold }, (_, index) => index + 1).map((count) => <option key={count} value={count}>{count} kişi</option>)}
-                    <option value="group">{reservationDefaults.groupThreshold}'den fazla kişi, grup talebi</option>
+                    <option value="group">{reservationDefaults.groupThreshold} kişiden fazla, grup talebi</option>
                   </select>
                   <FieldError>{errors.partySize}</FieldError>
                 </label>
