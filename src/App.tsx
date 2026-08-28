@@ -2412,8 +2412,9 @@ function QuickActionsSection({ compact, tablet }: { compact: boolean; tablet: bo
   const contactActions: QuickActionItem[] = [
     {
       label: "İletişim Formu",
-      detail: "Yakında aktif",
-      icon: "contact"
+      detail: "Mesaj gönder",
+      icon: "contact",
+      action: () => navigateToPath("/iletisim#mesaj-formu")
     },
     {
       label: "E-posta",

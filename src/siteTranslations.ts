@@ -9,6 +9,7 @@ const translations: Record<string, Translation> = {
   "Hakkımızda": { DE: "Über uns", ENG: "About us" },
   "Politikalarımız": { DE: "Unsere Richtlinien", ENG: "Our policies" },
   "İletişim": { DE: "Kontakt", ENG: "Contact" },
+  "İletişim Formu": { DE: "Kontaktformular", ENG: "Contact Form" },
   "Rezervasyon": { DE: "Reservierung", ENG: "Reservation" },
   "Menü": { DE: "Speisekarte", ENG: "Menu" },
   "Cookie-Einstellungen": { DE: "Cookie-Einstellungen", ENG: "Cookie settings" },

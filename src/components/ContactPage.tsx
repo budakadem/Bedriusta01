@@ -1,5 +1,6 @@
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useEffect, useState } from "react";
 import "./reservation-page.css";
+import "./contact-page.css";
 
 const restaurantAddress = "K1 1-4, 68159 Mannheim, Almanya";
 const restaurantAddressWithName = `Bedri Usta ${restaurantAddress}`;
@@ -38,11 +39,21 @@ async function copyAddress(onCopied?: () => void) {
   onCopied?.();
 }
 
+function scrollToForm() {
+  document.getElementById("mesaj-formu")?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 export function ContactPage() {
   const [form, setForm] = useState<ContactForm>(initialForm);
   const [errors, setErrors] = useState<Partial<Record<keyof ContactForm, string>>>({});
   const [addressCopied, setAddressCopied] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (!hash) return;
+    window.requestAnimationFrame(() => document.querySelector(hash)?.scrollIntoView({ block: "start" }));
+  }, []);
 
   const update = (field: keyof ContactForm, value: string) => {
     setForm((previous) => ({ ...previous, [field]: value }));
@@ -85,12 +96,31 @@ export function ContactPage() {
 
       <section className="reservation-content">
         <div className="reservation-shell reservation-shell--form">
+          <div className="contact-tiles">
+            <button type="button" className="contact-tile" onClick={scrollToForm}>
+              <span className="contact-tile__label">İletişim Formu</span>
+              <span className="contact-tile__value">Mesaj gönder</span>
+            </button>
+            <a className="contact-tile" href="mailto:info@bedriusta.de">
+              <span className="contact-tile__label">E-posta</span>
+              <span className="contact-tile__value">info@bedriusta.de</span>
+            </a>
+            <div className="contact-tile contact-tile--muted">
+              <span className="contact-tile__label">WhatsApp</span>
+              <span className="contact-tile__value">Numara yakında</span>
+            </div>
+            <div className="contact-tile contact-tile--muted">
+              <span className="contact-tile__label">Telefon</span>
+              <span className="contact-tile__value">Numara yakında</span>
+            </div>
+          </div>
+
           <div className="reservation-form">
             <div className="reservation-steps">
               <section className="reservation-section" aria-labelledby="contact-info">
                 <div className="reservation-section__heading">
                   <span>01</span>
-                  <div><h2 id="contact-info">Adres ve iletişim</h2><p>Bize en hızlı buradan ulaşabilirsin.</p></div>
+                  <div><h2 id="contact-info">Adres ve çalışma saatleri</h2><p>Bize Mannheim şehir merkezinde ulaşabilirsin.</p></div>
                 </div>
 
                 <div className="reservation-section__body">
@@ -109,23 +139,17 @@ export function ContactPage() {
                   </div>
 
                   <div className="reservation-grid reservation-grid--two">
-                    <a className="reservation-map-link" href="mailto:info@bedriusta.de">E-posta: info@bedriusta.de</a>
+                    <button type="button" className="reservation-map-link" onClick={handleCopyAddress}>
+                      Adresi kopyala
+                    </button>
                     <a className="reservation-map-link" href={googleMapsPlaceLink} target="_blank" rel="noreferrer">Haritada aç ↗</a>
                   </div>
-                  <div className="reservation-grid reservation-grid--two">
-                    <div className="reservation-field"><span>WhatsApp</span><p style={{ margin: 0 }}>Numara yakında</p></div>
-                    <div className="reservation-field"><span>Telefon</span><p style={{ margin: 0 }}>Numara yakında</p></div>
-                  </div>
-
-                  <button type="button" className="reservation-map-link" onClick={handleCopyAddress}>
-                    Adresi kopyala
-                  </button>
                   {addressCopied && <p className="reservation-verified reservation-verified--panel">Adres kopyalandı.</p>}
                 </div>
               </section>
 
               {submitted ? (
-                <section className="reservation-section" aria-labelledby="contact-sent">
+                <section className="reservation-section" id="mesaj-formu" aria-labelledby="contact-sent">
                   <div className="reservation-section__heading">
                     <span>02</span>
                     <div><h2 id="contact-sent">Mesajın alındı</h2></div>
@@ -140,7 +164,7 @@ export function ContactPage() {
                 </section>
               ) : (
                 <form onSubmit={submitContactForm} noValidate>
-                  <section className="reservation-section" aria-labelledby="contact-form">
+                  <section className="reservation-section" id="mesaj-formu" aria-labelledby="contact-form">
                     <div className="reservation-section__heading">
                       <span>02</span>
                       <div><h2 id="contact-form">Mesaj gönder</h2><p>Sorunu veya talebini bize ilet.</p></div>
