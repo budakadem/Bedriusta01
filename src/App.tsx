@@ -61,7 +61,7 @@ const menuDessertImage = "/images/menu-dessert-portrait.webp";
 const menuCafeImage = "/images/menu-cafe-portrait-v1.webp";
 const menuVeganVegetarianImage = "/images/menu-vegan-vegetarisch-portrait-v1.jpg";
 const restaurantAddress = "K1 1-4, 68159 Mannheim, Almanya";
-const restaurantAddressWithName = `Bedri Usta ${restaurantAddress}`;
+const restaurantAddressWithName = "Bedri Usta K1 1-4, 68159 Mannheim, Deutschland";
 const googleMapsPlaceLink = "https://maps.app.goo.gl/NZHsiEJmyTg9nVgRA";
 const restaurantOpeningHours = [
   { days: "Pazar — Perşembe", time: "08:00 — 24:00" },

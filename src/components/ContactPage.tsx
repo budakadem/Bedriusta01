@@ -3,7 +3,7 @@ import "./reservation-page.css";
 import "./contact-page.css";
 
 const restaurantAddress = "K1 1-4, 68159 Mannheim, Almanya";
-const restaurantAddressWithName = `Bedri Usta ${restaurantAddress}`;
+const restaurantAddressWithName = "Bedri Usta K1 1-4, 68159 Mannheim, Deutschland";
 const googleMapsPlaceLink = "https://maps.app.goo.gl/NZHsiEJmyTg9nVgRA";
 const openingHours = [
   { days: "Pazar — Perşembe", time: "08:00 — 24:00" },
@@ -97,7 +97,7 @@ export function ContactPage() {
       <section className="reservation-content">
         <div className="reservation-shell reservation-shell--form">
           <div className="reservation-form">
-            <div className="reservation-steps">
+            <div className="contact-steps">
               <section className="reservation-section" aria-labelledby="contact-info">
                 <div className="reservation-section__heading">
                   <span>01</span>
