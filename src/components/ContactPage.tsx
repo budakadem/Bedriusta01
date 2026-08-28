@@ -191,18 +191,22 @@ export function ContactPage() {
 
           <div className="contact-tiles">
             <button type="button" className="contact-tile" onClick={scrollToForm}>
+              <span className="contact-tile__icon"><img src="/icons/ui/contact.svg" alt="" /></span>
               <span className="contact-tile__label">İletişim Formu</span>
               <span className="contact-tile__value">Mesaj gönder</span>
             </button>
             <a className="contact-tile" href="mailto:info@bedriusta.de">
+              <span className="contact-tile__icon"><img src="/icons/ui/email.svg" alt="" /></span>
               <span className="contact-tile__label">E-posta</span>
               <span className="contact-tile__value">info@bedriusta.de</span>
             </a>
             <div className="contact-tile contact-tile--muted">
+              <span className="contact-tile__icon"><img src="/icons/ui/whatsapp.svg" alt="" /></span>
               <span className="contact-tile__label">WhatsApp</span>
               <span className="contact-tile__value">Numara yakında</span>
             </div>
             <div className="contact-tile contact-tile--muted">
+              <span className="contact-tile__icon"><img src="/icons/ui/phone.svg" alt="" /></span>
               <span className="contact-tile__label">Telefon</span>
               <span className="contact-tile__value">Numara yakında</span>
             </div>
