@@ -54,6 +54,7 @@ const menuBreakfastImage = "/images/menu-kahvalti-portrait.webp";
 const menuMezeImage = "/images/menu-meze-portrait.webp";
 const menuDessertImage = "/images/menu-dessert-portrait.webp";
 const menuCafeImage = "/images/menu-cafe-portrait-v1.webp";
+const menuVeganVegetarianImage = "/images/menu-vegan-vegetarisch-portrait-v1.jpg";
 const restaurantAddress = "K1 1-4, 68159 Mannheim, Almanya";
 const googleMapsPlaceLink = "https://maps.app.goo.gl/NZHsiEJmyTg9nVgRA";
 const restaurantOpeningHours = [
@@ -209,7 +210,7 @@ const menuItems = [
   },
   {
     title: "Kahvaltı",
-    text: "Çay, sıcak ekmek ve özenle seçilmiş tatlarla güne sıcak bir başlangıç.",
+    text: "Geleneksel tatlar, çay ve özenle hazırlanan seçeneklerle güne keyifli bir başlangıç.",
     image: menuBreakfastImage
   },
   {
@@ -221,6 +222,11 @@ const menuItems = [
     title: "Café",
     text: "Kahveden pastaya, sıcak ve soğuk içeceklerle Mannheim’ın yeni buluşma noktası.",
     image: menuCafeImage
+  },
+  {
+    title: "Vegan & Vegetarisch",
+    text: "Taze yeşillikler, özenle hazırlanan salatalar ve zengin vegan–vejetaryen seçeneklerle sofraya ferah bir denge.",
+    image: menuVeganVegetarianImage
   }
 ];
 

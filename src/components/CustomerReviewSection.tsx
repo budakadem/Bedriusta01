@@ -8,7 +8,7 @@ const FEEDBACK_EMAIL = "info@bedriusta.de";
 const copy = {
   TR: {
     eyebrow: "DENEYİMİNİZ",
-    title: "5 Yıldız İçin Çalışıyoruz",
+    title: "Memnuniyetiniz Bizim İçin Değerli",
     subtitle: "Lezzetimizi ve deneyiminizi nasıl buldunuz?",
     heritage: "Her tabakta Bedri Usta’nın 50 yılı aşan değerlerine sahip çıkıyoruz: dürüst ustalık, gerçek misafirperverlik ve insanları aynı sofrada buluşturan lezzet.",
     googleStrong: "Google'da değerlendir",
@@ -23,7 +23,7 @@ const copy = {
   },
   DE: {
     eyebrow: "IHR ERLEBNIS",
-    title: "Wir geben alles für 5 Sterne.",
+    title: "Ihre Zufriedenheit liegt uns am Herzen.",
     subtitle: "Wie haben Ihnen unsere Küche und Ihr Besuch gefallen?",
     heritage: "Mit jedem Teller bewahren wir die Werte, für die Bedri Usta seit über 50 Jahren steht: ehrliches Handwerk, echte Gastfreundschaft und Geschmack, der Menschen verbindet.",
     googleStrong: "Bei Google bewerten",
@@ -38,7 +38,7 @@ const copy = {
   },
   ENG: {
     eyebrow: "YOUR EXPERIENCE",
-    title: "We Give Our Best for 5 Stars",
+    title: "Your Satisfaction Matters to Us",
     subtitle: "How did you enjoy our food and your experience?",
     heritage: "With every plate, we uphold the values Bedri Usta has stood for over 50 years: honest craftsmanship, genuine hospitality and flavours that bring people together.",
     googleStrong: "Review us on Google",
@@ -96,7 +96,6 @@ export function CustomerReviewSection() {
       <div className="customer-review__inner">
         <p className="customer-review__eyebrow">
           <span>{text.eyebrow}</span>
-          <span className="customer-review__eyebrow-stars" aria-hidden="true">★★★★★</span>
         </p>
         <h2 id="customer-review-title">{text.title}</h2>
         <p className="customer-review__subtitle">{text.subtitle}</p>
