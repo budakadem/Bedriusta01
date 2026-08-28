@@ -41,6 +41,9 @@
 .privacy-article address strong { color: var(--privacy-ink); }
 .privacy-article a { color: var(--privacy-red); font-weight: 800; text-underline-offset: 3px; overflow-wrap: anywhere; }
 .privacy-note { margin-top: 19px; padding: 14px 16px; border-left: 4px solid var(--privacy-gold); color: #5d4e46; background: #eee7e1; font-size: 12px; line-height: 1.65; }
+.privacy-cookie-manage { margin-top: 19px; min-height: 44px; padding: 0 20px; border: 1px solid var(--privacy-red); border-radius: 999px; color: var(--privacy-red); background: transparent; cursor: pointer; font: 800 11px/1.4 "Karla", sans-serif; letter-spacing: .07em; text-transform: uppercase; }
+.privacy-cookie-manage:hover { color: #fff; background: var(--privacy-red); }
+.privacy-cookie-manage:focus-visible { outline: 3px solid var(--privacy-gold); outline-offset: 4px; }
 .privacy-recruitment-grid { margin-top: 25px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid #d8ccc3; border-left: 1px solid #d8ccc3; }
 .privacy-recruitment-grid > div { min-width: 0; padding: 20px; border-right: 1px solid #d8ccc3; border-bottom: 1px solid #d8ccc3; background: #fffdfa; }
 .privacy-recruitment-grid strong, .privacy-recruitment-retention strong { color: var(--privacy-red); font-size: 13px; }

@@ -1,4 +1,6 @@
 import { type FormEvent, useEffect, useState } from "react";
+import { getIntlLocale, type SiteLanguage, useSiteLanguage } from "../siteLanguage";
+import { translateSiteText } from "../siteTranslations";
 import "./jobs-page.css";
 
 type Job = {
@@ -257,20 +259,20 @@ const jobs: Job[] = [
   }
 ];
 
-export function getJobsPageMetadata(pathname: string): PageMetadata {
+export function getJobsPageMetadata(pathname: string, language: SiteLanguage = "TR"): PageMetadata {
   const pathParts = pathname.replace(/\/+$/, "").split("/");
   const job = jobs.find((item) => item.slug === pathParts[2]);
 
   if (job) {
     return {
-      title: `${job.title} | Bedri Usta Mannheim`,
-      description: `${job.summary} Pozisyonu incele ve Bedri Usta Mannheim ekibine başvur.`
+      title: `${translateSiteText(job.title, language)} | Bedri Usta Mannheim`,
+      description: `${translateSiteText(job.summary, language)} ${language === "DE" ? "Stelle ansehen und beim Team von Bedri Usta Mannheim bewerben." : language === "ENG" ? "View the role and apply to join the Bedri Usta Mannheim team." : "Pozisyonu incele ve Bedri Usta Mannheim ekibine başvur."}`
     };
   }
 
   return {
-    title: "Ekibimize Katıl | Bedri Usta Mannheim",
-    description: "Bedri Usta Mannheim açık pozisyonlarını keşfet ve hızlıca başvur."
+    title: translateSiteText("Ekibimize Katıl | Bedri Usta Mannheim", language),
+    description: translateSiteText("Bedri Usta Mannheim açık pozisyonlarını keşfet ve hızlıca başvur.", language)
   };
 }
 
@@ -315,11 +317,12 @@ function ApplicationProgress({ activeStep }: { activeStep: 1 | 2 }) {
   );
 }
 
-const calendarWeekdays = ["Pt", "Sa", "Ça", "Pe", "Cu", "Ct", "Pa"];
+const calendarWeekdays = {
+  TR: ["Pt", "Sa", "Ça", "Pe", "Cu", "Ct", "Pa"],
+  DE: ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"],
+  ENG: ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"]
+} as const;
 const unavailableInterviewWeekdays = new Set([0, 1, 6]);
-const calendarMonthFormatter = new Intl.DateTimeFormat("tr-TR", { month: "long", year: "numeric" });
-const calendarDateFormatter = new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "long", year: "numeric", weekday: "long" });
-
 function toDateKey(date: Date) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -328,6 +331,10 @@ function toDateKey(date: Date) {
 }
 
 function AppointmentCalendar({ value, onChange }: { value: string; onChange: (value: string) => void }) {
+  const language = useSiteLanguage();
+  const locale = getIntlLocale(language);
+  const calendarMonthFormatter = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" });
+  const calendarDateFormatter = new Intl.DateTimeFormat(locale, { day: "numeric", month: "long", year: "numeric", weekday: "long" });
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const [visibleMonth, setVisibleMonth] = useState(() => new Date(today.getFullYear(), today.getMonth(), 1));
@@ -349,7 +356,7 @@ function AppointmentCalendar({ value, onChange }: { value: string; onChange: (va
         <button type="button" aria-label="Sonraki ay" onClick={() => setVisibleMonth(new Date(visibleMonth.getFullYear(), visibleMonth.getMonth() + 1, 1))}>→</button>
       </div>
       <div className="appointment-calendar__weekdays" aria-hidden="true">
-        {calendarWeekdays.map((day) => <span key={day}>{day}</span>)}
+        {calendarWeekdays[language].map((day) => <span key={day}>{day}</span>)}
       </div>
       <div className="appointment-calendar__days">
         {days.map((date) => {

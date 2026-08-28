@@ -1,6 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
+import { CookieNotice } from "./components/CookieNotice";
+import { LocalizationBoundary } from "./components/LocalizationBoundary";
 import "./styles.css";
 
 const root = document.getElementById("root");
@@ -11,7 +13,10 @@ if (!root) {
 
 createRoot(root).render(
   <StrictMode>
-    <App />
+    <LocalizationBoundary>
+      <App />
+    </LocalizationBoundary>
+    <CookieNotice />
   </StrictMode>
 );
 

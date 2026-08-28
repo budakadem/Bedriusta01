@@ -16,11 +16,13 @@ import {
   type MenuDiet
 } from "./menuData";
 import { NotificationCenter } from "./components/NotificationCenter";
+import { openCookiePreferences } from "./components/CookieNotice";
 import { CustomerReviewSection } from "./components/CustomerReviewSection";
 import { getJobsPageMetadata, JobsPage, type PageMetadata } from "./components/JobsPage";
 import { PrivacyPage } from "./components/PrivacyPage";
 import { ReservationPage } from "./components/ReservationPage";
-import { getSiteLanguage, setSiteLanguage, subscribeToSiteLanguage, type SiteLanguage } from "./siteLanguage";
+import { getSiteLanguage, setSiteLanguage, subscribeToSiteLanguage, type SiteLanguage, useSiteLanguage } from "./siteLanguage";
+import { translateSiteText } from "./siteTranslations";
 
 const logoImage = "/images/brand/bedri-usta-logo-rectangular.png";
 const portraitImage = "/images/bedri-portrait.png";
@@ -63,7 +65,7 @@ const restaurantOpeningHours = [
 ] as const;
 const defaultShareImage = "/images/mannheim-editorial-hero-v2.webp";
 
-function getRouteMetadata(pathname: string): PageMetadata {
+function getRouteMetadata(pathname: string, language: SiteLanguage = "TR"): PageMetadata {
   if (pathname === "/menu") {
     return {
       title: "Menü | Bedri Usta Mannheim",
@@ -100,7 +102,7 @@ function getRouteMetadata(pathname: string): PageMetadata {
       description: "Bedri Usta Mannheim için kişi sayını, tarihini ve saatini seç; rezervasyonunu veya grup talebini güvenli biçimde hazırla."
     };
   }
-  if (pathname === "/jobs" || pathname.startsWith("/jobs/")) return getJobsPageMetadata(pathname);
+  if (pathname === "/jobs" || pathname.startsWith("/jobs/")) return getJobsPageMetadata(pathname, language);
 
   return {
     title: "Bedri Usta Mannheim",
@@ -118,8 +120,12 @@ function ensureMeta(selector: string, attributes: Record<string, string>, conten
   element.setAttribute("content", content);
 }
 
-function updatePageMetadata(pathname: string) {
-  const metadata = getRouteMetadata(pathname);
+function updatePageMetadata(pathname: string, language: SiteLanguage) {
+  const routeMetadata = getRouteMetadata(pathname, language);
+  const metadata = {
+    title: translateSiteText(routeMetadata.title, language),
+    description: translateSiteText(routeMetadata.description, language)
+  };
   const canonicalUrl = new URL(pathname || "/", window.location.origin).toString();
   const imageUrl = new URL(defaultShareImage, window.location.origin).toString();
   let canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
@@ -175,10 +181,10 @@ const mobilePrimaryNavItems = [
   { label: "FAQ", href: "/#contact" }
 ];
 
-const mobileLegalNavItems: Array<{ label: string; href?: string; disabled?: boolean }> = [
+const mobileLegalNavItems: Array<{ label: string; href?: string; disabled?: boolean; action?: () => void }> = [
   { label: "Impressum", href: "/#policies" },
   { label: "Datenschutz", href: "/datenschutz" },
-  { label: "Cookie-Einstellungen", href: "/datenschutz#cookies" },
+  { label: "Cookie-Einstellungen", href: "/datenschutz#cookies", action: openCookiePreferences },
   { label: "AGB", disabled: true }
 ];
 
@@ -361,6 +367,7 @@ function ScrollReveal({
 }
 
 function App() {
+  const language = useSiteLanguage();
   const { width } = useWindowDimensions();
   const [pathname, setPathname] = useState(() => window.location.pathname);
   const [reservationAddressCopied, setReservationAddressCopied] = useState(false);
@@ -393,8 +400,8 @@ function App() {
   };
 
   useEffect(() => {
-    updatePageMetadata(pathname.replace(/\/+$/, "") || "/");
-  }, [pathname]);
+    updatePageMetadata(pathname.replace(/\/+$/, "") || "/", language);
+  }, [language, pathname]);
 
   if (pathname.replace(/\/+$/, "") === "/politikalarimiz") {
     return (
@@ -1276,14 +1283,15 @@ function RestaurantMenuPage({ isMobile }: { isMobile: boolean }) {
 }
 
 function AboutPage({ isMobile }: { isMobile: boolean }) {
+  const language = useSiteLanguage();
   useEffect(() => {
     const previousTitle = document.title;
-    document.title = "Hakkımızda | Bedri Usta Mannheim";
+    document.title = translateSiteText("Hakkımızda | Bedri Usta Mannheim", language);
 
     return () => {
       document.title = previousTitle;
     };
-  }, []);
+  }, [language]);
 
   const journey = [
     {
@@ -1419,14 +1427,15 @@ function AboutPage({ isMobile }: { isMobile: boolean }) {
 }
 
 function PoliciesPage({ isMobile }: { isMobile: boolean }) {
+  const language = useSiteLanguage();
   useEffect(() => {
     const previousTitle = document.title;
-    document.title = "Politikalarımız | Bedri Usta Mannheim";
+    document.title = translateSiteText("Politikalarımız | Bedri Usta Mannheim", language);
 
     return () => {
       document.title = previousTitle;
     };
-  }, []);
+  }, [language]);
 
   const policies = [
     {
@@ -1635,7 +1644,10 @@ function Header({ isMobile }: { isMobile: boolean }) {
             {mobileLegalNavItems.map((item, index) => (
               <Pressable
                 key={item.label}
-                onPress={item.href ? () => {
+                onPress={item.action ? () => {
+                  item.action?.();
+                  closeMobileMenu();
+                } : item.href ? () => {
                   openNavigationTarget(item.href as string);
                   closeMobileMenu();
                 } : undefined}
@@ -1667,6 +1679,8 @@ function HeaderUtilities({ compact = false }: { compact?: boolean }) {
   const [selectedLanguage, setSelectedLanguage] =
     useState<(typeof languageOptions)[number]["code"]>(() => getSiteLanguage());
   const languageSelectorRef = useRef<any>(null);
+
+  useEffect(() => subscribeToSiteLanguage(setSelectedLanguage), []);
 
   useEffect(() => {
     if (!languageOpen) return;
@@ -1780,7 +1794,7 @@ function HeaderUtilities({ compact = false }: { compact?: boolean }) {
               );
             })}
             <Text style={styles.languageDropdownNote}>
-              Diğer dillerin içerikleri daha sonra bağlanacaktır.
+              Dil tercihiniz bu cihazda saklanır.
             </Text>
           </View>
         )}
@@ -2611,10 +2625,10 @@ function Footer({ isMobile }: { isMobile: boolean }) {
     { label: "YouTube", href: "https://www.youtube.com/c/BedriUsta" },
     { label: "E-posta", href: "mailto:info@bedriusta.de" }
   ];
-  const legalLinks: Array<{ label: string; href?: string; disabled?: boolean }> = [
+  const legalLinks: Array<{ label: string; href?: string; disabled?: boolean; action?: () => void }> = [
     { label: "Impressum", href: "#policies" },
     { label: "Datenschutz", href: "/datenschutz" },
-    { label: "Cookie-Einstellungen", href: "/datenschutz#cookies" },
+    { label: "Cookie-Einstellungen", href: "/datenschutz#cookies", action: openCookiePreferences },
     { label: "AGB", disabled: true },
     { label: "FAQ", href: "/#contact" }
   ];
@@ -2758,7 +2772,7 @@ function Footer({ isMobile }: { isMobile: boolean }) {
             {legalLinks.map((item) => (
               <Pressable
                 key={item.label}
-                onPress={item.href ? () => openNavigationTarget(item.href as string) : undefined}
+                onPress={item.action ?? (item.href ? () => openNavigationTarget(item.href as string) : undefined)}
                 disabled={item.disabled}
                 accessibilityRole={item.disabled ? undefined : "link"}
                 accessibilityState={{ disabled: item.disabled }}

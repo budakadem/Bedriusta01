@@ -2,6 +2,7 @@ import { FormEvent, useState } from "react";
 import "./reservation-page.css";
 import { createReservationTimeOptions, reservationDefaults } from "../config/reservation";
 import { ReservationDatePicker } from "./ReservationDatePicker";
+import { getIntlLocale, useSiteLanguage } from "../siteLanguage";
 
 type ReservationKind = "normal" | "group";
 type ReservationForm = {
@@ -56,9 +57,9 @@ function berlinCalendarDate({ months = 0, years = 0 }: { months?: number; years?
   return `${targetYear}-${String(targetMonthIndex + 1).padStart(2, "0")}-${String(targetDay).padStart(2, "0")}`;
 }
 
-function formattedDate(value: string) {
+function formattedDate(value: string, locale: string) {
   if (!value) return "Seçilmedi";
-  return new Intl.DateTimeFormat("tr-TR", {
+  return new Intl.DateTimeFormat(locale, {
     timeZone: reservationDefaults.timeZone,
     weekday: "long",
     day: "2-digit",
@@ -92,6 +93,8 @@ function FieldError({ children }: { children?: string }) {
 }
 
 export function ReservationPage() {
+  const language = useSiteLanguage();
+  const locale = getIntlLocale(language);
   const [form, setForm] = useState<ReservationForm>(initialForm);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [otpCode, setOtpCode] = useState("");
@@ -305,7 +308,7 @@ export function ReservationPage() {
           <h1>{reservationKind === "group" ? "Talebin gönderildi." : "Rezervasyonun onaylandı."}</h1>
           <div className="reservation-result__status">{confirmation.status}</div>
           <dl>
-            <div><dt>Tarih</dt><dd>{formattedDate(form.date)}</dd></div>
+            <div><dt>Tarih</dt><dd>{formattedDate(form.date, locale)}</dd></div>
             <div><dt>Saat</dt><dd>{form.time}</dd></div>
             <div><dt>Kişi</dt><dd>{partyLabel}</dd></div>
             {confirmation.reference && <div><dt>Referans</dt><dd>{confirmation.reference}</dd></div>}
@@ -445,7 +448,7 @@ export function ReservationPage() {
             <div className="reservation-final" aria-label="Rezervasyon özeti">
               <div className="reservation-final__summary">
                 <div><span>Kişi</span><strong>{partyLabel}</strong></div>
-                <div><span>Tarih</span><strong>{formattedDate(form.date)}</strong></div>
+                <div><span>Tarih</span><strong>{formattedDate(form.date, locale)}</strong></div>
                 <div><span>Saat</span><strong>{form.time || "Seçilmedi"}</strong></div>
               </div>
               <div className="reservation-final__legal">

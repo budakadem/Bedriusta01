@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { openCookiePreferences } from "./CookieNotice";
 import "./privacy-page.css";
 
 const sections = [
@@ -270,6 +271,9 @@ export function PrivacyPage() {
                 Tarayıcı ayarlarından çerezleri, site verilerini ve PWA önbelleğini görüntüleyebilir veya silebilirsin.
                 Teknik olarak zorunlu verilerin engellenmesi bazı uygulama işlevlerinin çalışmasını sınırlayabilir.
               </p>
+              <button type="button" className="privacy-cookie-manage" onClick={() => openCookiePreferences()}>
+                Çerez tercihlerini gözden geçir
+              </button>
             </section>
 
             <section id="haklar">

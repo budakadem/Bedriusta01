@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { getIntlLocale, useSiteLanguage } from "../siteLanguage";
 
 type ReservationDatePickerProps = {
   value: string;
@@ -8,7 +9,11 @@ type ReservationDatePickerProps = {
   invalid?: boolean;
 };
 
-const weekdays = ["Pzt", "Sal", "Çar", "Per", "Cum", "Cmt", "Paz"];
+const weekdays = {
+  TR: ["Pzt", "Sal", "Çar", "Per", "Cum", "Cmt", "Paz"],
+  DE: ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"],
+  ENG: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+} as const;
 
 function parseDate(value: string) {
   const [year, month, day] = value.split("-").map(Number);
@@ -31,12 +36,14 @@ function moveMonth(date: Date, offset: number) {
   return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + offset, 1));
 }
 
-function readableDate(value: string) {
+function readableDate(value: string, locale: string) {
   if (!value) return "Tarih seçiniz";
-  return new Intl.DateTimeFormat("tr-TR", { day: "2-digit", month: "long", year: "numeric", timeZone: "UTC" }).format(parseDate(value));
+  return new Intl.DateTimeFormat(locale, { day: "2-digit", month: "long", year: "numeric", timeZone: "UTC" }).format(parseDate(value));
 }
 
 export function ReservationDatePicker({ value, min, max, onChange, invalid }: ReservationDatePickerProps) {
+  const language = useSiteLanguage();
+  const locale = getIntlLocale(language);
   const containerRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
   const [visibleMonth, setVisibleMonth] = useState(() => monthStart(parseDate(value || min)));
@@ -73,12 +80,12 @@ export function ReservationDatePicker({ value, min, max, onChange, invalid }: Re
     const day = index - firstWeekday + 1;
     return day >= 1 && day <= daysInMonth ? day : null;
   });
-  const monthTitle = new Intl.DateTimeFormat("tr-TR", { month: "long", year: "numeric", timeZone: "UTC" }).format(visibleMonth);
+  const monthTitle = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric", timeZone: "UTC" }).format(visibleMonth);
 
   return (
     <div className="reservation-date-picker" ref={containerRef}>
       <button className="reservation-date-trigger" type="button" onClick={() => setOpen((current) => !current)} aria-expanded={open} aria-haspopup="dialog" aria-invalid={invalid}>
-        <span className={value ? "" : "is-placeholder"}>{readableDate(value)}</span>
+        <span className={value ? "" : "is-placeholder"}>{readableDate(value, locale)}</span>
         <span className="reservation-date-trigger__icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none">
             <rect x="3.5" y="5" width="17" height="15" rx="2" />
@@ -97,7 +104,7 @@ export function ReservationDatePicker({ value, min, max, onChange, invalid }: Re
               <button type="button" onClick={() => setVisibleMonth((current) => moveMonth(current, 1))} disabled={nextDisabled} aria-label="Sonraki ay">→</button>
             </div>
             <div className="reservation-calendar__weekdays" aria-hidden="true">
-              {weekdays.map((weekday) => <span key={weekday}>{weekday}</span>)}
+              {weekdays[language].map((weekday) => <span key={weekday}>{weekday}</span>)}
             </div>
             <div className="reservation-calendar__days">
               {calendarCells.map((day, index) => {
@@ -106,7 +113,7 @@ export function ReservationDatePicker({ value, min, max, onChange, invalid }: Re
                 const key = dateKey(date);
                 const disabled = date.getTime() < minTime || date.getTime() > maxTime;
                 return (
-                  <button key={key} type="button" className={key === value ? "is-selected" : ""} disabled={disabled} onClick={() => { onChange(key); setOpen(false); }} aria-label={readableDate(key)} aria-pressed={key === value}>
+                  <button key={key} type="button" className={key === value ? "is-selected" : ""} disabled={disabled} onClick={() => { onChange(key); setOpen(false); }} aria-label={readableDate(key, locale)} aria-pressed={key === value}>
                     {day}
                   </button>
                 );
