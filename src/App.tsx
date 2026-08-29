@@ -2116,6 +2116,7 @@ function HorizontalCardRail({
   const directionRef = useRef<1 | -1>(1);
   const manualScrollFrameRef = useRef<number | null>(null);
   const interactionPausedRef = useRef(false);
+  const interactionSafetyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const getLoopSpan = (rail: HTMLElement) => {
     const cloneIndex = Math.floor(rail.children.length / 3);
     const firstItem = rail.children.item(0) as HTMLElement | null;
@@ -2170,6 +2171,9 @@ function HorizontalCardRail({
       if (manualScrollFrameRef.current !== null) {
         window.cancelAnimationFrame(manualScrollFrameRef.current);
       }
+      if (interactionSafetyTimerRef.current !== null) {
+        window.clearTimeout(interactionSafetyTimerRef.current);
+      }
     },
     []
   );
@@ -2217,7 +2221,7 @@ function HorizontalCardRail({
 
   useEffect(() => {
     if (!autoPlay || !isOverflowing || (!loop && isPaused)) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!loop && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     if (loop) {
       let frame = 0;
@@ -2294,27 +2298,32 @@ function HorizontalCardRail({
     });
   };
 
-  const interactionHandlers = {
-    onPointerDown: () => {
-      interactionPausedRef.current = true;
-      setIsPaused(true);
-    },
-    onPointerUp: () => {
-      interactionPausedRef.current = false;
-      setIsPaused(false);
-    },
-    onPointerCancel: () => {
-      interactionPausedRef.current = false;
-      setIsPaused(false);
-    },
-    onTouchStart: () => {
-      interactionPausedRef.current = true;
-      setIsPaused(true);
-    },
-    onTouchEnd: () => {
-      interactionPausedRef.current = false;
-      setIsPaused(false);
+  const resumeInteraction = () => {
+    interactionPausedRef.current = false;
+    setIsPaused(false);
+    if (interactionSafetyTimerRef.current !== null) {
+      window.clearTimeout(interactionSafetyTimerRef.current);
+      interactionSafetyTimerRef.current = null;
     }
+  };
+
+  const pauseInteraction = () => {
+    interactionPausedRef.current = true;
+    setIsPaused(true);
+    if (interactionSafetyTimerRef.current !== null) {
+      window.clearTimeout(interactionSafetyTimerRef.current);
+    }
+    // Some mobile browsers can drop the matching touchend/pointerup event;
+    // this guarantees the rail never gets stuck paused indefinitely.
+    interactionSafetyTimerRef.current = setTimeout(resumeInteraction, 2500);
+  };
+
+  const interactionHandlers = {
+    onPointerDown: pauseInteraction,
+    onPointerUp: resumeInteraction,
+    onPointerCancel: resumeInteraction,
+    onTouchStart: pauseInteraction,
+    onTouchEnd: resumeInteraction
   } as any;
 
   return (
