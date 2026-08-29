@@ -2318,7 +2318,7 @@ function HorizontalCardRail({
   } as any;
 
   return (
-    <View style={styles.cardRailShell} {...interactionHandlers}>
+    <View style={styles.cardRailShell} nativeID={`${id}-shell`} {...interactionHandlers}>
       {isOverflowing && (
         <Pressable
           onPress={() => scrollRail(-1)}
@@ -2352,7 +2352,6 @@ function HorizontalCardRail({
           isOverflowing && styles.cardRailOverflowing,
           !isOverflowing && styles.cardRailCentered
         ]}
-        {...({ className: "horizontal-card-rail" } as any)}
       >
         {children}
       </View>

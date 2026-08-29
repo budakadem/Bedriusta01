@@ -31,14 +31,21 @@ img {
 
 #restaurant-menu-categories,
 #restaurant-menu-utilities,
-.horizontal-card-rail {
+#featured-menu-card-rail {
   scrollbar-width: none;
   -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x !important;
+  overscroll-behavior-x: contain;
+}
+
+#featured-menu-card-rail-shell {
+  touch-action: auto !important;
 }
 
 #restaurant-menu-categories::-webkit-scrollbar,
 #restaurant-menu-utilities::-webkit-scrollbar,
-.horizontal-card-rail::-webkit-scrollbar {
+#featured-menu-card-rail::-webkit-scrollbar {
   display: none;
 }
 
@@ -86,7 +93,7 @@ img {
     transition: none !important;
   }
 
-  .horizontal-card-rail {
+  #featured-menu-card-rail {
     scroll-behavior: auto !important;
   }
 }
