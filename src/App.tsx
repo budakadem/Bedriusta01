@@ -2113,6 +2113,7 @@ function HorizontalCardRail({
 }) {
   const [isOverflowing, setIsOverflowing] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const isOverflowingRef = useRef(false);
   const directionRef = useRef<1 | -1>(1);
   const manualScrollFrameRef = useRef<number | null>(null);
   const interactionPausedRef = useRef(false);
@@ -2183,7 +2184,9 @@ function HorizontalCardRail({
     if (!rail) return;
 
     const updateOverflow = () => {
-      setIsOverflowing(rail.scrollWidth > rail.clientWidth + 4);
+      const overflowing = rail.scrollWidth > rail.clientWidth + 4;
+      isOverflowingRef.current = overflowing;
+      setIsOverflowing(overflowing);
     };
 
     const normalizeLoopPosition = () => {
@@ -2220,28 +2223,34 @@ function HorizontalCardRail({
   }, [id, loop]);
 
   useEffect(() => {
-    if (!autoPlay || !isOverflowing || (!loop && isPaused)) return;
-    if (!loop && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!autoPlay || !loop) return;
 
-    if (loop) {
-      let frame = 0;
-      let previousTime = window.performance.now();
+    let frame = 0;
+    let previousTime = window.performance.now();
 
-      const moveContinuously = (time: number) => {
-        const rail = document.getElementById(id);
-        if (!rail) return;
-
-        const elapsed = Math.min(time - previousTime, 64);
-        previousTime = time;
-        if (manualScrollFrameRef.current === null && !interactionPausedRef.current) {
+    const moveContinuously = (time: number) => {
+      const rail = document.getElementById(id);
+      if (rail) {
+        const elapsed = Math.min(Math.max(time - previousTime, 0), 64);
+        if (
+          isOverflowingRef.current &&
+          manualScrollFrameRef.current === null &&
+          !interactionPausedRef.current
+        ) {
           rail.scrollLeft += (elapsed / 1000) * 42;
         }
-        frame = window.requestAnimationFrame(moveContinuously);
-      };
-
+      }
+      previousTime = time;
       frame = window.requestAnimationFrame(moveContinuously);
-      return () => window.cancelAnimationFrame(frame);
-    }
+    };
+
+    frame = window.requestAnimationFrame(moveContinuously);
+    return () => window.cancelAnimationFrame(frame);
+  }, [autoPlay, id, loop]);
+
+  useEffect(() => {
+    if (!autoPlay || loop || !isOverflowing || isPaused) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const moveRail = () => {
       const rail = document.getElementById(id);
