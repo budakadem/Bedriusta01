@@ -34,13 +34,28 @@ img {
 #featured-menu-card-rail {
   scrollbar-width: none;
   -ms-overflow-style: none;
-  -webkit-overflow-scrolling: touch;
-  touch-action: pan-x !important;
+  /* pan-x alone tells the browser this element only ever pans horizontally,
+     so a vertical drag that starts on a card is swallowed instead of
+     scrolling the page. pan-y keeps the page scrollable through the rail. */
+  touch-action: pan-x pan-y pinch-zoom !important;
   overscroll-behavior-x: contain;
+  overscroll-behavior-y: auto;
 }
 
 #featured-menu-card-rail-shell {
   touch-action: auto !important;
+}
+
+/* The auto-scroll loop writes scrollLeft once per frame; any smooth-scroll or
+   snap behaviour on the rail cancels those writes on iOS Safari, which reads
+   as "the strip never moves on iPhone". */
+#featured-menu-card-rail {
+  scroll-behavior: auto !important;
+  scroll-snap-type: none !important;
+}
+
+#featured-menu-card-rail > * {
+  scroll-snap-align: none !important;
 }
 
 #restaurant-menu-categories::-webkit-scrollbar,

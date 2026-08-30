@@ -2226,22 +2226,46 @@ function HorizontalCardRail({
     if (!autoPlay || !loop) return;
 
     let frame = 0;
-    let previousTime = window.performance.now();
+    let previousTime = 0;
+    // Sub-pixel accumulator. `rail.scrollLeft += 0.7` is a no-op wherever the
+    // engine rounds the stored offset (iOS Safari does), so the strip stands
+    // still. Tracking the target position as a float and assigning it whole
+    // makes every frame advance regardless of rounding.
+    let target: number | null = null;
+    let lastApplied: number | null = null;
 
     const moveContinuously = (time: number) => {
-      const rail = document.getElementById(id);
-      if (rail) {
-        const elapsed = Math.min(Math.max(time - previousTime, 0), 64);
-        if (
-          isOverflowingRef.current &&
-          manualScrollFrameRef.current === null &&
-          !interactionPausedRef.current
-        ) {
-          rail.scrollLeft += (elapsed / 1000) * 42;
-        }
-      }
-      previousTime = time;
       frame = window.requestAnimationFrame(moveContinuously);
+
+      const rail = document.getElementById(id);
+      if (!rail || previousTime === 0) {
+        previousTime = time;
+        return;
+      }
+
+      const elapsed = Math.min(Math.max(time - previousTime, 0), 64);
+      previousTime = time;
+
+      if (
+        !isOverflowingRef.current ||
+        manualScrollFrameRef.current !== null ||
+        interactionPausedRef.current
+      ) {
+        target = null;
+        lastApplied = null;
+        return;
+      }
+
+      // Re-sync whenever something else moved the rail (a finger swipe, the
+      // loop normalizer's jump) so we continue from where it actually is.
+      if (target === null || (lastApplied !== null && Math.abs(rail.scrollLeft - lastApplied) > 2)) {
+        target = rail.scrollLeft;
+      }
+
+      const maxScroll = Math.max(0, rail.scrollWidth - rail.clientWidth);
+      target = Math.min(target + (elapsed / 1000) * 42, maxScroll);
+      rail.scrollLeft = target;
+      lastApplied = rail.scrollLeft;
     };
 
     frame = window.requestAnimationFrame(moveContinuously);
