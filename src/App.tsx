@@ -1814,15 +1814,18 @@ function HeaderUtilities({ compact = false }: { compact?: boolean }) {
       accessibilityLabel="Paylaşım, kullanıcı ve dil seçenekleri"
     >
       <ShareButton compact={compact} />
+      {/* The member icon is the club entrance. The notification centre it used
+          to open now lives on the club page as the (still disabled) device and
+          notification check, so the component stays in place rather than being
+          removed. */}
       <Pressable
-        onPress={() => setNotificationCenterOpen(true)}
+        onPress={() => openNavigationTarget("/golden-tabla-club")}
         accessibilityRole="button"
-        accessibilityLabel="Bildirim merkezini aç"
-        accessibilityState={{ expanded: notificationCenterOpen }}
+        accessibilityLabel="Golden Tabla Club sayfasını aç"
         style={({ hovered, pressed }: any) => [
           styles.headerLogin,
           compact && styles.headerLoginCompact,
-          (hovered || pressed || notificationCenterOpen) && styles.headerUtilityActive
+          (hovered || pressed) && styles.headerUtilityActive
         ]}
       >
         <Image
