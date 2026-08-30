@@ -7,11 +7,16 @@
  *
  * "necessary" is not stored: it is always on and cannot be switched off, so
  * persisting it would only invite it being tampered into a false value.
+ *
+ * Push notifications are deliberately NOT a category here. The browser's own
+ * Notification permission prompt is already explicit, specific and revocable
+ * consent for them, and the upcoming Tabla Plus flow asks separately again —
+ * a cookie-panel switch on top would be a third gate for the same decision,
+ * and would let the panel and the browser disagree about the answer.
  */
 
 export type ConsentDecision = {
   analytics: boolean;
-  functional: boolean;
 };
 
 export type StoredConsent = ConsentDecision & {
@@ -34,8 +39,8 @@ export const CONSENT_VERSION = "2";
 
 const CHANGE_EVENT = "bedriusta-consent-change";
 
-export const DENIED_ALL: ConsentDecision = { analytics: false, functional: false };
-export const GRANTED_ALL: ConsentDecision = { analytics: true, functional: true };
+export const DENIED_ALL: ConsentDecision = { analytics: false };
+export const GRANTED_ALL: ConsentDecision = { analytics: true };
 
 export function readConsent(): StoredConsent | null {
   try {
@@ -46,8 +51,7 @@ export function readConsent(): StoredConsent | null {
     return {
       version: CONSENT_VERSION,
       decidedAt: typeof parsed.decidedAt === "string" ? parsed.decidedAt : "",
-      analytics: parsed.analytics === true,
-      functional: parsed.functional === true
+      analytics: parsed.analytics === true
     };
   } catch {
     // Private mode, blocked storage, corrupted value: treat as "not decided"

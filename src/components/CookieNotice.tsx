@@ -22,7 +22,7 @@ const copy = {
   TR: {
     eyebrow: "GİZLİLİK TERCİHLERİ",
     title: "Çerez tercihlerinizi siz belirleyin.",
-    text: "Sitenin çalışması için gereken teknik verileri her zaman saklarız. İstatistik ve bildirim teknolojileri ise yalnızca siz onay verirseniz devreye girer; onayınızı istediğiniz zaman geri alabilirsiniz.",
+    text: "Sitenin çalışması için gereken teknik verileri her zaman saklarız. İstatistik ölçümü ise yalnızca siz onay verirseniz devreye girer; onayınızı istediğiniz zaman geri alabilirsiniz.",
     acceptAll: "Tümünü kabul et",
     rejectAll: "Yalnızca zorunlu",
     customise: "Ayarlar",
@@ -40,17 +40,13 @@ const copy = {
       analytics: {
         name: "İstatistik",
         text: "Google Analytics ile hangi sayfaların ilgi gördüğünü anonim olarak ölçeriz. Onay vermezseniz Google'a hiçbir bağlantı kurulmaz."
-      },
-      functional: {
-        name: "Bildirimler",
-        text: "Kampanya ve haberleri cihazınıza bildirim olarak gönderebilmemiz için OneSignal servisi. Yalnızca siz bildirimleri açtığınızda çalışır."
       }
     }
   },
   DE: {
     eyebrow: "DATENSCHUTZEINSTELLUNGEN",
     title: "Sie entscheiden über Ihre Cookies.",
-    text: "Technisch notwendige Daten speichern wir immer, damit die Seite funktioniert. Statistik- und Benachrichtigungstechnologien werden nur mit Ihrer Einwilligung aktiv; Sie können sie jederzeit widerrufen.",
+    text: "Technisch notwendige Daten speichern wir immer, damit die Seite funktioniert. Die Statistikmessung wird nur mit Ihrer Einwilligung aktiv; Sie können sie jederzeit widerrufen.",
     acceptAll: "Alle akzeptieren",
     rejectAll: "Nur notwendige",
     customise: "Einstellungen",
@@ -68,17 +64,13 @@ const copy = {
       analytics: {
         name: "Statistik",
         text: "Mit Google Analytics messen wir anonym, welche Seiten genutzt werden. Ohne Ihre Einwilligung wird keine Verbindung zu Google aufgebaut."
-      },
-      functional: {
-        name: "Benachrichtigungen",
-        text: "Der Dienst OneSignal, damit wir Ihnen Aktionen und Neuigkeiten als Push-Nachricht senden können. Aktiv nur, wenn Sie Benachrichtigungen selbst einschalten."
       }
     }
   },
   ENG: {
     eyebrow: "PRIVACY PREFERENCES",
     title: "You decide about your cookies.",
-    text: "We always store the technical data the site needs to work. Statistics and notification technologies are only activated with your consent, and you can withdraw it at any time.",
+    text: "We always store the technical data the site needs to work. Statistics measurement is only activated with your consent, and you can withdraw it at any time.",
     acceptAll: "Accept all",
     rejectAll: "Essential only",
     customise: "Settings",
@@ -96,10 +88,6 @@ const copy = {
       analytics: {
         name: "Statistics",
         text: "Google Analytics lets us measure anonymously which pages are used. Without your consent no connection to Google is made."
-      },
-      functional: {
-        name: "Notifications",
-        text: "The OneSignal service, so we can send you offers and news as push messages. Active only when you turn notifications on yourself."
       }
     }
   }
@@ -212,12 +200,6 @@ export function CookieNotice() {
             text={text.categories.analytics.text}
             checked={draft.analytics}
             onChange={(analytics) => setDraft((current) => ({ ...current, analytics }))}
-          />
-          <ConsentToggle
-            name={text.categories.functional.name}
-            text={text.categories.functional.text}
-            checked={draft.functional}
-            onChange={(functional) => setDraft((current) => ({ ...current, functional }))}
           />
         </div>
       )}
