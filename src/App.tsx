@@ -69,8 +69,8 @@ const craftDiningRoomImage = {
     "/images/bedri-usta-dining-room-1800.webp 1800w"
   ].join(", "),
   // Below 1180px the craft row stacks, so the photo spans almost the full
-  // viewport; above it, it is a fixed ~340px column.
-  sizes: "(max-width: 1179px) 92vw, 340px",
+  // viewport (capped at 560px); above it, it is half of the 1120px row.
+  sizes: "(max-width: 1179px) min(92vw, 560px), 537px",
   // The source is 3500x1954. Pinning the frame to exactly this ratio means
   // object-fit never has anything to crop away.
   aspectRatio: 3500 / 1954
@@ -765,34 +765,36 @@ function App() {
       </View>
 
       <View style={[styles.section, styles.craftSection]}>
-        <ScrollReveal style={[styles.craftInner, layout.isMobile && styles.stack]}>
-          <View
-            style={[
-              styles.craftMedia,
-              { aspectRatio: craftDiningRoomImage.aspectRatio },
-              layout.isMobile && styles.craftMediaMobile
-            ]}
-          >
-            <img
-              src={craftDiningRoomImage.src}
-              srcSet={craftDiningRoomImage.srcSet}
-              sizes={craftDiningRoomImage.sizes}
-              alt="Bedri Usta Mannheim salonunda bordo Bedri Usta yastıklarıyla hazırlanmış masalar"
-              loading="lazy"
-              decoding="async"
-              style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }}
-            />
-          </View>
+        <ScrollReveal style={styles.craftInner}>
           <Text style={[styles.craftTitle, layout.isMobile && styles.sectionTitleMobile]}>
             Ustalık, özenle hazırlanır; sofrada zarif bir deneyime dönüşür.
           </Text>
-          <View style={styles.proofList}>
-            {proofItems.map(([title, text]) => (
-              <View key={title} style={styles.proofItem}>
-                <Text style={styles.proofTitle}>{title}</Text>
-                <Text style={styles.proofText}>{text}</Text>
-              </View>
-            ))}
+          <View style={[styles.craftBody, layout.isMobile && styles.craftBodyMobile]}>
+            <View
+              style={[
+                styles.craftMedia,
+                { aspectRatio: craftDiningRoomImage.aspectRatio },
+                layout.isMobile && styles.craftMediaMobile
+              ]}
+            >
+              <img
+                src={craftDiningRoomImage.src}
+                srcSet={craftDiningRoomImage.srcSet}
+                sizes={craftDiningRoomImage.sizes}
+                alt="Bedri Usta Mannheim salonunda bordo Bedri Usta yastıklarıyla hazırlanmış masalar"
+                loading="lazy"
+                decoding="async"
+                style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }}
+              />
+            </View>
+            <View style={[styles.proofList, layout.isMobile && styles.proofListMobile]}>
+              {proofItems.map(([title, text]) => (
+                <View key={title} style={styles.proofItem}>
+                  <Text style={styles.proofTitle}>{title}</Text>
+                  <Text style={styles.proofText}>{text}</Text>
+                </View>
+              ))}
+            </View>
           </View>
         </ScrollReveal>
       </View>
@@ -5628,18 +5630,29 @@ const styles = StyleSheet.create({
     maxWidth: 1120,
     width: "100%",
     marginHorizontal: "auto",
+    // Title spans the full width on its own row; the photo and the proof list
+    // sit side by side underneath. Side-by-side with the title made the photo
+    // column narrow (340px => 190px tall) next to 372px of text, which left a
+    // large dead gap under it. At half width the photo is ~300px tall and
+    // matches the proof list, so the row reads as two balanced columns.
+    flexDirection: "column",
+    gap: 34
+  },
+  craftBody: {
+    width: "100%",
     flexDirection: "row",
     gap: 46,
-    // flex-start, not stretch: the photo keeps its own aspect ratio instead of
-    // being pulled to the text column's height (which is what cropped it).
     alignItems: "flex-start"
   },
+  craftBodyMobile: {
+    flexDirection: "column",
+    gap: 26
+  },
   craftMedia: {
-    flexGrow: 0,
+    flexGrow: 1,
     flexShrink: 1,
-    flexBasis: 340,
-    minWidth: 220,
-    alignSelf: "flex-start",
+    flexBasis: 0,
+    minWidth: 0,
     borderRadius: 14,
     overflow: "hidden",
     borderWidth: 2,
@@ -5654,11 +5667,9 @@ const styles = StyleSheet.create({
     width: "100%",
     maxWidth: 560,
     minWidth: 0,
-    marginHorizontal: "auto",
-    marginBottom: 6
+    marginHorizontal: "auto"
   } as any,
   craftTitle: {
-    flex: 1,
     color: colors.cream,
     fontFamily: "Heebo, sans-serif",
     fontSize: 46,
@@ -5666,8 +5677,17 @@ const styles = StyleSheet.create({
     fontWeight: "800"
   },
   proofList: {
-    flex: 1,
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
+    minWidth: 0,
     gap: 12
+  },
+  proofListMobile: {
+    flexBasis: "auto",
+    flexGrow: 0,
+    flexShrink: 0,
+    width: "100%"
   },
   proofItem: {
     borderTopWidth: 1,
