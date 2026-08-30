@@ -1,3 +1,5 @@
+import { currentConsent } from "../consent";
+
 const ONESIGNAL_APP_ID = "f28beacc-e1c1-4152-867f-2511122e686c";
 const ONESIGNAL_SDK_URL = "https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js";
 const ONESIGNAL_WORKER_PATH = "push/onesignal/OneSignalSDKWorker.js";
@@ -172,6 +174,14 @@ export function subscribeToOneSignal(
 export async function initializeOneSignal(): Promise<OneSignalSdk> {
   if (sdk) return sdk;
   if (initPromise) return initPromise;
+
+  // Opening the notification centre and pressing "enable" is itself an act of
+  // consent, but the cookie panel lets the visitor revoke it later. Honour that
+  // here so a withdrawn consent actually keeps the OneSignal SDK off the page.
+  if (!currentConsent().functional) {
+    emit({ error: "Bildirimler için çerez ayarlarından bildirim iznini açmalısınız." });
+    throw new Error("Notification consent has not been granted.");
+  }
 
   if (!window.isSecureContext || !("serviceWorker" in navigator) || !("Notification" in window)) {
     emit({ isSupported: false, error: "Bu tarayıcı web bildirimlerini desteklemiyor." });

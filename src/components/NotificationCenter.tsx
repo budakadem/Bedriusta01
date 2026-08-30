@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { currentConsent, saveConsent } from "../consent";
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import {
   getOneSignalSnapshot,
@@ -70,9 +71,14 @@ export function NotificationCenter({ onClose, visible }: NotificationCenterProps
     if (!visible) return;
 
     setMessage(null);
-    void initializeOneSignal().catch(() => {
-      // Hata merkezi durum kartında kullanıcıya açıklanır.
-    });
+    // Merely opening this panel is not consent, so the SDK is only warmed up
+    // for visitors who have already allowed the notification category. Everyone
+    // else initialises it by pressing the enable button below.
+    if (currentConsent().functional) {
+      void initializeOneSignal().catch(() => {
+        // Hata merkezi durum kartında kullanıcıya açıklanır.
+      });
+    }
 
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
@@ -96,6 +102,11 @@ export function NotificationCenter({ onClose, visible }: NotificationCenterProps
     if (actionDisabled || needsIosInstall) return;
     setBusy(true);
     setMessage(null);
+
+    // Pressing this button is the consent act for the notification category:
+    // record it so the cookie panel reflects reality and can revoke it later.
+    const consent = currentConsent();
+    if (!consent.functional) saveConsent({ ...consent, functional: true });
 
     try {
       const nextSnapshot = await requestPushPermission();

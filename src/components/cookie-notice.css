@@ -16,17 +16,66 @@
   animation: cookie-notice-in 260ms cubic-bezier(.2, .8, .2, 1) both;
 }
 
+/* The settings view stacks: copy, then the category list, then the actions. */
+.cookie-notice--settings {
+  grid-template-columns: minmax(0, 1fr);
+  width: min(560px, calc(100% - 28px));
+  max-height: min(80vh, 720px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
 .cookie-notice__copy { min-width: 0; }
 .cookie-notice__copy > span { display: block; margin-bottom: 5px; color: #dfbf78; font: 800 10px/15px "Karla", sans-serif; letter-spacing: 2px; }
 .cookie-notice__copy strong { display: block; font: 800 clamp(17px, 2vw, 21px)/1.25 "Heebo", sans-serif; }
 .cookie-notice__copy p { margin: 7px 0 0; color: rgba(255, 248, 238, .76); font: 500 13px/1.55 "Heebo", sans-serif; }
-.cookie-notice__actions { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
-.cookie-notice__actions a,
-.cookie-notice__actions button { min-height: 44px; padding: 0 16px; border-radius: 2px; font: 800 12px/1 "Karla", sans-serif; letter-spacing: .5px; cursor: pointer; }
-.cookie-notice__actions a { display: inline-flex; align-items: center; color: #fff8ee; text-decoration: none; border: 1px solid rgba(255, 248, 238, .3); }
-.cookie-notice__actions button { color: #5b1012; background: #dfbf78; border: 1px solid #dfbf78; }
-.cookie-notice__actions a:focus-visible,
-.cookie-notice__actions button:focus-visible { outline: 3px solid #fff8ee; outline-offset: 3px; }
+
+.cookie-notice__categories { display: grid; gap: 14px; }
+
+.cookie-category { padding: 13px 14px; border: 1px solid rgba(255, 248, 238, .16); border-radius: 4px; background: rgba(255, 248, 238, .04); }
+.cookie-category.is-locked { background: rgba(255, 248, 238, .02); }
+.cookie-category__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 30px; }
+.cookie-category__head strong { font: 800 14px/1.2 "Heebo", sans-serif; }
+.cookie-category__always { color: rgba(223, 191, 120, .9); font: 800 10px/1 "Karla", sans-serif; letter-spacing: 1.4px; text-transform: uppercase; }
+.cookie-category p { margin: 7px 0 0; color: rgba(255, 248, 238, .72); font: 500 12.5px/1.55 "Heebo", sans-serif; }
+
+/* Switch: a real checkbox kept accessible, with the visual track drawn on top. */
+.cookie-switch { position: relative; display: inline-flex; align-items: center; cursor: pointer; }
+.cookie-switch input { position: absolute; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.cookie-switch__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.cookie-switch__track {
+  display: block;
+  width: 46px;
+  height: 26px;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(255, 248, 238, .18);
+  border: 1px solid rgba(255, 248, 238, .28);
+  transition: background-color 180ms ease, border-color 180ms ease;
+}
+.cookie-switch__thumb {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #fff8ee;
+  transition: transform 180ms cubic-bezier(.22, 1, .36, 1);
+}
+.cookie-switch input:checked + .cookie-switch__track { background: #dfbf78; border-color: #dfbf78; }
+.cookie-switch input:checked + .cookie-switch__track .cookie-switch__thumb { transform: translateX(20px); background: #5b1012; }
+.cookie-switch input:focus-visible + .cookie-switch__track { outline: 3px solid #fff8ee; outline-offset: 3px; }
+
+.cookie-notice__actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 10px; }
+.cookie-notice__link { display: inline-flex; align-items: center; margin-right: auto; color: rgba(255, 248, 238, .8); font: 700 12px/1 "Karla", sans-serif; letter-spacing: .4px; text-decoration: underline; text-underline-offset: 4px; }
+
+/* Accept and reject share one class on purpose: identical size, colour and
+   contrast, so neither is nudged. Only "Settings" is visually secondary. */
+.cookie-btn { min-height: 44px; padding: 0 16px; border-radius: 2px; font: 800 12px/1 "Karla", sans-serif; letter-spacing: .5px; cursor: pointer; transition: filter 160ms ease; }
+.cookie-btn--primary { color: #5b1012; background: #dfbf78; border: 1px solid #dfbf78; }
+.cookie-btn--ghost { color: #fff8ee; background: transparent; border: 1px solid rgba(255, 248, 238, .3); }
+.cookie-btn:hover { filter: brightness(1.06); }
+.cookie-btn:focus-visible,
+.cookie-notice__link:focus-visible { outline: 3px solid #fff8ee; outline-offset: 3px; }
 
 @keyframes cookie-notice-in {
   from { opacity: 0; transform: translateY(16px); }
@@ -40,15 +89,19 @@
     grid-template-columns: 1fr;
     gap: 14px;
   }
+  .cookie-notice--settings { max-height: min(72vh, 640px); }
   .cookie-notice__actions { justify-content: stretch; }
-  .cookie-notice__actions a,
-  .cookie-notice__actions button { flex: 1; justify-content: center; text-align: center; }
+  .cookie-btn { flex: 1 1 auto; }
+  .cookie-notice__link { flex: 1 0 100%; margin: 0 0 4px; }
 }
 
 @media (max-width: 420px) {
-  .cookie-notice__actions { align-items: stretch; flex-direction: column-reverse; }
+  .cookie-notice__actions { align-items: stretch; }
+  .cookie-btn { flex: 1 0 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .cookie-notice { animation: none; }
+  .cookie-switch__track,
+  .cookie-switch__thumb { transition: none; }
 }

@@ -1,9 +1,17 @@
 import { useEffect, useState } from "react";
 import { useSiteLanguage } from "../siteLanguage";
+import {
+  currentConsent,
+  DENIED_ALL,
+  GRANTED_ALL,
+  hasDecided,
+  saveConsent,
+  subscribeToConsent,
+  type ConsentDecision
+} from "../consent";
+import { applyAnalyticsConsent } from "../services/analytics";
 import "./cookie-notice.css";
 
-const STORAGE_KEY = "bedriusta-cookie-notice";
-const CONSENT_VERSION = "1";
 const OPEN_PREFERENCES_EVENT = "bedriusta-cookie-preferences-open";
 
 export function openCookiePreferences() {
@@ -13,77 +21,235 @@ export function openCookiePreferences() {
 const copy = {
   TR: {
     eyebrow: "GİZLİLİK TERCİHLERİ",
-    title: "Yalnızca gerekli teknolojileri kullanıyoruz.",
-    text: "Sayfaların daha hızlı açılması için dil tercihini ve bazı teknik verileri cihazınızda saklayabiliriz. Bildirim servisi yalnızca siz açtığınızda devreye girer; reklam veya davranış analizi çerezi kullanmıyoruz.",
-    accept: "Anladım",
-    settings: "Ayrıntıları incele",
-    label: "Çerez ve gizlilik bilgilendirmesi"
+    title: "Çerez tercihlerinizi siz belirleyin.",
+    text: "Sitenin çalışması için gereken teknik verileri her zaman saklarız. İstatistik ve bildirim teknolojileri ise yalnızca siz onay verirseniz devreye girer; onayınızı istediğiniz zaman geri alabilirsiniz.",
+    acceptAll: "Tümünü kabul et",
+    rejectAll: "Yalnızca zorunlu",
+    customise: "Ayarlar",
+    save: "Seçimi kaydet",
+    back: "Geri",
+    details: "Ayrıntılı bilgi",
+    settingsTitle: "Çerez ayarları",
+    label: "Çerez ve gizlilik tercihleri",
+    always: "Her zaman aktif",
+    categories: {
+      necessary: {
+        name: "Zorunlu",
+        text: "Dil tercihiniz ve sayfaların hızlı açılmasını sağlayan uygulama önbelleği. Bunlar olmadan site düzgün çalışmaz; kapatılamaz."
+      },
+      analytics: {
+        name: "İstatistik",
+        text: "Google Analytics ile hangi sayfaların ilgi gördüğünü anonim olarak ölçeriz. Onay vermezseniz Google'a hiçbir bağlantı kurulmaz."
+      },
+      functional: {
+        name: "Bildirimler",
+        text: "Kampanya ve haberleri cihazınıza bildirim olarak gönderebilmemiz için OneSignal servisi. Yalnızca siz bildirimleri açtığınızda çalışır."
+      }
+    }
   },
   DE: {
     eyebrow: "DATENSCHUTZEINSTELLUNGEN",
-    title: "Wir verwenden nur technisch notwendige Technologien.",
-    text: "Für schnelleres Laden der Seiten können wir Ihre Sprachwahl und einige technische Daten auf Ihrem Gerät speichern. Der Benachrichtigungsdienst wird erst aktiv, wenn Sie ihn selbst öffnen; Werbe- oder Analyse-Cookies verwenden wir nicht.",
-    accept: "Verstanden",
-    settings: "Details ansehen",
-    label: "Hinweis zu Cookies und Datenschutz"
+    title: "Sie entscheiden über Ihre Cookies.",
+    text: "Technisch notwendige Daten speichern wir immer, damit die Seite funktioniert. Statistik- und Benachrichtigungstechnologien werden nur mit Ihrer Einwilligung aktiv; Sie können sie jederzeit widerrufen.",
+    acceptAll: "Alle akzeptieren",
+    rejectAll: "Nur notwendige",
+    customise: "Einstellungen",
+    save: "Auswahl speichern",
+    back: "Zurück",
+    details: "Weitere Informationen",
+    settingsTitle: "Cookie-Einstellungen",
+    label: "Cookie- und Datenschutzeinstellungen",
+    always: "Immer aktiv",
+    categories: {
+      necessary: {
+        name: "Notwendig",
+        text: "Ihre Sprachwahl und der App-Cache für schnelleres Laden. Ohne diese funktioniert die Seite nicht; sie lassen sich nicht deaktivieren."
+      },
+      analytics: {
+        name: "Statistik",
+        text: "Mit Google Analytics messen wir anonym, welche Seiten genutzt werden. Ohne Ihre Einwilligung wird keine Verbindung zu Google aufgebaut."
+      },
+      functional: {
+        name: "Benachrichtigungen",
+        text: "Der Dienst OneSignal, damit wir Ihnen Aktionen und Neuigkeiten als Push-Nachricht senden können. Aktiv nur, wenn Sie Benachrichtigungen selbst einschalten."
+      }
+    }
   },
   ENG: {
     eyebrow: "PRIVACY PREFERENCES",
-    title: "We only use essential technologies.",
-    text: "To load pages faster, we may store your language preference and some technical data on your device. The notification service only activates when you open it yourself; we do not use advertising or behavioural analytics cookies.",
-    accept: "Understood",
-    settings: "View details",
-    label: "Cookie and privacy notice"
+    title: "You decide about your cookies.",
+    text: "We always store the technical data the site needs to work. Statistics and notification technologies are only activated with your consent, and you can withdraw it at any time.",
+    acceptAll: "Accept all",
+    rejectAll: "Essential only",
+    customise: "Settings",
+    save: "Save choice",
+    back: "Back",
+    details: "More information",
+    settingsTitle: "Cookie settings",
+    label: "Cookie and privacy preferences",
+    always: "Always active",
+    categories: {
+      necessary: {
+        name: "Essential",
+        text: "Your language choice and the app cache that makes pages load faster. The site does not work without these; they cannot be switched off."
+      },
+      analytics: {
+        name: "Statistics",
+        text: "Google Analytics lets us measure anonymously which pages are used. Without your consent no connection to Google is made."
+      },
+      functional: {
+        name: "Notifications",
+        text: "The OneSignal service, so we can send you offers and news as push messages. Active only when you turn notifications on yourself."
+      }
+    }
   }
 } as const;
 
-function hasAcknowledgedNotice() {
-  try {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (!stored) return false;
-    return (JSON.parse(stored) as { version?: string }).version === CONSENT_VERSION;
-  } catch {
-    return false;
-  }
+function ConsentToggle({
+  name,
+  text,
+  checked,
+  disabled,
+  alwaysLabel,
+  onChange
+}: {
+  name: string;
+  text: string;
+  checked: boolean;
+  disabled?: boolean;
+  alwaysLabel?: string;
+  onChange?: (next: boolean) => void;
+}) {
+  return (
+    <div className={`cookie-category${disabled ? " is-locked" : ""}`}>
+      <div className="cookie-category__head">
+        <strong>{name}</strong>
+        {disabled ? (
+          <span className="cookie-category__always">{alwaysLabel}</span>
+        ) : (
+          <label className="cookie-switch">
+            <input
+              type="checkbox"
+              checked={checked}
+              onChange={(event) => onChange?.(event.target.checked)}
+            />
+            <span className="cookie-switch__track" aria-hidden="true">
+              <span className="cookie-switch__thumb" />
+            </span>
+            <span className="cookie-switch__label">{name}</span>
+          </label>
+        )}
+      </div>
+      <p>{text}</p>
+    </div>
+  );
 }
 
 export function CookieNotice() {
   const language = useSiteLanguage();
-  const [visible, setVisible] = useState(false);
   const text = copy[language];
+  const [visible, setVisible] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [draft, setDraft] = useState<ConsentDecision>(() => currentConsent());
+
+  // Re-apply the stored decision on every load: the consent record is the
+  // single source of truth, so a returning visitor who granted statistics gets
+  // GA back without being asked again, and one who declined never loads it.
+  useEffect(() => {
+    applyAnalyticsConsent(currentConsent().analytics);
+    return subscribeToConsent((decision) => applyAnalyticsConsent(decision.analytics));
+  }, []);
 
   useEffect(() => {
-    if (hasAcknowledgedNotice()) return;
+    if (hasDecided()) return;
     const timer = window.setTimeout(() => setVisible(true), 700);
     return () => window.clearTimeout(timer);
   }, []);
 
   useEffect(() => {
-    const handleOpenRequest = () => setVisible(true);
+    const handleOpenRequest = () => {
+      setDraft(currentConsent());
+      setShowSettings(true);
+      setVisible(true);
+    };
     window.addEventListener(OPEN_PREFERENCES_EVENT, handleOpenRequest);
     return () => window.removeEventListener(OPEN_PREFERENCES_EVENT, handleOpenRequest);
   }, []);
 
-  const acknowledge = () => {
-    window.localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify({ version: CONSENT_VERSION, acknowledgedAt: new Date().toISOString() })
-    );
+  const commit = (decision: ConsentDecision) => {
+    saveConsent(decision);
+    setDraft(decision);
+    setShowSettings(false);
     setVisible(false);
   };
 
   if (!visible) return null;
 
   return (
-    <aside className="cookie-notice" aria-label={text.label} aria-live="polite">
+    <aside
+      className={`cookie-notice${showSettings ? " cookie-notice--settings" : ""}`}
+      aria-label={text.label}
+      role="dialog"
+      aria-modal="false"
+    >
       <div className="cookie-notice__copy">
         <span>{text.eyebrow}</span>
-        <strong>{text.title}</strong>
-        <p>{text.text}</p>
+        <strong>{showSettings ? text.settingsTitle : text.title}</strong>
+        {!showSettings && <p>{text.text}</p>}
       </div>
+
+      {showSettings && (
+        <div className="cookie-notice__categories">
+          <ConsentToggle
+            name={text.categories.necessary.name}
+            text={text.categories.necessary.text}
+            checked
+            disabled
+            alwaysLabel={text.always}
+          />
+          <ConsentToggle
+            name={text.categories.analytics.name}
+            text={text.categories.analytics.text}
+            checked={draft.analytics}
+            onChange={(analytics) => setDraft((current) => ({ ...current, analytics }))}
+          />
+          <ConsentToggle
+            name={text.categories.functional.name}
+            text={text.categories.functional.text}
+            checked={draft.functional}
+            onChange={(functional) => setDraft((current) => ({ ...current, functional }))}
+          />
+        </div>
+      )}
+
       <div className="cookie-notice__actions">
-        <a href="/datenschutz#cookies">{text.settings}</a>
-        <button type="button" onClick={acknowledge}>{text.accept}</button>
+        <a className="cookie-notice__link" href="/datenschutz#cookies">
+          {text.details}
+        </a>
+        {showSettings ? (
+          <>
+            <button type="button" className="cookie-btn cookie-btn--ghost" onClick={() => setShowSettings(false)}>
+              {text.back}
+            </button>
+            <button type="button" className="cookie-btn cookie-btn--primary" onClick={() => commit(draft)}>
+              {text.save}
+            </button>
+          </>
+        ) : (
+          <>
+            <button type="button" className="cookie-btn cookie-btn--ghost" onClick={() => setShowSettings(true)}>
+              {text.customise}
+            </button>
+            {/* Reject carries the same weight as accept: a visibly weaker
+                "decline" is the single most cited defect in German rulings. */}
+            <button type="button" className="cookie-btn cookie-btn--primary" onClick={() => commit(DENIED_ALL)}>
+              {text.rejectAll}
+            </button>
+            <button type="button" className="cookie-btn cookie-btn--primary" onClick={() => commit(GRANTED_ALL)}>
+              {text.acceptAll}
+            </button>
+          </>
+        )}
       </div>
     </aside>
   );
