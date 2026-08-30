@@ -60,6 +60,16 @@ const menuMezeImage = "/images/menu-meze-portrait.webp";
 const menuDessertImage = "/images/menu-dessert-portrait.webp";
 const menuCafeImage = "/images/menu-cafe-portrait-v1.webp";
 const menuVeganVegetarianImage = "/images/menu-vegan-vegetarisch-portrait-v1.jpg";
+const craftDiningRoomImage = {
+  src: "/images/bedri-usta-dining-room.webp",
+  srcSet: [
+    "/images/bedri-usta-dining-room-480.webp 480w",
+    "/images/bedri-usta-dining-room-800.webp 800w",
+    "/images/bedri-usta-dining-room-1200.webp 1200w",
+    "/images/bedri-usta-dining-room-1800.webp 1800w"
+  ].join(", "),
+  sizes: "(max-width: 759px) 92vw, (max-width: 1180px) 30vw, 340px"
+};
 const restaurantAddress = "K1 1-4, 68159 Mannheim, Almanya";
 const restaurantAddressWithName = "Bedri Usta K1 1-4, 68159 Mannheim, Deutschland";
 const googleMapsPlaceLink = "https://maps.app.goo.gl/NZHsiEJmyTg9nVgRA";
@@ -751,6 +761,17 @@ function App() {
 
       <View style={[styles.section, styles.craftSection]}>
         <ScrollReveal style={[styles.craftInner, layout.isMobile && styles.stack]}>
+          <View style={[styles.craftMedia, layout.isMobile && styles.craftMediaMobile]}>
+            <img
+              src={craftDiningRoomImage.src}
+              srcSet={craftDiningRoomImage.srcSet}
+              sizes={craftDiningRoomImage.sizes}
+              alt="Bedri Usta Mannheim salonunda bordo Bedri Usta yastıklarıyla hazırlanmış masalar"
+              loading="lazy"
+              decoding="async"
+              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+            />
+          </View>
           <Text style={[styles.craftTitle, layout.isMobile && styles.sectionTitleMobile]}>
             Ustalık, özenle hazırlanır; sofrada zarif bir deneyime dönüşür.
           </Text>
@@ -5598,8 +5619,27 @@ const styles = StyleSheet.create({
     marginHorizontal: "auto",
     flexDirection: "row",
     gap: 46,
-    alignItems: "flex-start"
+    alignItems: "stretch"
   },
+  craftMedia: {
+    flexGrow: 0,
+    flexShrink: 1,
+    flexBasis: 300,
+    minWidth: 220,
+    borderRadius: 14,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "rgba(255,247,223,0.22)",
+    boxShadow: "0 24px 60px rgba(20,4,4,.45)"
+  } as any,
+  craftMediaMobile: {
+    flexBasis: "auto",
+    flexGrow: 0,
+    flexShrink: 0,
+    width: "100%",
+    minWidth: 0,
+    aspectRatio: 16 / 9
+  } as any,
   craftTitle: {
     flex: 1,
     color: colors.cream,
