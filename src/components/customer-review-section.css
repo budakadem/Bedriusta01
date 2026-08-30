@@ -30,12 +30,17 @@
    is left-aligned behind a fixed-width icon chip, so the two logos share one
    vertical line and the two labels share another. */
 .customer-review__public-actions--prominent { display: grid; grid-template-columns: minmax(0, 1fr); justify-content: stretch; width: min(360px, 100%); margin: 26px auto 0; gap: 12px; }
-.customer-review__public-actions--prominent button { display: grid; grid-template-columns: 40px minmax(0, 1fr); align-items: center; justify-content: stretch; gap: 14px; width: 100%; min-width: 0; min-height: 64px; padding: 12px 18px; color: var(--review-cream); border-color: var(--review-wine); background: var(--review-wine); font-size: 16px; text-align: left; transition: transform 180ms cubic-bezier(.22,1,.36,1), background-color 180ms ease; }
+/* The icon and the label+stars move together as one centered group. Both
+   buttons give that group the same fixed-basis width (the icon is a fixed
+   40px and the label box below has a shared flex-basis), so the group's
+   width — and therefore the icon's x position once centered — is identical
+   between the two buttons regardless of how long each label text is. */
+.customer-review__public-actions--prominent button { display: flex; align-items: center; justify-content: center; gap: 14px; width: 100%; min-width: 0; min-height: 64px; padding: 12px 18px; color: var(--review-cream); border-color: var(--review-wine); background: var(--review-wine); font-size: 16px; text-align: left; transition: transform 180ms cubic-bezier(.22,1,.36,1), background-color 180ms ease; }
 .customer-review__public-actions--prominent button:hover { background: var(--review-wine-active); transform: translateY(-2px); }
 .customer-review__public-actions--prominent button:active { transform: translateY(0); }
-.customer-review__platform-icon { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 999px; background: var(--review-cream); }
+.customer-review__platform-icon { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; flex: 0 0 40px; border-radius: 999px; background: var(--review-cream); }
 .customer-review__public-actions--prominent .customer-review__platform-icon img { width: 24px; height: 24px; flex: 0 0 24px; }
-.customer-review__platform-copy { display: flex; min-width: 0; flex-direction: column; align-items: center; gap: 3px; text-align: center; }
+.customer-review__platform-copy { display: flex; flex: 0 1 200px; min-width: 0; flex-direction: column; align-items: center; gap: 3px; text-align: center; }
 .customer-review__platform-label { font: 800 16px/1.25 "Heebo", sans-serif; }
 .customer-review__platform-stars { color: var(--review-gold); font: 800 13px/16px "Karla", sans-serif; letter-spacing: 2px; }
 .customer-review__text-link { min-height: 44px; margin-top: 18px; padding: 8px 4px; border: 0; color: var(--review-wine); background: transparent; font-size: 14px; font-weight: 800; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
