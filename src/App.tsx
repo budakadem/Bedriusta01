@@ -201,11 +201,11 @@ const navItems = [
     label: "Kurumsal",
     items: [
       { label: "Hakkımızda", href: "/hakkimizda" },
-      { label: "Golden Tabla Club", href: "/golden-tabla-club" },
       { label: "Jobs", href: "/jobs" },
       { label: "Politikalarımız", href: "/politikalarimiz" }
     ]
   },
+  { label: "Golden Tabla Club", href: "/golden-tabla-club" },
   { label: "İletişim", href: "/iletisim" },
   { label: "Menü", href: "/menu" },
   { label: "Rezervasyon", href: "/rezervasyon" }
