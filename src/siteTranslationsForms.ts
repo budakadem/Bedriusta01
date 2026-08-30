@@ -239,4 +239,168 @@ export const formTranslations: Record<string, { DE: string; ENG: string }> = {
   ,"Türk çayı ve kahvesinden modern içeceklere kadar bar akışını yönetir, nargile servisinde misafirlere özenli bir deneyim sunarsın.": { DE: "Sie steuern den Barablauf von türkischem Tee und Kaffee bis zu modernen Getränken und bieten Gästen einen aufmerksamen Shisha-Service.", ENG: "You manage the bar from Turkish tea and coffee to modern drinks and provide guests with attentive shisha service." }
   ,"Ekibimize Katıl | Bedri Usta Mannheim": { DE: "Karriere | Bedri Usta Mannheim", ENG: "Join Our Team | Bedri Usta Mannheim" }
   ,"Bedri Usta Mannheim açık pozisyonlarını keşfet ve hızlıca başvur.": { DE: "Entdecken Sie offene Stellen bei Bedri Usta Mannheim und bewerben Sie sich unkompliziert.", ENG: "Explore open roles at Bedri Usta Mannheim and apply with ease." }
+
+  // Job responsibilities & profile bullet lists (per role, in jobs array order)
+  ,"Misafirleri profesyonel biçimde karşılamak, yerleştirmek ve uğurlamak": { DE: "Gäste professionell empfangen, platzieren und verabschieden", ENG: "Welcome, seat and bid farewell to guests professionally" }
+  ,"Siparişleri doğru almak; yemek ve içecek servisini özenle yürütmek": { DE: "Bestellungen korrekt aufnehmen; Speisen- und Getränkeservice sorgfältig durchführen", ENG: "Take orders accurately; carry out food and drink service with care" }
+  ,"Menü hakkında bilgi vermek ve misafire uygun öneriler sunmak": { DE: "Über die Speisekarte informieren und passende Empfehlungen aussprechen", ENG: "Provide information about the menu and offer suitable recommendations" }
+  ,"Kasa ve ödeme işlemlerini dikkatli, doğru ve şeffaf biçimde gerçekleştirmek": { DE: "Kassen- und Zahlungsvorgänge sorgfältig, korrekt und transparent abwickeln", ENG: "Handle till and payment processes carefully, accurately and transparently" }
+  ,"Masa ve servis alanlarının düzenini korumak": { DE: "Die Ordnung an Tischen und im Servicebereich aufrechterhalten", ENG: "Maintain order at tables and in service areas" }
+  ,"Mutfak ve bar ekibiyle koordineli çalışmak": { DE: "Koordiniert mit dem Küchen- und Barteam zusammenarbeiten", ENG: "Work in close coordination with the kitchen and bar team" }
+  ,"Hijyen, gıda güvenliği ve servis standartlarını eksiksiz uygulamak": { DE: "Hygiene-, Lebensmittelsicherheits- und Servicestandards vollständig einhalten", ENG: "Fully apply hygiene, food safety and service standards" }
+  ,"Gastronomi servisinde deneyim tercih sebebidir": { DE: "Erfahrung im Gastronomieservice ist von Vorteil", ENG: "Experience in restaurant service is an advantage" }
+  ,"Güler yüzlü, kendine güvenen ve misafir odaklısındır": { DE: "Sie sind freundlich, selbstbewusst und gästeorientiert", ENG: "You are friendly, confident and guest-focused" }
+  ,"Almanca ve Türkçe iletişim kurabilirsin": { DE: "Sie kommunizieren auf Deutsch und Türkisch", ENG: "You can communicate in German and Turkish" }
+  ,"Yoğun saatlerde dikkatini korur ve ekip çalışmasına uyum sağlarsın": { DE: "Auch in stressigen Zeiten bleiben Sie aufmerksam und arbeiten gut im Team", ENG: "You stay focused during busy periods and work well as part of a team" }
+
+  ,"Misafirleri karşılamak, masaya yerleştirmek ve uğurlamak": { DE: "Gäste empfangen, zu Tischen begleiten und verabschieden", ENG: "Welcome guests, seat them at tables and bid them farewell" }
+  ,"Telefonla ve yüz yüze rezervasyon almak": { DE: "Reservierungen telefonisch und persönlich entgegennehmen", ENG: "Take reservations by phone and in person" }
+  ,"Masa doluluk planını ve bekleme sürecini yönetmek": { DE: "Die Tischbelegung und den Wartebereich steuern", ENG: "Manage table occupancy and the waiting process" }
+  ,"Gerektiğinde servis ekibine destek olmak": { DE: "Bei Bedarf das Serviceteam unterstützen", ENG: "Support the service team when needed" }
+  ,"Karşılama alanının düzenini ve güçlü ilk izlenimi korumak": { DE: "Die Ordnung im Empfangsbereich und einen starken ersten Eindruck bewahren", ENG: "Maintain order at the entrance and ensure a strong first impression" }
+  ,"Temsil gücün yüksek, güler yüzlü ve misafir odaklısındır": { DE: "Sie treten sicher auf, sind freundlich und gästeorientiert", ENG: "You have a strong, friendly presence and are guest-focused" }
+  ,"Karşılama veya servis deneyimi avantajdır": { DE: "Erfahrung im Empfang oder Service ist von Vorteil", ENG: "Experience in reception or service is an advantage" }
+  ,"Almanca iletişimin çok iyi, Türkçe iletişimin iyidir": { DE: "Ihr Deutsch ist sehr gut, Ihr Türkisch ist gut", ENG: "Your German is very good and your Turkish is good" }
+  ,"Yoğunlukta sakin kalır, planlı ve çözüm odaklı çalışırsın": { DE: "Auch in stressigen Momenten bleiben Sie ruhig, strukturiert und lösungsorientiert", ENG: "You stay calm under pressure and work in an organised, solution-focused way" }
+
+  ,"Kebap ve ızgara etlerini reçeteye uygun hazırlamak ve pişirmek": { DE: "Kebab- und Grillfleisch rezepturgetreu vorbereiten und zubereiten", ENG: "Prepare and grill kebab and grilled meats according to recipe" }
+  ,"Et ürünlerinin tazelik ve kalite kontrolünü yapmak": { DE: "Frische und Qualität der Fleischprodukte kontrollieren", ENG: "Check the freshness and quality of meat products" }
+  ,"Pişirme sıcaklıklarını ve servis zamanlamasını yönetmek": { DE: "Gartemperaturen und Serviertiming steuern", ENG: "Manage cooking temperatures and service timing" }
+  ,"Yardımcı personele istasyon düzeni konusunda rehberlik etmek": { DE: "Hilfskräfte bei der Stationsorganisation anleiten", ENG: "Guide assistant staff on station organisation" }
+  ,"Mutfak ekibiyle yakın koordinasyon kurmak": { DE: "Eng mit dem Küchenteam zusammenarbeiten", ENG: "Coordinate closely with the kitchen team" }
+  ,"Kebap veya ızgara ustası olarak birkaç yıllık deneyimin vardır": { DE: "Sie verfügen über mehrjährige Erfahrung als Kebab- oder Grillkoch", ENG: "You have several years of experience as a kebab or grill chef" }
+  ,"Geleneksel Türk ızgara tekniklerine hâkimsindir": { DE: "Sie beherrschen traditionelle türkische Grilltechniken", ENG: "You have mastery of traditional Turkish grilling techniques" }
+  ,"Fiziksel olarak dayanıklı, güvenilir ve kalite odaklısındır": { DE: "Sie sind körperlich belastbar, zuverlässig und qualitätsbewusst", ENG: "You are physically resilient, reliable and quality-focused" }
+  ,"Almanca ve Türkçe ile mutfak ekibinde iletişim kurabilirsin": { DE: "Sie kommunizieren auf Deutsch und Türkisch im Küchenteam", ENG: "You can communicate in German and Turkish within the kitchen team" }
+
+  ,"Döner etini hazırlamak ve şişe usulüne uygun dizmek": { DE: "Dönerfleisch vorbereiten und fachgerecht auf den Spieß schichten", ENG: "Prepare döner meat and stack it onto the spit correctly" }
+  ,"Döner ve dürüm çeşitlerini doğru kalınlıkta kesmek ve porsiyonlamak": { DE: "Döner- und Dürüm-Varianten in der richtigen Stärke schneiden und portionieren", ENG: "Slice and portion döner and dürüm varieties to the correct thickness" }
+  ,"Isı, pişme, tazelik ve servis hızını kontrol etmek": { DE: "Hitze, Gargrad, Frische und Servicegeschwindigkeit kontrollieren", ENG: "Monitor heat, doneness, freshness and service speed" }
+  ,"Et stoklarını takip etmek ve ön hazırlığı planlamak": { DE: "Fleischbestände überwachen und die Vorbereitung planen", ENG: "Track meat stock levels and plan preparation" }
+  ,"Tehlike Analizi ve Kritik Kontrol Noktaları (HACCP), hijyen ve iş güvenliği kurallarını uygulamak": { DE: "HACCP- (Gefahrenanalyse und kritische Kontrollpunkte), Hygiene- und Arbeitssicherheitsvorschriften einhalten", ENG: "Apply HACCP (Hazard Analysis and Critical Control Points), hygiene and workplace safety rules" }
+  ,"Döner ustalığında sağlam deneyimin vardır": { DE: "Sie verfügen über fundierte Erfahrung als Döner-Meister", ENG: "You have solid experience as a döner chef" }
+  ,"Klasik ve modern döner ile dürüm hazırlama tekniklerini bilirsin": { DE: "Sie beherrschen klassische und moderne Döner- und Dürüm-Zubereitungstechniken", ENG: "You know classic and modern döner and dürüm preparation techniques" }
+  ,"Titiz, hijyenik ve yoğun tempoya dayanıklı çalışırsın": { DE: "Sie arbeiten sorgfältig, hygienisch und auch bei hohem Tempo zuverlässig", ENG: "You work meticulously, hygienically and can handle a fast pace" }
+
+  ,"Pide, lahmacun ve lavaş hamurunu hazırlamak ve porsiyonlamak": { DE: "Teig für Pide, Lahmacun und Lavaş vorbereiten und portionieren", ENG: "Prepare and portion dough for pide, lahmacun and lavaş" }
+  ,"Ürünleri reçeteye uygun biçimde açmak, hazırlamak ve pişirmek": { DE: "Produkte rezepturgetreu ausrollen, belegen und backen", ENG: "Roll out, prepare and bake products according to recipe" }
+  ,"Taş fırının ısısını ve üretim sırasını yönetmek": { DE: "Steinofentemperatur und Produktionsreihenfolge steuern", ENG: "Manage stone-oven heat and production sequence" }
+  ,"Hamur kalitesini ve porsiyon standartlarını kontrol etmek": { DE: "Teigqualität und Portionsstandards kontrollieren", ENG: "Check dough quality and portion standards" }
+  ,"Fırın istasyonunu düzenli ve hijyenik tutmak": { DE: "Die Ofenstation ordentlich und hygienisch halten", ENG: "Keep the oven station tidy and hygienic" }
+  ,"Pide, lahmacun veya taş fırın üretiminde deneyimlisin": { DE: "Sie haben Erfahrung in der Herstellung von Pide, Lahmacun oder Steinofenprodukten", ENG: "You have experience making pide, lahmacun or stone-oven products" }
+  ,"Geleneksel hamur tekniklerine hâkimsindir": { DE: "Sie beherrschen traditionelle Teigtechniken", ENG: "You have mastery of traditional dough techniques" }
+  ,"Sıcak ortamda ve ayakta çalışmaya uygunsundur": { DE: "Sie sind es gewohnt, in heißer Umgebung im Stehen zu arbeiten", ENG: "You are comfortable working on your feet in a hot environment" }
+  ,"Titiz, güvenilir ve ekip çalışmasına yatkınsındır": { DE: "Sie sind sorgfältig, zuverlässig und teamfähig", ENG: "You are meticulous, reliable and a strong team player" }
+
+  ,"Etleri parçalamak, ayıklamak, porsiyonlamak ve hazırlamak": { DE: "Fleisch zerlegen, parieren, portionieren und vorbereiten", ENG: "Cut, trim, portion and prepare meat" }
+  ,"Kebap, ızgara, döner ve dürüm üretimi için et hazırlamak": { DE: "Fleisch für Kebab-, Grill-, Döner- und Dürüm-Produktion vorbereiten", ENG: "Prepare meat for kebab, grill, döner and dürüm production" }
+  ,"Soğuk zincir, sıcaklık kontrolü ve hijyen kurallarını uygulamak": { DE: "Kühlkette, Temperaturkontrolle und Hygienevorschriften einhalten", ENG: "Maintain cold-chain, temperature control and hygiene rules" }
+  ,"Stok takibi yapmak ve depo düzenini korumak": { DE: "Bestände überwachen und die Lagerordnung aufrechterhalten", ENG: "Track stock and maintain storeroom order" }
+  ,"Mutfak ekibinin günlük hazırlık planına destek olmak": { DE: "Das Küchenteam bei der täglichen Vorbereitungsplanung unterstützen", ENG: "Support the kitchen team's daily preparation planning" }
+  ,"Et işleme veya kasaplık deneyimin vardır": { DE: "Sie haben Erfahrung in der Fleischverarbeitung oder als Metzger", ENG: "You have experience in meat processing or butchery" }
+  ,"Gıda güvenliği ve çapraz bulaşma riskleri konusunda bilinçlisin": { DE: "Sie sind sich der Lebensmittelsicherheit und der Risiken von Kreuzkontamination bewusst", ENG: "You are aware of food safety and cross-contamination risks" }
+  ,"Fiziksel olarak dayanıklı, dikkatli ve güvenilirsindir": { DE: "Sie sind körperlich belastbar, sorgfältig und zuverlässig", ENG: "You are physically resilient, careful and reliable" }
+  ,"Yoğun mutfak temposunda ekip düzenine uyum sağlarsın": { DE: "Auch bei hohem Küchentempo fügen Sie sich gut ins Team ein", ENG: "You adapt well to the team even at a fast kitchen pace" }
+
+  ,"Çeşitli mezeleri ve salataları günlük olarak hazırlamak": { DE: "Verschiedene Mezes und Salate täglich frisch zubereiten", ENG: "Prepare a variety of meze and salads fresh daily" }
+  ,"Ürünlerin tazeliğini, lezzetini ve sunumunu kontrol etmek": { DE: "Frische, Geschmack und Präsentation der Produkte kontrollieren", ENG: "Check the freshness, flavour and presentation of products" }
+  ,"Reçete ve porsiyon standartlarını uygulamak": { DE: "Rezeptur- und Portionsstandards einhalten", ENG: "Apply recipe and portion standards" }
+  ,"Büfe ve alakart servis akışını desteklemek": { DE: "Den Ablauf von Büfett- und À-la-carte-Service unterstützen", ENG: "Support buffet and à la carte service flow" }
+  ,"Soğuk istasyonun hijyenini ve düzenini korumak": { DE: "Hygiene und Ordnung der kalten Küche aufrechterhalten", ENG: "Maintain hygiene and order at the cold station" }
+  ,"Soğuk mutfak veya meze hazırlama deneyimin vardır": { DE: "Sie haben Erfahrung in der kalten Küche oder der Meze-Zubereitung", ENG: "You have experience in cold-kitchen or meze preparation" }
+  ,"Türk meze kültürüne ve temel reçetelere hâkimsindir": { DE: "Sie kennen sich mit türkischer Meze-Kultur und Grundrezepturen aus", ENG: "You are well versed in Turkish meze culture and core recipes" }
+  ,"Titiz, yaratıcı ve sunum konusunda özenlisindir": { DE: "Sie arbeiten sorgfältig, kreativ und mit Liebe zum Detail bei der Präsentation", ENG: "You are meticulous, creative and detail-oriented in presentation" }
+  ,"Yoğun tempoda ekip çalışmasına uyum sağlarsın": { DE: "Auch bei hohem Tempo arbeiten Sie gut im Team", ENG: "You work well in a team even at a fast pace" }
+
+  ,"Sebze, garnitür ve temel malzemeleri hazırlamak": { DE: "Gemüse, Beilagen und Grundzutaten vorbereiten", ENG: "Prepare vegetables, garnishes and basic ingredients" }
+  ,"Ustalara ve aşçılara günlük üretimde destek olmak": { DE: "Meister und Köche bei der täglichen Produktion unterstützen", ENG: "Support chefs and cooks in daily production" }
+  ,"Mutfak alanlarının temizlik ve düzenini sağlamak": { DE: "Sauberkeit und Ordnung in der Küche sicherstellen", ENG: "Ensure cleanliness and order in kitchen areas" }
+  ,"Malzeme kabulü ve doğru depolama süreçlerine yardımcı olmak": { DE: "Bei Wareneingang und korrekter Lagerung mithelfen", ENG: "Assist with goods receiving and correct storage" }
+  ,"Hijyen ve iş güvenliği kurallarına uymak": { DE: "Hygiene- und Arbeitssicherheitsvorschriften einhalten", ENG: "Follow hygiene and workplace safety rules" }
+  ,"Gastronomi deneyimi avantajdır ancak zorunlu değildir": { DE: "Erfahrung in der Gastronomie ist von Vorteil, aber keine Voraussetzung", ENG: "Hospitality experience is an advantage but not required" }
+  ,"Öğrenmeye istekli, güvenilir ve dikkatlisindir": { DE: "Sie sind lernbereit, zuverlässig und sorgfältig", ENG: "You are eager to learn, reliable and attentive" }
+  ,"Fiziksel olarak dayanıklı ve çalışmaya isteklisindir": { DE: "Sie sind körperlich belastbar und arbeitsbereit", ENG: "You are physically resilient and ready to work" }
+  ,"Ekip çalışmasına ve yoğun tempoya uyum sağlarsın": { DE: "Sie passen sich gut an Teamarbeit und hohes Tempo an", ENG: "You adapt well to teamwork and a fast pace" }
+
+  ,"Tabak, çatal-bıçak ve mutfak ekipmanlarını yıkamak": { DE: "Geschirr, Besteck und Küchenausrüstung spülen", ENG: "Wash plates, cutlery and kitchen equipment" }
+  ,"Endüstriyel bulaşık makinesini doğru ve güvenli kullanmak": { DE: "Die Industriespülmaschine korrekt und sicher bedienen", ENG: "Operate the industrial dishwasher correctly and safely" }
+  ,"Gerektiğinde ekipmanları elde yıkamak": { DE: "Bei Bedarf Geräte per Hand spülen", ENG: "Hand-wash equipment when needed" }
+  ,"Bulaşık alanının hijyenini ve düzenini sağlamak": { DE: "Hygiene und Ordnung im Spülbereich sicherstellen", ENG: "Ensure hygiene and order in the dishwashing area" }
+  ,"Genel mutfak düzenine destek olmak": { DE: "Die allgemeine Küchenordnung unterstützen", ENG: "Support general kitchen organisation" }
+  ,"Güvenilir, titiz ve düzenlisindir": { DE: "Sie sind zuverlässig, sorgfältig und ordentlich", ENG: "You are reliable, careful and organised" }
+  ,"Fiziksel olarak dayanıklı ve yoğun tempoya uygunsundur": { DE: "Sie sind körperlich belastbar und geeignet für hohes Tempo", ENG: "You are physically resilient and suited to a fast pace" }
+  ,"Temel Almanca veya Türkçe ile ekip içinde iletişim kurabilirsin": { DE: "Sie kommunizieren mit grundlegenden Deutsch- oder Türkischkenntnissen im Team", ENG: "You can communicate in the team with basic German or Turkish" }
+  ,"Bulaşık deneyimi avantajdır ancak öğrenme isteği de değerlidir": { DE: "Spülerfahrung ist von Vorteil, Lernbereitschaft ist ebenso willkommen", ENG: "Dishwashing experience is an advantage, but willingness to learn is equally valued" }
+
+  ,"Türk çayı, Türk kahvesi, espresso ve sıcak içecekleri hazırlamak": { DE: "Türkischen Tee, türkischen Kaffee, Espresso und Heißgetränke zubereiten", ENG: "Prepare Turkish tea, Turkish coffee, espresso and hot drinks" }
+  ,"Ayran, meyve suyu, buzlu çay, milkshake ve kokteylleri hazırlamak": { DE: "Ayran, Saft, Eistee, Milkshakes und Cocktails zubereiten", ENG: "Prepare ayran, juice, iced tea, milkshakes and cocktails" }
+  ,"Nargile hazırlığı, sunumu ve servis takibini yapmak": { DE: "Shisha vorbereiten, präsentieren und den Service begleiten", ENG: "Prepare, present and follow up on shisha service" }
+  ,"Servis ekibine destek olmak ve tezgâh akışını yönetmek": { DE: "Das Serviceteam unterstützen und den Thekenablauf steuern", ENG: "Support the service team and manage counter flow" }
+  ,"İçecek barı ile nargile alanının düzenini ve stoklarını takip etmek": { DE: "Ordnung und Bestände von Getränkebar und Shisha-Bereich überwachen", ENG: "Monitor order and stock in the drinks bar and shisha area" }
+  ,"Barista, içecek veya nargile servisi deneyimi avantajdır": { DE: "Erfahrung als Barista oder im Getränke- bzw. Shisha-Service ist von Vorteil", ENG: "Experience as a barista or in drinks/shisha service is an advantage" }
+  ,"Türk çay-kahve kültürüne ve modern kahve makinelerine ilgi duyarsın": { DE: "Sie interessieren sich für türkische Tee-Kaffee-Kultur und moderne Kaffeemaschinen", ENG: "You have an interest in Turkish tea-coffee culture and modern coffee machines" }
+  ,"Güler yüzlü, hizmet odaklı ve iletişimi güçlüsündür": { DE: "Sie sind freundlich, serviceorientiert und kommunikationsstark", ENG: "You are friendly, service-oriented and a strong communicator" }
+  ,"Almanca ve Türkçe iletişim kurabilir, yoğun tempoya uyum sağlarsın": { DE: "Sie kommunizieren auf Deutsch und Türkisch und passen sich hohem Tempo an", ENG: "You can communicate in German and Turkish and adapt to a fast pace" }
+
+  // Jobs page: remaining UI microcopy not yet wired to translateSiteText
+  ,", iş görüşmesi randevusu yok": { DE: ", keine Vorstellungsgesprächstermine", ENG: ", no interview appointments" }
+  ,"Bu pozisyona başvurabilmek için Almanya’da yasal çalışma hakkına sahip olman gerekiyor.": { DE: "Um sich auf diese Position zu bewerben, müssen Sie in Deutschland berechtigt sein zu arbeiten.", ENG: "To apply for this position, you must be legally entitled to work in Germany." }
+  ,"Belirtilmedi": { DE: "Keine Angabe", ENG: "Not specified" }
+  ,"Gönderiliyor…": { DE: "Wird gesendet…", ENG: "Sending…" }
+  ,"Kodu yeniden gönder": { DE: "Code erneut senden", ENG: "Resend code" }
+  ,"Doğrulama kodu gönder": { DE: "Bestätigungscode senden", ENG: "Send verification code" }
+  ,"Kontrol ediliyor…": { DE: "Wird geprüft…", ENG: "Checking…" }
+  ,"Kodu doğrula": { DE: "Code bestätigen", ENG: "Verify code" }
+  ,"Kod {email} adresine gönderildi.": { DE: "Der Code wurde an {email} gesendet.", ENG: "The code was sent to {email}." }
+  ,"Doğrulama kodu şu anda gönderilemedi. Lütfen kısa süre sonra tekrar dene.": { DE: "Der Bestätigungscode konnte derzeit nicht gesendet werden. Bitte versuchen Sie es in Kürze erneut.", ENG: "The verification code couldn't be sent right now. Please try again shortly." }
+  ,"Lütfen e-postana gelen 6 haneli kodu gir.": { DE: "Bitte geben Sie den 6-stelligen Code aus Ihrer E-Mail ein.", ENG: "Please enter the 6-digit code from your email." }
+  ,"E-posta adresin doğrulandı.": { DE: "Ihre E-Mail-Adresse wurde bestätigt.", ENG: "Your email address has been verified." }
+  ,"Kod doğrulanamadı. Kodu kontrol edip tekrar dene.": { DE: "Der Code konnte nicht bestätigt werden. Bitte prüfen Sie ihn und versuchen Sie es erneut.", ENG: "The code couldn't be verified. Please check it and try again." }
+  ,"Devam etmek için tarih, saat, e-posta doğrulaması ve görüşme belgeleri onayını tamamla.": { DE: "Um fortzufahren, vervollständigen Sie Datum, Uhrzeit, E-Mail-Bestätigung und die Bestätigung der Gesprächsunterlagen.", ENG: "To continue, complete the date, time, email verification and interview documents confirmation." }
+  ,"Başvurun ve görüşme randevun alındı. Onay e-postanı kısa süre içinde göndereceğiz.": { DE: "Ihre Bewerbung und Ihr Gesprächstermin sind eingegangen. Wir senden Ihnen in Kürze eine Bestätigungs-E-Mail.", ENG: "Your application and interview appointment have been received. We'll send your confirmation email shortly." }
+  ,"Başvurun şu anda gönderilemedi. Lütfen kısa süre sonra tekrar dene.": { DE: "Ihre Bewerbung konnte derzeit nicht gesendet werden. Bitte versuchen Sie es in Kürze erneut.", ENG: "Your application couldn't be sent right now. Please try again shortly." }
+  ,"Başvuru alındı": { DE: "Bewerbung eingegangen", ENG: "Application received" }
+  ,"Başvuruyu ve randevuyu onayla": { DE: "Bewerbung und Termin bestätigen", ENG: "Confirm application and appointment" }
+  ,"Başvuru adımı {step} / 2": { DE: "Bewerbungsschritt {step} / 2", ENG: "Application step {step} / 2" }
+  ,"Bedri Usta Mannheim ekibi": { DE: "Team von Bedri Usta Mannheim", ENG: "Bedri Usta Mannheim team" }
+  ,"Bedri Usta Mannheim restoran ekibi birlikte": { DE: "Restaurantteam von Bedri Usta Mannheim gemeinsam", ENG: "The Bedri Usta Mannheim restaurant team together" }
+
+  // Reservation page: remaining UI microcopy not yet wired to translateSiteText
+  ,"Kişi sayısını seçmelisin.": { DE: "Bitte wählen Sie die Personenzahl.", ENG: "Please select the party size." }
+  ,"Kişi sayısı {min}–{max} arasında olmalı.": { DE: "Die Personenzahl muss zwischen {min} und {max} liegen.", ENG: "Party size must be between {min} and {max}." }
+  ,"Tarih seçmelisin.": { DE: "Bitte wählen Sie ein Datum.", ENG: "Please select a date." }
+  ,"Saat seçmelisin.": { DE: "Bitte wählen Sie eine Uhrzeit.", ENG: "Please select a time." }
+  ,"Hitap seçmelisin.": { DE: "Bitte wählen Sie eine Anrede.", ENG: "Please select a salutation." }
+  ,"Adını yazmalısın.": { DE: "Bitte geben Sie Ihren Vornamen ein.", ENG: "Please enter your first name." }
+  ,"Soyadını yazmalısın.": { DE: "Bitte geben Sie Ihren Nachnamen ein.", ENG: "Please enter your last name." }
+  ,"Geçerli bir telefon numarası yazmalısın.": { DE: "Bitte geben Sie eine gültige Telefonnummer ein.", ENG: "Please enter a valid phone number." }
+  ,"Geçerli bir e-posta adresi yazmalısın.": { DE: "Bitte geben Sie eine gültige E-Mail-Adresse ein.", ENG: "Please enter a valid email address." }
+  ,"Önce geçerli bir e-posta adresi yazmalısın.": { DE: "Bitte geben Sie zuerst eine gültige E-Mail-Adresse ein.", ENG: "Please enter a valid email address first." }
+  ,"E-posta doğrulama servisi şu anda kullanılamıyor. Lütfen daha sonra tekrar dene.": { DE: "Der E-Mail-Bestätigungsdienst ist derzeit nicht verfügbar. Bitte versuchen Sie es später erneut.", ENG: "The email verification service is currently unavailable. Please try again later." }
+  ,"Altı haneli doğrulama kodu e-posta adresine gönderildi.": { DE: "Der 6-stellige Bestätigungscode wurde an Ihre E-Mail-Adresse gesendet.", ENG: "The 6-digit verification code has been sent to your email address." }
+  ,"Kod şu anda gönderilemedi. Lütfen biraz sonra yeniden dene.": { DE: "Der Code konnte derzeit nicht gesendet werden. Bitte versuchen Sie es in Kürze erneut.", ENG: "The code couldn't be sent right now. Please try again shortly." }
+  ,"Altı haneli kodu eksiksiz yazmalısın.": { DE: "Bitte geben Sie den vollständigen 6-stelligen Code ein.", ENG: "Please enter the complete 6-digit code." }
+  ,"Kod geçersiz veya süresi dolmuş. Lütfen tekrar dene.": { DE: "Der Code ist ungültig oder abgelaufen. Bitte versuchen Sie es erneut.", ENG: "The code is invalid or has expired. Please try again." }
+  ,"Rezervasyon sistemi şu anda kullanılamıyor. Lütfen daha sonra tekrar dene.": { DE: "Das Reservierungssystem ist derzeit nicht verfügbar. Bitte versuchen Sie es später erneut.", ENG: "The reservation system is currently unavailable. Please try again later." }
+  ,"ONAY BEKLİYOR": { DE: "WARTET AUF BESTÄTIGUNG", ENG: "AWAITING CONFIRMATION" }
+  ,"ONAYLANDI": { DE: "BESTÄTIGT", ENG: "CONFIRMED" }
+  ,"Bu saat az önce doldu. Lütfen başka bir saat seç.": { DE: "Diese Uhrzeit wurde soeben vergeben. Bitte wählen Sie eine andere Uhrzeit.", ENG: "This time slot was just taken. Please choose another time." }
+  ,"İşlem şu anda tamamlanamadı. Bilgilerin kaydedilmedi; lütfen yeniden dene.": { DE: "Der Vorgang konnte derzeit nicht abgeschlossen werden. Ihre Angaben wurden nicht gespeichert; bitte versuchen Sie es erneut.", ENG: "The process couldn't be completed right now. Your details weren't saved; please try again." }
+  ,"GRUP TALEBİ": { DE: "GRUPPENANFRAGE", ENG: "GROUP REQUEST" }
+  ,"REZERVASYON": { DE: "RESERVIERUNG", ENG: "RESERVATION" }
+  ,"Talebin gönderildi.": { DE: "Ihre Anfrage wurde gesendet.", ENG: "Your request has been sent." }
+  ,"Rezervasyonun onaylandı.": { DE: "Ihre Reservierung wurde bestätigt.", ENG: "Your reservation is confirmed." }
+  ,"{n} kişiden fazla, grup talebi": { DE: "Mehr als {n} Personen, Gruppenanfrage", ENG: "More than {n} guests, group request" }
+  ,"{n} kişi, grup talebi": { DE: "{n} Personen, Gruppenanfrage", ENG: "{n} guests, group request" }
+  ,"{n}’den fazla kişi": { DE: "Mehr als {n} Personen", ENG: "More than {n} guests" }
+  ,"Kişi seçilmedi": { DE: "Keine Personenzahl ausgewählt", ENG: "No party size selected" }
+  ,"En fazla {limit} kişi olabilir.": { DE: "Es dürfen höchstens {limit} Personen sein.", ENG: "There can be at most {limit} guests." }
+  ,"Seçilmedi": { DE: "Nicht ausgewählt", ENG: "Not selected" }
+  ,"Kontrol ediliyor...": { DE: "Wird geprüft...", ENG: "Checking..." }
+  ,"Hazırlanıyor...": { DE: "Wird vorbereitet...", ENG: "Preparing..." }
+  ,"Grup talebini gönder": { DE: "Gruppenanfrage senden", ENG: "Send group request" }
+  ,"Rezervasyonu tamamla": { DE: "Reservierung abschließen", ENG: "Complete reservation" }
+  ,"seviye belirtilmedi": { DE: "Niveau nicht angegeben", ENG: "level not specified" }
+  ,"Pazar — Perşembe": { DE: "Sonntag — Donnerstag", ENG: "Sunday — Thursday" }
+  ,"Cuma — Cumartesi": { DE: "Freitag — Samstag", ENG: "Friday — Saturday" }
 };

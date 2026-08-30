@@ -2231,6 +2231,94 @@ function HorizontalCardRail({
     };
   }, [id, loop]);
 
+  // Belt-and-braces vertical scroll passthrough. touch-action + overflow-y:
+  // hidden on the rail (see styles.css) should already let a vertical drag
+  // that starts on a card fall through to the page on any spec-compliant
+  // engine. This adds a JS fallback for engines/contexts (e.g. iOS "Add to
+  // Home Screen" standalone mode) where that chaining doesn't kick in: it
+  // gives the browser one frame to prove it scrolled the page on its own,
+  // and only takes over driving the page's scrollTop itself if it didn't.
+  // A pan that turns out to be horizontal is left completely alone.
+  useEffect(() => {
+    const rail = document.getElementById(id);
+    if (!rail) return;
+
+    let touchState: {
+      startX: number;
+      startY: number;
+      lastY: number;
+      axis: "x" | "y" | null;
+      scrollTopAtLock: number;
+      fallbackActive: boolean;
+    } | null = null;
+
+    const handleTouchStart = (event: TouchEvent) => {
+      if (event.touches.length !== 1) {
+        touchState = null;
+        return;
+      }
+      const touch = event.touches[0];
+      touchState = {
+        startX: touch.clientX,
+        startY: touch.clientY,
+        lastY: touch.clientY,
+        axis: null,
+        scrollTopAtLock: 0,
+        fallbackActive: false
+      };
+    };
+
+    const handleTouchMove = (event: TouchEvent) => {
+      if (!touchState || event.touches.length !== 1) return;
+      const touch = event.touches[0];
+      const dx = touch.clientX - touchState.startX;
+      const dy = touch.clientY - touchState.startY;
+
+      if (touchState.axis === null) {
+        if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+        touchState.axis = Math.abs(dy) > Math.abs(dx) ? "y" : "x";
+        if (touchState.axis === "y") {
+          const scroller = document.scrollingElement || document.documentElement;
+          touchState.scrollTopAtLock = scroller.scrollTop;
+          const lockedState = touchState;
+          // A timer rather than requestAnimationFrame: rAF is paused while
+          // the tab/page isn't visible for compositing, which would leave
+          // fallbackActive permanently false. setTimeout keeps firing
+          // regardless, and 32ms is still well within one gesture's motion.
+          window.setTimeout(() => {
+            if (touchState !== lockedState) return;
+            lockedState.fallbackActive = scroller.scrollTop === lockedState.scrollTopAtLock;
+          }, 32);
+        }
+      }
+
+      if (touchState.axis !== "y") return;
+
+      if (touchState.fallbackActive) {
+        event.preventDefault();
+        const scroller = document.scrollingElement || document.documentElement;
+        scroller.scrollTop += touchState.lastY - touch.clientY;
+      }
+      touchState.lastY = touch.clientY;
+    };
+
+    const clearTouchState = () => {
+      touchState = null;
+    };
+
+    rail.addEventListener("touchstart", handleTouchStart, { passive: true });
+    rail.addEventListener("touchmove", handleTouchMove, { passive: false });
+    rail.addEventListener("touchend", clearTouchState, { passive: true });
+    rail.addEventListener("touchcancel", clearTouchState, { passive: true });
+
+    return () => {
+      rail.removeEventListener("touchstart", handleTouchStart);
+      rail.removeEventListener("touchmove", handleTouchMove);
+      rail.removeEventListener("touchend", clearTouchState);
+      rail.removeEventListener("touchcancel", clearTouchState);
+    };
+  }, [id]);
+
   useEffect(() => {
     if (!autoPlay || !loop) return;
 

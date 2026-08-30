@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { getIntlLocale, useSiteLanguage } from "../siteLanguage";
+import { getIntlLocale, type SiteLanguage, useSiteLanguage } from "../siteLanguage";
+import { translateSiteText } from "../siteTranslations";
 
 type ReservationDatePickerProps = {
   value: string;
@@ -36,8 +37,8 @@ function moveMonth(date: Date, offset: number) {
   return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + offset, 1));
 }
 
-function readableDate(value: string, locale: string) {
-  if (!value) return "Tarih seçiniz";
+function readableDate(value: string, locale: string, language: SiteLanguage) {
+  if (!value) return translateSiteText("Tarih seçiniz", language);
   return new Intl.DateTimeFormat(locale, { day: "2-digit", month: "long", year: "numeric", timeZone: "UTC" }).format(parseDate(value));
 }
 
@@ -85,7 +86,7 @@ export function ReservationDatePicker({ value, min, max, onChange, invalid }: Re
   return (
     <div className="reservation-date-picker" ref={containerRef}>
       <button className="reservation-date-trigger" type="button" onClick={() => setOpen((current) => !current)} aria-expanded={open} aria-haspopup="dialog" aria-invalid={invalid}>
-        <span className={value ? "" : "is-placeholder"}>{readableDate(value, locale)}</span>
+        <span className={value ? "" : "is-placeholder"}>{readableDate(value, locale, language)}</span>
         <span className="reservation-date-trigger__icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none">
             <rect x="3.5" y="5" width="17" height="15" rx="2" />
@@ -96,12 +97,12 @@ export function ReservationDatePicker({ value, min, max, onChange, invalid }: Re
 
       {open && (
         <>
-          <button className="reservation-calendar-backdrop" type="button" onClick={() => setOpen(false)} aria-label="Takvimi kapat" />
-          <div className="reservation-calendar" role="dialog" aria-label="Rezervasyon tarihi seç">
+          <button className="reservation-calendar-backdrop" type="button" onClick={() => setOpen(false)} aria-label={translateSiteText("Takvimi kapat", language)} />
+          <div className="reservation-calendar" role="dialog" aria-label={translateSiteText("Rezervasyon tarihi seç", language)}>
             <div className="reservation-calendar__header">
-              <button type="button" onClick={() => setVisibleMonth((current) => moveMonth(current, -1))} disabled={previousDisabled} aria-label="Önceki ay">←</button>
+              <button type="button" onClick={() => setVisibleMonth((current) => moveMonth(current, -1))} disabled={previousDisabled} aria-label={translateSiteText("Önceki ay", language)}>←</button>
               <strong>{monthTitle}</strong>
-              <button type="button" onClick={() => setVisibleMonth((current) => moveMonth(current, 1))} disabled={nextDisabled} aria-label="Sonraki ay">→</button>
+              <button type="button" onClick={() => setVisibleMonth((current) => moveMonth(current, 1))} disabled={nextDisabled} aria-label={translateSiteText("Sonraki ay", language)}>→</button>
             </div>
             <div className="reservation-calendar__weekdays" aria-hidden="true">
               {weekdays[language].map((weekday) => <span key={weekday}>{weekday}</span>)}
@@ -113,13 +114,13 @@ export function ReservationDatePicker({ value, min, max, onChange, invalid }: Re
                 const key = dateKey(date);
                 const disabled = date.getTime() < minTime || date.getTime() > maxTime;
                 return (
-                  <button key={key} type="button" className={key === value ? "is-selected" : ""} disabled={disabled} onClick={() => { onChange(key); setOpen(false); }} aria-label={readableDate(key, locale)} aria-pressed={key === value}>
+                  <button key={key} type="button" className={key === value ? "is-selected" : ""} disabled={disabled} onClick={() => { onChange(key); setOpen(false); }} aria-label={readableDate(key, locale, language)} aria-pressed={key === value}>
                     {day}
                   </button>
                 );
               })}
             </div>
-            <div className="reservation-calendar__legend"><span><i className="is-available" /> Seçilebilir</span><span><i /> Seçilemez</span></div>
+            <div className="reservation-calendar__legend"><span><i className="is-available" /> {translateSiteText("Seçilebilir", language)}</span><span><i /> {translateSiteText("Seçilemez", language)}</span></div>
           </div>
         </>
       )}

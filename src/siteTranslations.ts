@@ -224,3 +224,19 @@ export function translateSiteText(value: string, language: SiteLanguage): string
 
   return value;
 }
+
+// For dynamic strings (a name, a count, an email address) that still need a
+// translated shell. `key` carries `{placeholder}` markers matched against
+// `vars`; only the shell is looked up in the dictionaries above, so the
+// interpolated values pass through unchanged in every language.
+export function translateSiteTextTemplate(
+  key: string,
+  language: SiteLanguage,
+  vars: Record<string, string | number>
+): string {
+  let text = translateSiteText(key, language);
+  for (const [name, value] of Object.entries(vars)) {
+    text = text.split(`{${name}}`).join(String(value));
+  }
+  return text;
+}

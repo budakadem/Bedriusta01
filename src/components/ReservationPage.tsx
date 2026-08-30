@@ -2,7 +2,8 @@ import { FormEvent, useState } from "react";
 import "./reservation-page.css";
 import { createReservationTimeOptions, reservationDefaults } from "../config/reservation";
 import { ReservationDatePicker } from "./ReservationDatePicker";
-import { getIntlLocale, useSiteLanguage } from "../siteLanguage";
+import { getIntlLocale, type SiteLanguage, useSiteLanguage } from "../siteLanguage";
+import { translateSiteText, translateSiteTextTemplate } from "../siteTranslations";
 
 type ReservationKind = "normal" | "group";
 type ReservationForm = {
@@ -57,8 +58,8 @@ function berlinCalendarDate({ months = 0, years = 0 }: { months?: number; years?
   return `${targetYear}-${String(targetMonthIndex + 1).padStart(2, "0")}-${String(targetDay).padStart(2, "0")}`;
 }
 
-function formattedDate(value: string, locale: string) {
-  if (!value) return "Seçilmedi";
+function formattedDate(value: string, locale: string, language: SiteLanguage) {
+  if (!value) return translateSiteText("Seçilmedi", language);
   return new Intl.DateTimeFormat(locale, {
     timeZone: reservationDefaults.timeZone,
     weekday: "long",
@@ -95,6 +96,8 @@ function FieldError({ children }: { children?: string }) {
 export function ReservationPage() {
   const language = useSiteLanguage();
   const locale = getIntlLocale(language);
+  const t = (value: string) => translateSiteText(value, language);
+  const tpl = (key: string, vars: Record<string, string | number>) => translateSiteTextTemplate(key, language, vars);
   const [form, setForm] = useState<ReservationForm>(initialForm);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [otpCode, setOtpCode] = useState("");
@@ -113,12 +116,12 @@ export function ReservationPage() {
     && groupPartySize > reservationDefaults.groupThreshold
     && groupPartySize <= reservationDefaults.capacityWindowGuestLimit;
   const groupSizeLimitError = form.groupPartySize && groupPartySize > reservationDefaults.capacityWindowGuestLimit
-    ? `En fazla ${reservationDefaults.capacityWindowGuestLimit} kişi olabilir.`
+    ? tpl("En fazla {limit} kişi olabilir.", { limit: reservationDefaults.capacityWindowGuestLimit })
     : "";
   const partySelectionComplete = Boolean(form.partySize) && (reservationKind === "normal" || groupSizeValid);
   const partyLabel = reservationKind === "group"
-    ? form.groupPartySize ? `${form.groupPartySize} kişi, grup talebi` : `${reservationDefaults.groupThreshold}'den fazla kişi`
-    : form.partySize ? `${form.partySize} kişi` : "Kişi seçilmedi";
+    ? form.groupPartySize ? tpl("{n} kişi, grup talebi", { n: form.groupPartySize }) : tpl("{n}’den fazla kişi", { n: reservationDefaults.groupThreshold })
+    : form.partySize ? `${form.partySize} ${t("kişi")}` : t("Kişi seçilmedi");
   const scheduleComplete = partySelectionComplete && Boolean(form.date && form.time);
   const reservationDetailsComplete = scheduleComplete;
   const contactDetailsComplete = reservationDetailsComplete
@@ -185,15 +188,15 @@ export function ReservationPage() {
 
   const validateAll = () => {
     const nextErrors: Record<string, string> = {};
-    if (!form.partySize) nextErrors.partySize = "Kişi sayısını seçmelisin.";
-    if (reservationKind === "group" && !groupSizeValid) nextErrors.groupPartySize = `Kişi sayısı ${reservationDefaults.groupThreshold + 1}–${reservationDefaults.capacityWindowGuestLimit} arasında olmalı.`;
-    if (!form.date) nextErrors.date = "Tarih seçmelisin.";
-    if (!form.time) nextErrors.time = "Saat seçmelisin.";
-    if (!form.salutation) nextErrors.salutation = "Hitap seçmelisin.";
-    if (!form.firstName.trim()) nextErrors.firstName = "Adını yazmalısın.";
-    if (!form.lastName.trim()) nextErrors.lastName = "Soyadını yazmalısın.";
-    if (!/^\+?[0-9 ()-]{8,20}$/.test(form.phone.trim())) nextErrors.phone = "Geçerli bir telefon numarası yazmalısın.";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) nextErrors.email = "Geçerli bir e-posta adresi yazmalısın.";
+    if (!form.partySize) nextErrors.partySize = t("Kişi sayısını seçmelisin.");
+    if (reservationKind === "group" && !groupSizeValid) nextErrors.groupPartySize = tpl("Kişi sayısı {min}–{max} arasında olmalı.", { min: reservationDefaults.groupThreshold + 1, max: reservationDefaults.capacityWindowGuestLimit });
+    if (!form.date) nextErrors.date = t("Tarih seçmelisin.");
+    if (!form.time) nextErrors.time = t("Saat seçmelisin.");
+    if (!form.salutation) nextErrors.salutation = t("Hitap seçmelisin.");
+    if (!form.firstName.trim()) nextErrors.firstName = t("Adını yazmalısın.");
+    if (!form.lastName.trim()) nextErrors.lastName = t("Soyadını yazmalısın.");
+    if (!/^\+?[0-9 ()-]{8,20}$/.test(form.phone.trim())) nextErrors.phone = t("Geçerli bir telefon numarası yazmalısın.");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) nextErrors.email = t("Geçerli bir e-posta adresi yazmalısın.");
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length) {
       window.requestAnimationFrame(() => {
@@ -208,11 +211,11 @@ export function ReservationPage() {
 
   const sendVerification = async () => {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
-      setErrors((current) => ({ ...current, email: "Önce geçerli bir e-posta adresi yazmalısın." }));
+      setErrors((current) => ({ ...current, email: t("Önce geçerli bir e-posta adresi yazmalısın.") }));
       return false;
     }
     if (!reservationApiUrl) {
-      setServiceMessage("E-posta doğrulama servisi şu anda kullanılamıyor. Lütfen daha sonra tekrar dene.");
+      setServiceMessage(t("E-posta doğrulama servisi şu anda kullanılamıyor. Lütfen daha sonra tekrar dene."));
       return false;
     }
     setVerificationState("sending");
@@ -225,18 +228,18 @@ export function ReservationPage() {
       });
       if (!response.ok) throw new Error();
       setVerificationState("sent");
-      setServiceMessage("Altı haneli doğrulama kodu e-posta adresine gönderildi.");
+      setServiceMessage(t("Altı haneli doğrulama kodu e-posta adresine gönderildi."));
       return true;
     } catch {
       setVerificationState("idle");
-      setServiceMessage("Kod şu anda gönderilemedi. Lütfen biraz sonra yeniden dene.");
+      setServiceMessage(t("Kod şu anda gönderilemedi. Lütfen biraz sonra yeniden dene."));
       return false;
     }
   };
 
   const verifyCode = async () => {
     if (!/^\d{6}$/.test(otpCode)) {
-      setServiceMessage("Altı haneli kodu eksiksiz yazmalısın.");
+      setServiceMessage(t("Altı haneli kodu eksiksiz yazmalısın."));
       return;
     }
     if (!reservationApiUrl) return;
@@ -249,10 +252,10 @@ export function ReservationPage() {
       });
       if (!response.ok) throw new Error();
       setVerificationState("verified");
-      setServiceMessage("E-posta adresin doğrulandı.");
+      setServiceMessage(t("E-posta adresin doğrulandı."));
     } catch {
       setVerificationState("sent");
-      setServiceMessage("Kod geçersiz veya süresi dolmuş. Lütfen tekrar dene.");
+      setServiceMessage(t("Kod geçersiz veya süresi dolmuş. Lütfen tekrar dene."));
     }
   };
 
@@ -260,7 +263,7 @@ export function ReservationPage() {
     event.preventDefault();
     if (!validateAll()) return;
     if (!reservationApiUrl) {
-      setServiceMessage("Rezervasyon sistemi şu anda kullanılamıyor. Lütfen daha sonra tekrar dene.");
+      setServiceMessage(t("Rezervasyon sistemi şu anda kullanılamıyor. Lütfen daha sonra tekrar dene."));
       return;
     }
     if (verificationState !== "verified") {
@@ -289,11 +292,11 @@ export function ReservationPage() {
         if (response.status === 409) throw new Error("slot_unavailable");
         throw new Error("submit_failed");
       }
-      setConfirmation({ reference: result.reference ?? "", status: reservationKind === "group" ? "ONAY BEKLİYOR" : "ONAYLANDI" });
+      setConfirmation({ reference: result.reference ?? "", status: reservationKind === "group" ? t("ONAY BEKLİYOR") : t("ONAYLANDI") });
     } catch (error) {
       setServiceMessage(error instanceof Error && error.message === "slot_unavailable"
-        ? "Bu saat az önce doldu. Lütfen başka bir saat seç."
-        : "İşlem şu anda tamamlanamadı. Bilgilerin kaydedilmedi; lütfen yeniden dene.");
+        ? t("Bu saat az önce doldu. Lütfen başka bir saat seç.")
+        : t("İşlem şu anda tamamlanamadı. Bilgilerin kaydedilmedi; lütfen yeniden dene."));
     } finally {
       setSubmitting(false);
     }
@@ -304,17 +307,17 @@ export function ReservationPage() {
       <main className="reservation-page reservation-result">
         <section className="reservation-result__card">
           <span className="reservation-result__mark" aria-hidden="true">✓</span>
-          <p>{reservationKind === "group" ? "GRUP TALEBİ" : "REZERVASYON"}</p>
-          <h1>{reservationKind === "group" ? "Talebin gönderildi." : "Rezervasyonun onaylandı."}</h1>
+          <p>{reservationKind === "group" ? t("GRUP TALEBİ") : t("REZERVASYON")}</p>
+          <h1>{reservationKind === "group" ? t("Talebin gönderildi.") : t("Rezervasyonun onaylandı.")}</h1>
           <div className="reservation-result__status">{confirmation.status}</div>
           <dl>
-            <div><dt>Tarih</dt><dd>{formattedDate(form.date, locale)}</dd></div>
-            <div><dt>Saat</dt><dd>{form.time}</dd></div>
-            <div><dt>Kişi</dt><dd>{partyLabel}</dd></div>
-            {confirmation.reference && <div><dt>Referans</dt><dd>{confirmation.reference}</dd></div>}
+            <div><dt>{t("Tarih")}</dt><dd>{formattedDate(form.date, locale, language)}</dd></div>
+            <div><dt>{t("Saat")}</dt><dd>{form.time}</dd></div>
+            <div><dt>{t("Kişi")}</dt><dd>{partyLabel}</dd></div>
+            {confirmation.reference && <div><dt>{t("Referans")}</dt><dd>{confirmation.reference}</dd></div>}
           </dl>
-          {reservationKind === "group" && <p className="reservation-result__note">Ekibimiz seninle iletişime geçecek. Talep, personel onayından sonra kesinleşir.</p>}
-          <button type="button" onClick={() => window.location.assign("/")}>Ana sayfaya dön</button>
+          {reservationKind === "group" && <p className="reservation-result__note">{t("Ekibimiz seninle iletişime geçecek. Talep, personel onayından sonra kesinleşir.")}</p>}
+          <button type="button" onClick={() => window.location.assign("/")}>{t("Ana sayfaya dön")}</button>
         </section>
       </main>
     );
@@ -324,9 +327,9 @@ export function ReservationPage() {
     <main className="reservation-page">
       <header className="reservation-intro">
         <div className="reservation-shell">
-          <button className="reservation-back" type="button" onClick={() => window.history.back()} aria-label="Önceki sayfaya dön">← Geri dön</button>
+          <button className="reservation-back" type="button" onClick={() => window.history.back()} aria-label={t("Önceki sayfaya dön")}>{t("← Geri dön")}</button>
           <p className="reservation-kicker">BEDRİ USTA MANNHEIM</p>
-          <h1>Rezervasyon</h1>
+          <h1>{t("Rezervasyon")}</h1>
           <p>Restaurant &amp; Café</p>
         </div>
       </header>
@@ -338,23 +341,23 @@ export function ReservationPage() {
             <section className={`reservation-section reservation-section--tracked ${partySelectionComplete ? "is-complete" : "is-active"}`} aria-labelledby="kisi-sayisi">
               <div className="reservation-section__heading">
                 <span>01</span>
-                <div><h2 id="kisi-sayisi">Kişi sayısı</h2><p>Rezervasyona katılacak kişi sayısını seç.</p></div>
+                <div><h2 id="kisi-sayisi">{t("Kişi sayısı")}</h2><p>{t("Rezervasyona katılacak kişi sayısını seç.")}</p></div>
               </div>
 
               <div className="reservation-section__body">
                 <label className={errors.partySize ? "reservation-field reservation-field--invalid" : "reservation-field"}>
-                  <span>Kişi sayısı *</span>
+                  <span>{t("Kişi sayısı *")}</span>
                   <select value={form.partySize} onChange={(event) => changePartySize(event.target.value)} aria-invalid={Boolean(errors.partySize)}>
-                    <option value="">Seçiniz</option>
-                    {Array.from({ length: reservationDefaults.groupThreshold }, (_, index) => index + 1).map((count) => <option key={count} value={count}>{count} kişi</option>)}
-                    <option value="group">{reservationDefaults.groupThreshold} kişiden fazla, grup talebi</option>
+                    <option value="">{t("Seçiniz")}</option>
+                    {Array.from({ length: reservationDefaults.groupThreshold }, (_, index) => index + 1).map((count) => <option key={count} value={count}>{count} {t("kişi")}</option>)}
+                    <option value="group">{tpl("{n} kişiden fazla, grup talebi", { n: reservationDefaults.groupThreshold })}</option>
                   </select>
                   <FieldError>{errors.partySize}</FieldError>
                 </label>
 
                 {reservationKind === "group" && (
                   <label className={errors.groupPartySize || groupSizeLimitError ? "reservation-field reservation-field--invalid" : "reservation-field"}>
-                    <span>Grup kişi sayısı *</span>
+                    <span>{t("Grup kişi sayısı *")}</span>
                     <input type="number" inputMode="numeric" min={reservationDefaults.groupThreshold + 1} max={reservationDefaults.capacityWindowGuestLimit} value={form.groupPartySize} onChange={(event) => changeGroupPartySize(event.target.value)} placeholder={`${reservationDefaults.groupThreshold + 1}–${reservationDefaults.capacityWindowGuestLimit}`} aria-invalid={Boolean(errors.groupPartySize || groupSizeLimitError)} />
                     <FieldError>{groupSizeLimitError || errors.groupPartySize}</FieldError>
                   </label>
@@ -365,21 +368,21 @@ export function ReservationPage() {
             <section className={`reservation-section reservation-section--tracked ${reservationDetailsComplete ? "is-complete" : partySelectionComplete ? "is-active" : "is-locked"}`} aria-labelledby="tarih-saat-not" aria-disabled={!partySelectionComplete}>
               <div className="reservation-section__heading">
                 <span>02</span>
-                <div><h2 id="tarih-saat-not">Tarih, saat ve not</h2><p>Ziyaret zamanını seç ve varsa notunu ekle.</p></div>
+                <div><h2 id="tarih-saat-not">{t("Tarih, saat ve not")}</h2><p>{t("Ziyaret zamanını seç ve varsa notunu ekle.")}</p></div>
               </div>
 
               {partySelectionComplete ? <div className="reservation-section__body">
 
                 <div className="reservation-grid reservation-grid--two">
                   <div className={errors.date ? "reservation-field reservation-field--invalid" : "reservation-field"}>
-                    <span>{reservationKind === "group" ? "Tercih edilen tarih *" : "Tarih *"}</span>
+                    <span>{reservationKind === "group" ? t("Tercih edilen tarih *") : t("Tarih *")}</span>
                     <ReservationDatePicker min={berlinDate()} max={maxDate} value={form.date} onChange={changeDate} invalid={Boolean(errors.date)} />
                     <FieldError>{errors.date}</FieldError>
                   </div>
                   <label className={errors.time ? "reservation-field reservation-field--invalid" : "reservation-field"}>
-                    <span>{reservationKind === "group" ? "Tercih edilen saat *" : "Saat *"}</span>
+                    <span>{reservationKind === "group" ? t("Tercih edilen saat *") : t("Saat *")}</span>
                     <select value={form.time} onChange={(event) => update("time", event.target.value)} aria-invalid={Boolean(errors.time)}>
-                      <option value="">Seçiniz</option>
+                      <option value="">{t("Seçiniz")}</option>
                       {availableTimeOptions.map((time) => <option key={time} value={time}>{time}</option>)}
                     </select>
                     <FieldError>{errors.time}</FieldError>
@@ -388,88 +391,88 @@ export function ReservationPage() {
 
                 {reservationKind === "group" && (
                   <div className="reservation-info">
-                    20 kişiden büyük gruplarda talebin ekibimiz tarafından kontrol edilir ve iletişim sonrasında kesinleşir.
+                    {t("20 kişiden büyük gruplarda talebin ekibimiz tarafından kontrol edilir ve iletişim sonrasında kesinleşir.")}
                   </div>
                 )}
                 <label className="reservation-field">
-                  <span>Not <em>(isteğe bağlı)</em></span>
+                  <span>{t("Not")} <em>{t("(isteğe bağlı)")}</em></span>
                   <textarea
                     rows={4}
                     maxLength={600}
                     value={form.note}
                     onChange={(event) => update("note", event.target.value)}
-                    placeholder="İş yemeği, doğum günü, pasta talebi, evlilik yıldönümü, çocuk sandalyesi veya diğer özel istekler..."
-                    aria-label="Not (isteğe bağlı)"
+                    placeholder={t("İş yemeği, doğum günü, pasta talebi, evlilik yıldönümü, çocuk sandalyesi veya diğer özel istekler...")}
+                    aria-label={t("Not (isteğe bağlı)")}
                   />
                   <small>{form.note.length}/600</small>
                 </label>
-              </div> : <div className="reservation-section__locked"><span aria-hidden="true">02</span><p>Önce kişi sayısını seç.</p></div>}
+              </div> : <div className="reservation-section__locked"><span aria-hidden="true">02</span><p>{t("Önce kişi sayısını seç.")}</p></div>}
             </section>
 
             <section className={`reservation-section reservation-section--tracked ${contactDetailsComplete ? "is-complete" : reservationDetailsComplete ? "is-active" : "is-locked"}`} aria-labelledby="iletisim" aria-disabled={!reservationDetailsComplete}>
               <div className="reservation-section__heading">
                 <span>03</span>
-                <div><h2 id="iletisim">İletişim</h2><p>Onay ve rezervasyon bilgileri için.</p></div>
+                <div><h2 id="iletisim">{t("İletişim")}</h2><p>{t("Onay ve rezervasyon bilgileri için.")}</p></div>
               </div>
               {reservationDetailsComplete ? <div className="reservation-section__body">
                 <div className="reservation-grid reservation-grid--name">
                   <label className={errors.salutation ? "reservation-field reservation-field--invalid" : "reservation-field"}>
-                    <span>Hitap *</span>
+                    <span>{t("Hitap *")}</span>
                     <select value={form.salutation} onChange={(event) => update("salutation", event.target.value)} aria-invalid={Boolean(errors.salutation)}>
-                      <option value="">Seçiniz</option><option value="herr">Bay</option><option value="frau">Bayan</option><option value="divers">Çeşitli</option><option value="none">Belirtmek istemiyorum</option>
+                      <option value="">{t("Seçiniz")}</option><option value="herr">{t("Bay")}</option><option value="frau">{t("Bayan")}</option><option value="divers">{t("Çeşitli")}</option><option value="none">{t("Belirtmek istemiyorum")}</option>
                     </select>
                     <FieldError>{errors.salutation}</FieldError>
                   </label>
                   <label className={errors.firstName ? "reservation-field reservation-field--invalid" : "reservation-field"}>
-                    <span>Ad *</span><input autoComplete="given-name" value={form.firstName} onChange={(event) => update("firstName", event.target.value)} aria-invalid={Boolean(errors.firstName)} /><FieldError>{errors.firstName}</FieldError>
+                    <span>{t("Ad *")}</span><input autoComplete="given-name" value={form.firstName} onChange={(event) => update("firstName", event.target.value)} aria-invalid={Boolean(errors.firstName)} /><FieldError>{errors.firstName}</FieldError>
                   </label>
                   <label className={errors.lastName ? "reservation-field reservation-field--invalid" : "reservation-field"}>
-                    <span>Soyad *</span><input autoComplete="family-name" value={form.lastName} onChange={(event) => update("lastName", event.target.value)} aria-invalid={Boolean(errors.lastName)} /><FieldError>{errors.lastName}</FieldError>
+                    <span>{t("Soyad *")}</span><input autoComplete="family-name" value={form.lastName} onChange={(event) => update("lastName", event.target.value)} aria-invalid={Boolean(errors.lastName)} /><FieldError>{errors.lastName}</FieldError>
                   </label>
                 </div>
                 <div className="reservation-grid reservation-grid--two">
                   <label className={errors.phone ? "reservation-field reservation-field--invalid" : "reservation-field"}>
-                    <span>Telefon *</span><input type="tel" autoComplete="tel" placeholder="+49 ..." value={form.phone} onChange={(event) => update("phone", event.target.value)} aria-invalid={Boolean(errors.phone)} /><FieldError>{errors.phone}</FieldError>
+                    <span>{t("Telefon *")}</span><input type="tel" autoComplete="tel" placeholder="+49 ..." value={form.phone} onChange={(event) => update("phone", event.target.value)} aria-invalid={Boolean(errors.phone)} /><FieldError>{errors.phone}</FieldError>
                   </label>
                   <label className={errors.email ? "reservation-field reservation-field--invalid" : "reservation-field"}>
-                    <span>E-posta *</span><input type="email" autoComplete="email" value={form.email} onChange={(event) => update("email", event.target.value)} aria-invalid={Boolean(errors.email)} /><FieldError>{errors.email}</FieldError>
+                    <span>{t("E-posta *")}</span><input type="email" autoComplete="email" value={form.email} onChange={(event) => update("email", event.target.value)} aria-invalid={Boolean(errors.email)} /><FieldError>{errors.email}</FieldError>
                   </label>
                 </div>
 
-              </div> : <div className="reservation-section__locked"><span aria-hidden="true">03</span><p>Önce tarih ve saat bilgilerini tamamla.</p></div>}
+              </div> : <div className="reservation-section__locked"><span aria-hidden="true">03</span><p>{t("Önce tarih ve saat bilgilerini tamamla.")}</p></div>}
             </section>
 
             <section className={`reservation-section reservation-section--tracked reservation-section--tracked-last ${verificationState === "verified" ? "is-complete" : contactDetailsComplete ? "is-active" : "is-locked"}`} aria-labelledby="kontrol-ve-gonderim" aria-disabled={!contactDetailsComplete}>
               <div className="reservation-section__heading">
                 <span>04</span>
-                <div><h2 id="kontrol-ve-gonderim">Kontrol ve gönderim</h2><p>Bilgilerini kontrol et ve rezervasyonunu tamamla.</p></div>
+                <div><h2 id="kontrol-ve-gonderim">{t("Kontrol ve gönderim")}</h2><p>{t("Bilgilerini kontrol et ve rezervasyonunu tamamla.")}</p></div>
               </div>
               {contactDetailsComplete ? <div className="reservation-section__body reservation-section__body--final">
-            <div className="reservation-final" aria-label="Rezervasyon özeti">
+            <div className="reservation-final" aria-label={t("Rezervasyon özeti")}>
               <div className="reservation-final__summary">
-                <div><span>Kişi</span><strong>{partyLabel}</strong></div>
-                <div><span>Tarih</span><strong>{formattedDate(form.date, locale)}</strong></div>
-                <div><span>Saat</span><strong>{form.time || "Seçilmedi"}</strong></div>
+                <div><span>{t("Kişi")}</span><strong>{partyLabel}</strong></div>
+                <div><span>{t("Tarih")}</span><strong>{formattedDate(form.date, locale, language)}</strong></div>
+                <div><span>{t("Saat")}</span><strong>{form.time || t("Seçilmedi")}</strong></div>
               </div>
               <div className="reservation-final__legal">
-                <div><strong>Rezervasyon verilerinin korunması</strong><p>Bilgilerin yalnızca rezervasyonu veya grup talebini yürütmek için işlenir. Ayrıntıları <a href="/datenschutz#reservierung">veri koruma bilgilendirmesinde</a> inceleyebilirsin.</p></div>
-                <p>Masa, gecikme durumunda standart olarak 15 dakika korunur. Saatler Europe/Berlin zaman dilimindedir.</p>
+                <div><strong>{t("Rezervasyon verilerinin korunması")}</strong><p>{t("Bilgilerin yalnızca rezervasyonu veya grup talebini yürütmek için işlenir. Ayrıntıları")} <a href="/datenschutz#reservierung">{t("veri koruma bilgilendirmesinde")}</a> {t("inceleyebilirsin.")}</p></div>
+                <p>{t("Masa, gecikme durumunda standart olarak 15 dakika korunur. Saatler Europe/Berlin zaman dilimindedir.")}</p>
               </div>
               {serviceMessage && <div className="reservation-service-message" role="status">{serviceMessage}</div>}
               {(verificationState === "sent" || verificationState === "checking") && (
                 <div className="reservation-code" id="eposta-kodu">
-                  <label className="reservation-field"><span>E-postana gönderilen 6 haneli kod</span><input inputMode="numeric" autoComplete="one-time-code" maxLength={6} value={otpCode} onChange={(event) => setOtpCode(event.target.value.replace(/\D/g, ""))} /></label>
-                  <button type="button" onClick={verifyCode} disabled={verificationState === "checking"}>{verificationState === "checking" ? "Kontrol ediliyor..." : "Kodu doğrula"}</button>
+                  <label className="reservation-field"><span>{t("E-postana gönderilen 6 haneli kod")}</span><input inputMode="numeric" autoComplete="one-time-code" maxLength={6} value={otpCode} onChange={(event) => setOtpCode(event.target.value.replace(/\D/g, ""))} /></label>
+                  <button type="button" onClick={verifyCode} disabled={verificationState === "checking"}>{verificationState === "checking" ? t("Kontrol ediliyor...") : t("Kodu doğrula")}</button>
                 </div>
               )}
-              {verificationState === "verified" && <div className="reservation-verified reservation-verified--panel">✓ E-posta adresin doğrulandı.</div>}
+              {verificationState === "verified" && <div className="reservation-verified reservation-verified--panel">{t("✓ E-posta adresin doğrulandı.")}</div>}
               <button className="reservation-submit" type="submit" disabled={submitting || verificationState === "sending"}>
-                {submitting || verificationState === "sending" ? "Hazırlanıyor..." : reservationKind === "group" ? "Grup talebini gönder" : "Rezervasyonu tamamla"}
+                {submitting || verificationState === "sending" ? t("Hazırlanıyor...") : reservationKind === "group" ? t("Grup talebini gönder") : t("Rezervasyonu tamamla")}
               </button>
-              <p className="reservation-submit-note">Rezervasyonu tamamladığında e-posta adresine tek kullanımlık doğrulama kodu gönderilir.</p>
-              <a className="reservation-map-link" href="https://maps.app.goo.gl/NZHsiEJmyTg9nVgRA" target="_blank" rel="noreferrer">K1 1–4, 68159 Mannheim · Haritada aç ↗</a>
+              <p className="reservation-submit-note">{t("Rezervasyonu tamamladığında e-posta adresine tek kullanımlık doğrulama kodu gönderilir.")}</p>
+              <a className="reservation-map-link" href="https://maps.app.goo.gl/NZHsiEJmyTg9nVgRA" target="_blank" rel="noreferrer">{t("K1 1–4, 68159 Mannheim · Haritada aç ↗")}</a>
             </div>
-              </div> : <div className="reservation-section__locked"><span aria-hidden="true">04</span><p>Önce iletişim bilgilerini tamamla.</p></div>}
+              </div> : <div className="reservation-section__locked"><span aria-hidden="true">04</span><p>{t("Önce iletişim bilgilerini tamamla.")}</p></div>}
             </section>
             </div>
           </form>
