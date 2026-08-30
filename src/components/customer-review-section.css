@@ -35,7 +35,7 @@
 .customer-review__public-actions--prominent button:active { transform: translateY(0); }
 .customer-review__platform-icon { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 999px; background: var(--review-cream); }
 .customer-review__public-actions--prominent .customer-review__platform-icon img { width: 24px; height: 24px; flex: 0 0 24px; }
-.customer-review__platform-copy { display: flex; min-width: 0; flex-direction: column; align-items: flex-start; gap: 3px; text-align: left; }
+.customer-review__platform-copy { display: flex; min-width: 0; flex-direction: column; align-items: center; gap: 3px; text-align: center; }
 .customer-review__platform-label { font: 800 16px/1.25 "Heebo", sans-serif; }
 .customer-review__platform-stars { color: var(--review-gold); font: 800 13px/16px "Karla", sans-serif; letter-spacing: 2px; }
 .customer-review__text-link { min-height: 44px; margin-top: 18px; padding: 8px 4px; border: 0; color: var(--review-wine); background: transparent; font-size: 14px; font-weight: 800; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
