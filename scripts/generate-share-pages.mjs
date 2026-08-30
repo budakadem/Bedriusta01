@@ -41,6 +41,11 @@ const pages = [
     description: "Bedri Usta Mannheim web sitesi, PWA, bildirimler, iletişim ve iş başvuruları için veri koruma bilgilendirmesi."
   },
   {
+    route: "/golden-tabla-club",
+    title: "Golden Tabla Club | Bedri Usta",
+    description: "Bedri Usta’nın değerleriyle kurulan Avrupa esnaf ağı. Fırsatlar, partner indirimleri ve online kampanyalar tek çatı altında."
+  },
+  {
     route: "/rezervasyon",
     title: "Rezervasyon | Bedri Usta Mannheim",
     description: "Bedri Usta Mannheim için kişi sayını, tarihini ve saatini seç; rezervasyonunu veya grup talebini güvenli biçimde hazırla."
