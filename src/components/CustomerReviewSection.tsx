@@ -72,16 +72,20 @@ export function CustomerReviewSection() {
   const PublicReviewButtons = () => (
     <div className="customer-review__public-actions customer-review__public-actions--prominent">
       <button type="button" onClick={() => openPublicReview(GOOGLE_REVIEW_URL)}>
-        <img src="/icons/google-review.svg" alt="" aria-hidden="true" />
+        <span className="customer-review__platform-icon">
+          <img src="/icons/google-review.svg" alt="" aria-hidden="true" />
+        </span>
         <span className="customer-review__platform-copy">
-          <span>{text.googleStrong}</span>
+          <span className="customer-review__platform-label">{text.googleStrong}</span>
           <span className="customer-review__platform-stars" aria-label={text.ratingLabel}>★★★★★</span>
         </span>
       </button>
       <button type="button" onClick={() => openPublicReview(null)}>
-        <img src="/icons/tripadvisor-review.svg" alt="" aria-hidden="true" />
+        <span className="customer-review__platform-icon">
+          <img src="/icons/tripadvisor-review.svg" alt="" aria-hidden="true" />
+        </span>
         <span className="customer-review__platform-copy">
-          <span>{text.tripadvisor}</span>
+          <span className="customer-review__platform-label">{text.tripadvisor}</span>
           <span className="customer-review__platform-stars" aria-label={text.ratingLabel}>★★★★★</span>
         </span>
       </button>

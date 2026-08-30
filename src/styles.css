@@ -38,6 +38,13 @@ img {
      so a vertical drag that starts on a card is swallowed instead of
      scrolling the page. pan-y keeps the page scrollable through the rail. */
   touch-action: pan-x pan-y pinch-zoom !important;
+  /* overflow-x: auto forces the other axis from `visible` to `auto`, which
+     makes the rail a vertical scroll container with nothing to scroll. iOS
+     then keeps a vertical drag inside the rail instead of chaining it to the
+     page, so the section could only be scrolled past from outside the strip.
+     `hidden` keeps the horizontal scrolling and gives the vertical axis back
+     to the page. */
+  overflow-y: hidden !important;
   overscroll-behavior-x: contain;
   overscroll-behavior-y: auto;
 }

@@ -26,9 +26,17 @@
 .customer-review__public-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 14px; }
 .customer-review__public-actions button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 10px 18px; border: 1px solid #9f7f55; border-radius: 6px; color: var(--review-wine); background: rgba(255,248,238,.62); font-size: 14px; font-weight: 800; cursor: pointer; }
 .customer-review__public-actions img { width: 30px; height: 30px; flex: 0 0 30px; object-fit: contain; }
-.customer-review__public-actions--prominent { margin-top: 26px; }
-.customer-review__public-actions--prominent button { min-height: 58px; min-width: min(290px, 100%); color: var(--review-cream); border-color: var(--review-wine); background: var(--review-wine); font-size: 16px; }
-.customer-review__platform-copy { display: flex; min-width: 0; flex-direction: column; align-items: flex-start; gap: 2px; text-align: left; }
+/* Both buttons sit in one centred column of identical width and their content
+   is left-aligned behind a fixed-width icon chip, so the two logos share one
+   vertical line and the two labels share another. */
+.customer-review__public-actions--prominent { display: grid; grid-template-columns: minmax(0, 1fr); justify-content: stretch; width: min(360px, 100%); margin: 26px auto 0; gap: 12px; }
+.customer-review__public-actions--prominent button { display: grid; grid-template-columns: 40px minmax(0, 1fr); align-items: center; justify-content: stretch; gap: 14px; width: 100%; min-width: 0; min-height: 64px; padding: 12px 18px; color: var(--review-cream); border-color: var(--review-wine); background: var(--review-wine); font-size: 16px; text-align: left; transition: transform 180ms cubic-bezier(.22,1,.36,1), background-color 180ms ease; }
+.customer-review__public-actions--prominent button:hover { background: var(--review-wine-active); transform: translateY(-2px); }
+.customer-review__public-actions--prominent button:active { transform: translateY(0); }
+.customer-review__platform-icon { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 999px; background: var(--review-cream); }
+.customer-review__public-actions--prominent .customer-review__platform-icon img { width: 24px; height: 24px; flex: 0 0 24px; }
+.customer-review__platform-copy { display: flex; min-width: 0; flex-direction: column; align-items: flex-start; gap: 3px; text-align: left; }
+.customer-review__platform-label { font: 800 16px/1.25 "Heebo", sans-serif; }
 .customer-review__platform-stars { color: var(--review-gold); font: 800 13px/16px "Karla", sans-serif; letter-spacing: 2px; }
 .customer-review__text-link { min-height: 44px; margin-top: 18px; padding: 8px 4px; border: 0; color: var(--review-wine); background: transparent; font-size: 14px; font-weight: 800; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
 .customer-review__notice { color: #7b2528 !important; font-size: 13px !important; font-weight: 700 !important; }
@@ -36,6 +44,7 @@
 
 @media (max-width: 600px) {
   .customer-review__public-actions, .customer-review__public-actions button { width: 100%; }
+  .customer-review__public-actions--prominent { width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {

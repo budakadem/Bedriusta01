@@ -2140,8 +2140,17 @@ function HorizontalCardRail({
       : Math.min(rail.clientWidth * 0.78, 360);
   };
 
+  // `isPaused` only feeds the paginated (non-loop) autoplay timer; the
+  // continuous rail reads interactionPausedRef instead. Re-rendering 27 cards
+  // in the middle of a touch can make mobile Safari abandon the pan it had
+  // already started, so the continuous rail never touches React state here.
+  const setPausedState = (paused: boolean) => {
+    if (loop) return;
+    setIsPaused(paused);
+  };
+
   const animateRailBy = (rail: HTMLElement, distance: number) => {
-    setIsPaused(true);
+    setPausedState(true);
 
     if (manualScrollFrameRef.current !== null) {
       window.cancelAnimationFrame(manualScrollFrameRef.current);
@@ -2160,7 +2169,7 @@ function HorizontalCardRail({
         manualScrollFrameRef.current = window.requestAnimationFrame(animate);
       } else {
         manualScrollFrameRef.current = null;
-        setIsPaused(false);
+        setPausedState(false);
       }
     };
 
@@ -2333,7 +2342,7 @@ function HorizontalCardRail({
 
   const resumeInteraction = () => {
     interactionPausedRef.current = false;
-    setIsPaused(false);
+    setPausedState(false);
     if (interactionSafetyTimerRef.current !== null) {
       window.clearTimeout(interactionSafetyTimerRef.current);
       interactionSafetyTimerRef.current = null;
@@ -2342,7 +2351,7 @@ function HorizontalCardRail({
 
   const pauseInteraction = () => {
     interactionPausedRef.current = true;
-    setIsPaused(true);
+    setPausedState(true);
     if (interactionSafetyTimerRef.current !== null) {
       window.clearTimeout(interactionSafetyTimerRef.current);
     }
