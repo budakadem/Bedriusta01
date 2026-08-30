@@ -28,12 +28,11 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/icons/bedri-favicon-v2-32.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/icons/bedri-pwa-v2-192.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/icons/bedri-apple-touch-v2-180.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800&family=Karla:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Heebo and Karla are self-hosted from /fonts (see src/fonts.css) rather
+         than fetched from Google, so no visitor IP reaches a third party. -->
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/heebo-400-latin.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/heebo-800-latin.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/karla-700-latin.woff2" crossorigin />
     <title>Bedri Usta</title>
   </head>
   <body>

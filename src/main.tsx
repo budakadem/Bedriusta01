@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import { CookieNotice } from "./components/CookieNotice";
 import { LocalizationBoundary } from "./components/LocalizationBoundary";
+import "./fonts.css";
 import "./styles.css";
 
 const root = document.getElementById("root");
