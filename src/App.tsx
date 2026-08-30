@@ -68,7 +68,12 @@ const craftDiningRoomImage = {
     "/images/bedri-usta-dining-room-1200.webp 1200w",
     "/images/bedri-usta-dining-room-1800.webp 1800w"
   ].join(", "),
-  sizes: "(max-width: 759px) 92vw, (max-width: 1180px) 30vw, 340px"
+  // Below 1180px the craft row stacks, so the photo spans almost the full
+  // viewport; above it, it is a fixed ~340px column.
+  sizes: "(max-width: 1179px) 92vw, 340px",
+  // The source is 3500x1954. Pinning the frame to exactly this ratio means
+  // object-fit never has anything to crop away.
+  aspectRatio: 3500 / 1954
 };
 const restaurantAddress = "K1 1-4, 68159 Mannheim, Almanya";
 const restaurantAddressWithName = "Bedri Usta K1 1-4, 68159 Mannheim, Deutschland";
@@ -761,7 +766,13 @@ function App() {
 
       <View style={[styles.section, styles.craftSection]}>
         <ScrollReveal style={[styles.craftInner, layout.isMobile && styles.stack]}>
-          <View style={[styles.craftMedia, layout.isMobile && styles.craftMediaMobile]}>
+          <View
+            style={[
+              styles.craftMedia,
+              { aspectRatio: craftDiningRoomImage.aspectRatio },
+              layout.isMobile && styles.craftMediaMobile
+            ]}
+          >
             <img
               src={craftDiningRoomImage.src}
               srcSet={craftDiningRoomImage.srcSet}
@@ -769,7 +780,7 @@ function App() {
               alt="Bedri Usta Mannheim salonunda bordo Bedri Usta yastıklarıyla hazırlanmış masalar"
               loading="lazy"
               decoding="async"
-              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+              style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }}
             />
           </View>
           <Text style={[styles.craftTitle, layout.isMobile && styles.sectionTitleMobile]}>
@@ -5619,17 +5630,21 @@ const styles = StyleSheet.create({
     marginHorizontal: "auto",
     flexDirection: "row",
     gap: 46,
-    alignItems: "stretch"
+    // flex-start, not stretch: the photo keeps its own aspect ratio instead of
+    // being pulled to the text column's height (which is what cropped it).
+    alignItems: "flex-start"
   },
   craftMedia: {
     flexGrow: 0,
     flexShrink: 1,
-    flexBasis: 300,
+    flexBasis: 340,
     minWidth: 220,
+    alignSelf: "flex-start",
     borderRadius: 14,
     overflow: "hidden",
-    borderWidth: 1,
-    borderColor: "rgba(255,247,223,0.22)",
+    borderWidth: 2,
+    borderColor: "#dfbf78",
+    backgroundColor: "rgba(0,0,0,0.18)",
     boxShadow: "0 24px 60px rgba(20,4,4,.45)"
   } as any,
   craftMediaMobile: {
@@ -5637,8 +5652,10 @@ const styles = StyleSheet.create({
     flexGrow: 0,
     flexShrink: 0,
     width: "100%",
+    maxWidth: 560,
     minWidth: 0,
-    aspectRatio: 16 / 9
+    marginHorizontal: "auto",
+    marginBottom: 6
   } as any,
   craftTitle: {
     flex: 1,
