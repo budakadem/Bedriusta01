@@ -1,39 +1,51 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSiteLanguage } from "../siteLanguage";
 import "./golden-tabla-club.css";
 
 /**
  * Golden Tabla Club — preview build.
  *
- * No backend exists yet, so every control is rendered in its final design but
- * disabled. Nothing is collected, stored or sent from this page, which is why
- * it carries no consent or privacy obligation in this state.
+ * No backend exists yet, so every data control is disabled. Nothing is
+ * collected, stored or sent from this page.
  *
- * Two deliberate structural choices:
- * - the sign-up form is behind a button rather than shown to every visitor,
- *   because a long dead form is the worst thing to put in front of someone who
- *   has not yet decided to join;
- * - the four areas are tabs, so the page stays short and the visitor picks
- *   what they want to see instead of scrolling past three sections they don't.
+ * Consent design (the part that has to be right before anything else):
+ * the club's whole service is sending offers, so ONE consent is mandatory —
+ * membership plus offers by email — and it doubles as the address we verify.
+ * WhatsApp and push are genuinely extra channels and stay optional. Bundling
+ * all four into one tick would be the thing German regulators actually object
+ * to; asking for four separate ticks with none of them required would be
+ * clumsy for no benefit. One required, two optional is both.
+ *
+ * Push notifications are handled here and nowhere else, so a visitor is never
+ * asked the same question in two places.
  */
 
-type TabId = "discounts" | "partners" | "online" | "franchise";
+type TabId = "discounts" | "partners" | "online" | "jobs" | "franchise";
 
-const TAB_ORDER: TabId[] = ["discounts", "partners", "online", "franchise"];
+const TAB_ORDER: TabId[] = ["discounts", "partners", "online", "jobs", "franchise"];
+
+function navigateTo(path: string) {
+  window.history.pushState({}, "", path);
+  window.dispatchEvent(new PopStateEvent("popstate"));
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
 const copy = {
   TR: {
     metaTitle: "Golden Tabla Club | Bedri Usta",
     metaDescription:
-      "Bedri Usta’nın değerleriyle kurulan Avrupa esnaf ağı. Fırsatlar, partner indirimleri ve online kampanyalar tek çatı altında.",
+      "Bedri Usta’nın Avrupa esnaf ağı. Üyelere özel indirimler, partner fırsatları ve online kampanyalar tek yerde.",
     kicker: "GOLDEN TABLA CLUB",
     soon: "Yakında",
-    storyTitle: "Bir tabla, bir ağ.",
+    required: "Zorunlu",
+    optional: "İsteğe bağlı",
+
+    storyTitle: "Bedri Usta’nın ağına katıl.",
     storyLead:
       "14 yaşında bir çocuk, Adana sokaklarında üç tekerlekli bir tablayla kebap satıyordu. Tablayı birinden, kömürü birinden, eti birinden, sebzeyi birinden aldı. O tabla tek başına bir tezgâh değildi — bir esnaf ağıydı.",
     storyHighlight: "Bugün aynı ağı Avrupa’da kuruyoruz.",
     storyInvite:
-      "Fırsatlardan, partnerlerden, indirimlerden ve online kampanyalardan haberdar olmak ister misin? Bedri Usta’nın değerleriyle kulübe katıl.",
+      "Üyelere özel indirimler, Avrupa genelinde partner fırsatları ve online kampanyalar — hepsi tek yerde. Üyelik ücretsiz.",
 
     joinCta: "Üye ol",
     joinCtaNote: "Kayıtlar çok yakında açılıyor.",
@@ -50,11 +62,17 @@ const copy = {
       postalCode: "Posta kodu",
       birthDate: "Doğum tarihi",
       phone: "Telefon",
-      optional: "isteğe bağlı"
+      optionalTag: "isteğe bağlı"
     },
-    permissionsTitle: "Hangi kanaldan haber almak istersin?",
-    permissionsNote: "Hiçbiri önceden işaretli değildir; her birini istediğin zaman kapatabilirsin.",
-    permissions: ["E-posta ile kampanya", "WhatsApp ile kampanya", "Push bildirimi", "Partner fırsatları"],
+
+    consentTitle: "Onaylar",
+    consentRequired:
+      "Golden Tabla Club üyeliğini ve e-posta ile fırsat, indirim ve partner kampanyalarını almayı kabul ediyorum.",
+    consentWhatsapp: "WhatsApp ile de kampanya almak istiyorum.",
+    consentPush: "Bu cihaza push bildirimi göndermenizi istiyorum.",
+    doubleOptIn:
+      "Kayıttan sonra e-posta adresine bir doğrulama bağlantısı gönderilir. Üyeliğin ancak bu bağlantıya tıkladığında başlar; tıklamazsan hiçbir mesaj gönderilmez.",
+    withdraw: "Onayını istediğin zaman geri alabilirsin.",
     submit: "Üyeliği tamamla",
 
     tabsTitle: "Kulüpte neler var?",
@@ -62,6 +80,7 @@ const copy = {
     filterCountry: "Ülke",
     filterCity: "Şehir",
     filterCategory: "Kategori",
+    jobsButton: "Açık pozisyonlara git",
     tabs: {
       discounts: {
         name: "İndirimler",
@@ -78,6 +97,11 @@ const copy = {
         text: "Kargoyla her yere gönderen iş ortakları. Konum fark etmez.",
         empty: "Online partnerler çok yakında burada."
       },
+      jobs: {
+        name: "İş İlanları",
+        text: "Bedri Usta Mannheim’daki açık pozisyonlar. Bu bölüm şimdiden aktif.",
+        empty: ""
+      },
       franchise: {
         name: "Franchise",
         text: "Tablayı kendi şehrine taşımak isteyenler için iş ortaklığı.",
@@ -87,22 +111,25 @@ const copy = {
 
     deviceTitle: "Cihaz ve bildirim durumu",
     deviceText:
-      "Uygulamanın ana ekrana eklenip eklenmediğini, bildirim izninin durumunu ve cihaz kaydını buradan görebileceksin.",
+      "Bildirimler yalnızca buradan yönetilir. Uygulamanın ana ekrana eklenip eklenmediğini, bildirim izninin durumunu ve cihaz kaydını buradan göreceksin.",
     deviceButton: "Bildirim durumunu kontrol et"
   },
 
   DE: {
     metaTitle: "Golden Tabla Club | Bedri Usta",
     metaDescription:
-      "Das europäische Händlernetzwerk nach den Werten von Bedri Usta. Angebote, Partnerrabatte und Online-Aktionen an einem Ort.",
+      "Das europäische Händlernetzwerk von Bedri Usta. Rabatte für Mitglieder, Partnerangebote und Online-Aktionen an einem Ort.",
     kicker: "GOLDEN TABLA CLUB",
     soon: "Demnächst",
-    storyTitle: "Eine Tabla, ein Netzwerk.",
+    required: "Erforderlich",
+    optional: "Optional",
+
+    storyTitle: "Werden Sie Teil des Netzwerks von Bedri Usta.",
     storyLead:
       "Ein 14-jähriger Junge verkaufte in den Straßen Adanas Kebab von einem dreirädrigen Wagen, einer Tabla. Den Wagen bekam er vom einen, die Kohle vom anderen, das Fleisch vom nächsten, das Gemüse von wieder einem anderen. Diese Tabla war nicht nur ein Stand — sie war ein Netzwerk von Händlern.",
     storyHighlight: "Heute bauen wir dasselbe Netzwerk in Europa auf.",
     storyInvite:
-      "Möchten Sie über Angebote, Partner, Rabatte und Online-Aktionen informiert werden? Werden Sie Teil des Clubs — mit den Werten von Bedri Usta.",
+      "Rabatte nur für Mitglieder, Partnerangebote in ganz Europa und Online-Aktionen — alles an einem Ort. Die Mitgliedschaft ist kostenlos.",
 
     joinCta: "Mitglied werden",
     joinCtaNote: "Die Anmeldung öffnet in Kürze.",
@@ -119,16 +146,17 @@ const copy = {
       postalCode: "PLZ",
       birthDate: "Geburtsdatum",
       phone: "Telefon",
-      optional: "optional"
+      optionalTag: "optional"
     },
-    permissionsTitle: "Worüber möchten Sie informiert werden?",
-    permissionsNote: "Nichts ist vorausgewählt; Sie können jede Einwilligung jederzeit widerrufen.",
-    permissions: [
-      "Aktionen per E-Mail",
-      "Aktionen per WhatsApp",
-      "Push-Benachrichtigungen",
-      "Partnerangebote"
-    ],
+
+    consentTitle: "Einwilligungen",
+    consentRequired:
+      "Ich möchte Mitglied im Golden Tabla Club werden und Angebote, Rabatte und Partneraktionen per E-Mail erhalten.",
+    consentWhatsapp: "Ich möchte Aktionen zusätzlich per WhatsApp erhalten.",
+    consentPush: "Ich möchte Push-Benachrichtigungen auf diesem Gerät erhalten.",
+    doubleOptIn:
+      "Nach der Anmeldung senden wir einen Bestätigungslink an Ihre E-Mail-Adresse. Die Mitgliedschaft beginnt erst mit dem Klick auf diesen Link; ohne Bestätigung senden wir Ihnen nichts.",
+    withdraw: "Sie können Ihre Einwilligung jederzeit widerrufen.",
     submit: "Mitgliedschaft abschließen",
 
     tabsTitle: "Was bietet der Club?",
@@ -136,6 +164,7 @@ const copy = {
     filterCountry: "Land",
     filterCity: "Stadt",
     filterCategory: "Kategorie",
+    jobsButton: "Zu den offenen Stellen",
     tabs: {
       discounts: {
         name: "Rabatte",
@@ -152,6 +181,11 @@ const copy = {
         text: "Partner, die europaweit versenden. Der Standort spielt keine Rolle.",
         empty: "Online-Partner erscheinen hier in Kürze."
       },
+      jobs: {
+        name: "Stellenangebote",
+        text: "Offene Stellen bei Bedri Usta Mannheim. Dieser Bereich ist bereits aktiv.",
+        empty: ""
+      },
       franchise: {
         name: "Franchise",
         text: "Partnerschaft für alle, die die Tabla in ihre eigene Stadt bringen möchten.",
@@ -161,22 +195,25 @@ const copy = {
 
     deviceTitle: "Geräte- und Benachrichtigungsstatus",
     deviceText:
-      "Hier sehen Sie, ob die App zum Startbildschirm hinzugefügt wurde, wie der Benachrichtigungsstatus ist und ob Ihr Gerät registriert ist.",
+      "Benachrichtigungen werden ausschließlich hier verwaltet. Sie sehen, ob die App zum Startbildschirm hinzugefügt wurde, wie der Berechtigungsstatus ist und ob Ihr Gerät registriert ist.",
     deviceButton: "Benachrichtigungsstatus prüfen"
   },
 
   ENG: {
     metaTitle: "Golden Tabla Club | Bedri Usta",
     metaDescription:
-      "The European network of traders built on Bedri Usta's values. Offers, partner discounts and online campaigns in one place.",
+      "Bedri Usta's European network of traders. Member discounts, partner offers and online campaigns in one place.",
     kicker: "GOLDEN TABLA CLUB",
     soon: "Coming soon",
-    storyTitle: "One tabla, one network.",
+    required: "Required",
+    optional: "Optional",
+
+    storyTitle: "Join Bedri Usta's network.",
     storyLead:
       "A 14-year-old boy sold kebab from a three-wheeled cart — a tabla — in the streets of Adana. He got the cart from one person, the coal from another, the meat from another, the vegetables from another. That tabla was not just a stall — it was a network of traders.",
     storyHighlight: "Today we are building that same network across Europe.",
     storyInvite:
-      "Would you like to hear about offers, partners, discounts and online campaigns? Join the club, built on Bedri Usta's values.",
+      "Member-only discounts, partner offers across Europe and online campaigns — all in one place. Membership is free.",
 
     joinCta: "Become a member",
     joinCtaNote: "Registration opens very soon.",
@@ -193,11 +230,17 @@ const copy = {
       postalCode: "Postcode",
       birthDate: "Date of birth",
       phone: "Phone",
-      optional: "optional"
+      optionalTag: "optional"
     },
-    permissionsTitle: "What would you like to hear about?",
-    permissionsNote: "Nothing is pre-selected; you can withdraw any consent at any time.",
-    permissions: ["Campaigns by email", "Campaigns by WhatsApp", "Push notifications", "Partner offers"],
+
+    consentTitle: "Consents",
+    consentRequired:
+      "I want to join the Golden Tabla Club and receive offers, discounts and partner campaigns by email.",
+    consentWhatsapp: "I would also like to receive campaigns via WhatsApp.",
+    consentPush: "I would like to receive push notifications on this device.",
+    doubleOptIn:
+      "After signing up we send a confirmation link to your email address. Membership begins only when you click that link; without it we send you nothing.",
+    withdraw: "You can withdraw your consent at any time.",
     submit: "Complete membership",
 
     tabsTitle: "What is in the club?",
@@ -205,6 +248,7 @@ const copy = {
     filterCountry: "Country",
     filterCity: "City",
     filterCategory: "Category",
+    jobsButton: "Go to open positions",
     tabs: {
       discounts: {
         name: "Discounts",
@@ -221,6 +265,11 @@ const copy = {
         text: "Partners who ship anywhere. Location does not matter.",
         empty: "Online partners will appear here very soon."
       },
+      jobs: {
+        name: "Jobs",
+        text: "Open positions at Bedri Usta Mannheim. This section is already live.",
+        empty: ""
+      },
       franchise: {
         name: "Franchise",
         text: "Partnership for those who want to bring the tabla to their own city.",
@@ -230,7 +279,7 @@ const copy = {
 
     deviceTitle: "Device and notification status",
     deviceText:
-      "Here you will see whether the app has been added to your home screen, the notification permission status and whether your device is registered.",
+      "Notifications are managed here and nowhere else. You will see whether the app was added to your home screen, the permission status and whether your device is registered.",
     deviceButton: "Check notification status"
   }
 } as const;
@@ -256,11 +305,28 @@ function PreviewField({
   );
 }
 
+function ConsentRow({ text, tag, tone }: { text: string; tag: string; tone: "required" | "optional" }) {
+  return (
+    <li className={`club-consent club-consent--${tone}`}>
+      {/* Empty box on purpose: nothing may look pre-selected. */}
+      <span className="club-consent__box" aria-hidden="true" />
+      <span className="club-consent__text">{text}</span>
+      <span className={`club-tag club-tag--${tone}`}>{tag}</span>
+    </li>
+  );
+}
+
+const CONFETTI_PIECES = 26;
+const CONFETTI_MS = 1400;
+
 export function GoldenTablaClubPage() {
   const language = useSiteLanguage();
   const text = copy[language];
   const [formOpen, setFormOpen] = useState(false);
+  const [confetti, setConfetti] = useState(false);
   const [activeTab, setActiveTab] = useState<TabId>("discounts");
+  const formRef = useRef<HTMLDivElement>(null);
+  const confettiTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const previousTitle = document.title;
@@ -276,11 +342,43 @@ export function GoldenTablaClubPage() {
     };
   }, [text.metaTitle, text.metaDescription]);
 
+  useEffect(
+    () => () => {
+      if (confettiTimer.current) clearTimeout(confettiTimer.current);
+    },
+    []
+  );
+
+  // Scrolling has to happen after React has committed the panel, so it runs
+  // from an effect rather than a rAF chain inside the click handler — the
+  // panel does not exist yet at click time.
+  useEffect(() => {
+    if (!formOpen) return;
+
+    const panel = formRef.current;
+    if (!panel) return;
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // scrollIntoView rather than setting scrollTop: this page's scroll
+    // container is not documentElement, and letting the browser find it is
+    // more reliable than guessing. The header offset comes from
+    // scroll-margin-top on the section itself.
+    panel.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+  }, [formOpen]);
+
+  const openForm = () => {
+    setFormOpen(true);
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    setConfetti(true);
+    if (confettiTimer.current) clearTimeout(confettiTimer.current);
+    confettiTimer.current = setTimeout(() => setConfetti(false), CONFETTI_MS);
+  };
+
   const activeCopy = text.tabs[activeTab];
 
   return (
     <main className="club-page">
-      {/* Story first: nobody joins something they have not understood yet. */}
       <section className="club-hero">
         <div className="club-shell">
           <p className="club-kicker">{text.kicker}</p>
@@ -293,12 +391,29 @@ export function GoldenTablaClubPage() {
             <button
               type="button"
               className="club-cta__button"
-              onClick={() => setFormOpen((open) => !open)}
+              onClick={() => (formOpen ? setFormOpen(false) : openForm())}
               aria-expanded={formOpen}
               aria-controls="club-form-panel"
             >
               {text.joinCta}
               <span className="club-cta__chevron" aria-hidden="true">{formOpen ? "↑" : "↓"}</span>
+
+              {confetti && (
+                <span className="club-confetti" aria-hidden="true">
+                  {Array.from({ length: CONFETTI_PIECES }, (_, index) => (
+                    <span
+                      key={index}
+                      className={`club-confetti__piece club-confetti__piece--${index % 4}`}
+                      style={{
+                        // Spread the burst across the button and stagger it a
+                        // little so the pieces do not move as one block.
+                        left: `${(index / CONFETTI_PIECES) * 100}%`,
+                        animationDelay: `${(index % 6) * 40}ms`
+                      }}
+                    />
+                  ))}
+                </span>
+              )}
             </button>
             <span className="club-cta__note">{text.joinCtaNote}</span>
           </div>
@@ -307,9 +422,9 @@ export function GoldenTablaClubPage() {
 
       {/* Revealed only on request, not pushed at every visitor. */}
       {formOpen && (
-        <section className="club-form-section" id="club-form-panel">
+        <section className="club-form-section" id="club-form-panel" ref={formRef}>
           <div className="club-shell">
-            <div className="club-card club-card--form">
+            <div className="club-card">
               <div className="club-card__head">
                 <h2>{text.formTitle}</h2>
                 <span className="club-soon">{text.soon}</span>
@@ -322,22 +437,19 @@ export function GoldenTablaClubPage() {
                 <PreviewField label={text.fields.country} placeholder={text.fields.countryPlaceholder} />
                 <PreviewField label={text.fields.city} />
                 <PreviewField label={text.fields.postalCode} />
-                <PreviewField label={text.fields.birthDate} optionalLabel={text.fields.optional} />
-                <PreviewField label={text.fields.phone} optionalLabel={text.fields.optional} />
+                <PreviewField label={text.fields.birthDate} optionalLabel={text.fields.optionalTag} />
+                <PreviewField label={text.fields.phone} optionalLabel={text.fields.optionalTag} />
               </div>
 
               <div className="club-consents">
-                <h3>{text.permissionsTitle}</h3>
-                <p>{text.permissionsNote}</p>
+                <h3>{text.consentTitle}</h3>
                 <ul>
-                  {text.permissions.map((permission) => (
-                    <li key={permission}>
-                      {/* Empty boxes on purpose: nothing may look pre-selected. */}
-                      <span className="club-consents__box" aria-hidden="true" />
-                      <span>{permission}</span>
-                    </li>
-                  ))}
+                  <ConsentRow text={text.consentRequired} tag={text.required} tone="required" />
+                  <ConsentRow text={text.consentWhatsapp} tag={text.optional} tone="optional" />
+                  <ConsentRow text={text.consentPush} tag={text.optional} tone="optional" />
                 </ul>
+                <p className="club-consents__note">{text.doubleOptIn}</p>
+                <p className="club-consents__note">{text.withdraw}</p>
               </div>
 
               <div className="club-card__actions">
@@ -353,7 +465,6 @@ export function GoldenTablaClubPage() {
         </section>
       )}
 
-      {/* Four areas as tabs: the page stays short and the visitor chooses. */}
       <section className="club-tabs-section" aria-labelledby="club-tabs-title">
         <div className="club-shell">
           <h2 id="club-tabs-title" className="club-section-title">{text.tabsTitle}</h2>
@@ -384,32 +495,44 @@ export function GoldenTablaClubPage() {
           >
             <div className="club-panel__head">
               <h3>{activeCopy.name}</h3>
-              <span className="club-soon">{text.soon}</span>
+              {/* Jobs already exists, so it is the one area not marked soon. */}
+              {activeTab !== "jobs" && <span className="club-soon">{text.soon}</span>}
             </div>
             <p className="club-panel__text">{activeCopy.text}</p>
 
-            {/* Franchise is a single enquiry, not a directory: no search there. */}
-            {activeTab !== "franchise" && (
-              <div className="club-searchbar" aria-disabled="true">
-                <input type="text" disabled placeholder={text.searchPlaceholder} tabIndex={-1} />
-                <div className="club-searchbar__filters">
-                  {activeTab !== "online" && <button type="button" disabled>{text.filterCountry}</button>}
-                  {activeTab !== "online" && <button type="button" disabled>{text.filterCity}</button>}
-                  <button type="button" disabled>{text.filterCategory}</button>
-                </div>
-              </div>
+            {activeTab === "jobs" ? (
+              <button
+                type="button"
+                className="club-button club-button--primary club-button--inline"
+                onClick={() => navigateTo("/jobs")}
+              >
+                {text.jobsButton}
+              </button>
+            ) : (
+              <>
+                {/* Franchise is a single enquiry, not a directory: no search. */}
+                {activeTab !== "franchise" && (
+                  <div className="club-searchbar" aria-disabled="true">
+                    <input type="text" disabled placeholder={text.searchPlaceholder} tabIndex={-1} />
+                    <div className="club-searchbar__filters">
+                      {activeTab !== "online" && <button type="button" disabled>{text.filterCountry}</button>}
+                      {activeTab !== "online" && <button type="button" disabled>{text.filterCity}</button>}
+                      <button type="button" disabled>{text.filterCategory}</button>
+                    </div>
+                  </div>
+                )}
+                <p className="club-panel__empty">{activeCopy.empty}</p>
+              </>
             )}
-
-            <p className="club-panel__empty">{activeCopy.empty}</p>
           </div>
         </div>
       </section>
 
-      {/* Kept as a disabled control rather than removed: this is the device and
-          notification check that gets switched on with the backend. */}
+      {/* Notifications live here and nowhere else, so the visitor is never
+          asked the same question in two places. Disabled until the backend. */}
       <section className="club-device-section">
         <div className="club-shell">
-          <div className="club-card club-card--device">
+          <div className="club-card">
             <div className="club-card__head">
               <h2>{text.deviceTitle}</h2>
               <span className="club-soon">{text.soon}</span>
