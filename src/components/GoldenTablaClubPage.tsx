@@ -1,19 +1,25 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSiteLanguage } from "../siteLanguage";
 import "./golden-tabla-club.css";
 
 /**
  * Golden Tabla Club — preview build.
  *
- * Nothing here is wired to a backend yet: there is no Supabase project, so the
- * form deliberately does not accept input and the notification check does not
- * run. Every interactive control is rendered in its final design but disabled
- * and labelled "coming soon", so the layout can be reviewed and approved now
- * and switched on later without a redesign.
+ * No backend exists yet, so every control is rendered in its final design but
+ * disabled. Nothing is collected, stored or sent from this page, which is why
+ * it carries no consent or privacy obligation in this state.
  *
- * Nothing is collected, stored or sent from this page, which is why it adds no
- * new consent or privacy obligations in this state.
+ * Two deliberate structural choices:
+ * - the sign-up form is behind a button rather than shown to every visitor,
+ *   because a long dead form is the worst thing to put in front of someone who
+ *   has not yet decided to join;
+ * - the four areas are tabs, so the page stays short and the visitor picks
+ *   what they want to see instead of scrolling past three sections they don't.
  */
+
+type TabId = "discounts" | "partners" | "online" | "franchise";
+
+const TAB_ORDER: TabId[] = ["discounts", "partners", "online", "franchise"];
 
 const copy = {
   TR: {
@@ -29,8 +35,10 @@ const copy = {
     storyInvite:
       "Fırsatlardan, partnerlerden, indirimlerden ve online kampanyalardan haberdar olmak ister misin? Bedri Usta’nın değerleriyle kulübe katıl.",
 
-    joinTitle: "Kulübe katıl",
-    joinNote: "Kayıtlar çok yakında açılıyor.",
+    joinCta: "Üye ol",
+    joinCtaNote: "Kayıtlar çok yakında açılıyor.",
+    formTitle: "Kulübe katıl",
+    formClose: "Kapat",
     fields: {
       salutation: "Hitap",
       salutationPlaceholder: "Herr / Frau / Divers",
@@ -44,43 +52,38 @@ const copy = {
       phone: "Telefon",
       optional: "isteğe bağlı"
     },
-    joinButton: "Üye ol",
+    permissionsTitle: "Hangi kanaldan haber almak istersin?",
+    permissionsNote: "Hiçbiri önceden işaretli değildir; her birini istediğin zaman kapatabilirsin.",
+    permissions: ["E-posta ile kampanya", "WhatsApp ile kampanya", "Push bildirimi", "Partner fırsatları"],
+    submit: "Üyeliği tamamla",
 
-    searchTitle: "Ara ve filtrele",
+    tabsTitle: "Kulüpte neler var?",
     searchPlaceholder: "İşletme veya kategori ara…",
     filterCountry: "Ülke",
     filterCity: "Şehir",
     filterCategory: "Kategori",
-    searchNote: "Arama, ilk partnerler eklendiğinde açılacak.",
-
-    sectionsTitle: "Kulüpte neler var?",
-    sections: [
-      {
-        no: "01",
+    tabs: {
+      discounts: {
         name: "İndirimler",
-        text: "Şu an geçerli olan fırsatlar. Bedri Usta’nın kendi indirimleri her zaman en üstte."
+        text: "Şu an geçerli olan fırsatlar. Bedri Usta’nın kendi indirimleri her zaman en üstte.",
+        empty: "İlk fırsatlar çok yakında burada."
       },
-      {
-        no: "02",
+      partners: {
         name: "Partnerler",
-        text: "Avrupa’daki iş ortaklarımızın dizini. Ülkeye ve şehre göre listelenir."
+        text: "Avrupa’daki iş ortaklarımızın dizini. Ülkeye ve şehre göre listelenir.",
+        empty: "Partner dizini çok yakında açılıyor."
       },
-      {
-        no: "03",
+      online: {
         name: "Online Partnerler",
-        text: "Kargoyla her yere gönderen iş ortakları. Konum fark etmez."
+        text: "Kargoyla her yere gönderen iş ortakları. Konum fark etmez.",
+        empty: "Online partnerler çok yakında burada."
       },
-      {
-        no: "04",
-        name: "Franchise ve İş Ortaklığı",
-        text: "Tablayı kendi şehrine taşımak isteyenler için."
+      franchise: {
+        name: "Franchise",
+        text: "Tablayı kendi şehrine taşımak isteyenler için iş ortaklığı.",
+        empty: "Başvuru koşulları çok yakında yayınlanacak."
       }
-    ],
-
-    permissionsTitle: "İletişim tercihleri",
-    permissionsText:
-      "Hangi kanaldan haber almak istediğine tek tek karar verirsin. Hiçbiri önceden işaretli değildir ve her birini istediğin zaman kapatabilirsin.",
-    permissions: ["E-posta ile kampanya", "WhatsApp ile kampanya", "Push bildirimi", "Partner fırsatları"],
+    },
 
     deviceTitle: "Cihaz ve bildirim durumu",
     deviceText:
@@ -91,7 +94,7 @@ const copy = {
   DE: {
     metaTitle: "Golden Tabla Club | Bedri Usta",
     metaDescription:
-      "Das europäische Handwerker- und Händlernetzwerk nach den Werten von Bedri Usta. Angebote, Partnerrabatte und Online-Aktionen an einem Ort.",
+      "Das europäische Händlernetzwerk nach den Werten von Bedri Usta. Angebote, Partnerrabatte und Online-Aktionen an einem Ort.",
     kicker: "GOLDEN TABLA CLUB",
     soon: "Demnächst",
     storyTitle: "Eine Tabla, ein Netzwerk.",
@@ -101,8 +104,10 @@ const copy = {
     storyInvite:
       "Möchten Sie über Angebote, Partner, Rabatte und Online-Aktionen informiert werden? Werden Sie Teil des Clubs — mit den Werten von Bedri Usta.",
 
-    joinTitle: "Dem Club beitreten",
-    joinNote: "Die Anmeldung öffnet in Kürze.",
+    joinCta: "Mitglied werden",
+    joinCtaNote: "Die Anmeldung öffnet in Kürze.",
+    formTitle: "Dem Club beitreten",
+    formClose: "Schließen",
     fields: {
       salutation: "Anrede",
       salutationPlaceholder: "Herr / Frau / Divers",
@@ -116,48 +121,43 @@ const copy = {
       phone: "Telefon",
       optional: "optional"
     },
-    joinButton: "Mitglied werden",
-
-    searchTitle: "Suchen und filtern",
-    searchPlaceholder: "Betrieb oder Kategorie suchen…",
-    filterCountry: "Land",
-    filterCity: "Stadt",
-    filterCategory: "Kategorie",
-    searchNote: "Die Suche wird aktiviert, sobald die ersten Partner eingetragen sind.",
-
-    sectionsTitle: "Was bietet der Club?",
-    sections: [
-      {
-        no: "01",
-        name: "Rabatte",
-        text: "Aktuell gültige Angebote. Die Angebote von Bedri Usta stehen immer ganz oben."
-      },
-      {
-        no: "02",
-        name: "Partner",
-        text: "Das Verzeichnis unserer Partner in Europa, nach Land und Stadt sortiert."
-      },
-      {
-        no: "03",
-        name: "Online-Partner",
-        text: "Partner, die europaweit versenden. Der Standort spielt keine Rolle."
-      },
-      {
-        no: "04",
-        name: "Franchise und Partnerschaft",
-        text: "Für alle, die die Tabla in ihre eigene Stadt bringen möchten."
-      }
-    ],
-
-    permissionsTitle: "Kommunikationseinstellungen",
-    permissionsText:
-      "Sie entscheiden für jeden Kanal einzeln. Nichts ist vorausgewählt, und Sie können jede Einwilligung jederzeit widerrufen.",
+    permissionsTitle: "Worüber möchten Sie informiert werden?",
+    permissionsNote: "Nichts ist vorausgewählt; Sie können jede Einwilligung jederzeit widerrufen.",
     permissions: [
       "Aktionen per E-Mail",
       "Aktionen per WhatsApp",
       "Push-Benachrichtigungen",
       "Partnerangebote"
     ],
+    submit: "Mitgliedschaft abschließen",
+
+    tabsTitle: "Was bietet der Club?",
+    searchPlaceholder: "Betrieb oder Kategorie suchen…",
+    filterCountry: "Land",
+    filterCity: "Stadt",
+    filterCategory: "Kategorie",
+    tabs: {
+      discounts: {
+        name: "Rabatte",
+        text: "Aktuell gültige Angebote. Die Angebote von Bedri Usta stehen immer ganz oben.",
+        empty: "Die ersten Angebote erscheinen hier in Kürze."
+      },
+      partners: {
+        name: "Partner",
+        text: "Das Verzeichnis unserer Partner in Europa, nach Land und Stadt sortiert.",
+        empty: "Das Partnerverzeichnis öffnet in Kürze."
+      },
+      online: {
+        name: "Online-Partner",
+        text: "Partner, die europaweit versenden. Der Standort spielt keine Rolle.",
+        empty: "Online-Partner erscheinen hier in Kürze."
+      },
+      franchise: {
+        name: "Franchise",
+        text: "Partnerschaft für alle, die die Tabla in ihre eigene Stadt bringen möchten.",
+        empty: "Die Bedingungen werden in Kürze veröffentlicht."
+      }
+    },
 
     deviceTitle: "Geräte- und Benachrichtigungsstatus",
     deviceText:
@@ -178,8 +178,10 @@ const copy = {
     storyInvite:
       "Would you like to hear about offers, partners, discounts and online campaigns? Join the club, built on Bedri Usta's values.",
 
-    joinTitle: "Join the club",
-    joinNote: "Registration opens very soon.",
+    joinCta: "Become a member",
+    joinCtaNote: "Registration opens very soon.",
+    formTitle: "Join the club",
+    formClose: "Close",
     fields: {
       salutation: "Salutation",
       salutationPlaceholder: "Herr / Frau / Divers",
@@ -193,43 +195,38 @@ const copy = {
       phone: "Phone",
       optional: "optional"
     },
-    joinButton: "Become a member",
+    permissionsTitle: "What would you like to hear about?",
+    permissionsNote: "Nothing is pre-selected; you can withdraw any consent at any time.",
+    permissions: ["Campaigns by email", "Campaigns by WhatsApp", "Push notifications", "Partner offers"],
+    submit: "Complete membership",
 
-    searchTitle: "Search and filter",
+    tabsTitle: "What is in the club?",
     searchPlaceholder: "Search a business or category…",
     filterCountry: "Country",
     filterCity: "City",
     filterCategory: "Category",
-    searchNote: "Search will open once the first partners are listed.",
-
-    sectionsTitle: "What is in the club?",
-    sections: [
-      {
-        no: "01",
+    tabs: {
+      discounts: {
         name: "Discounts",
-        text: "Offers valid right now. Bedri Usta's own offers are always at the top."
+        text: "Offers valid right now. Bedri Usta's own offers are always at the top.",
+        empty: "The first offers will appear here very soon."
       },
-      {
-        no: "02",
+      partners: {
         name: "Partners",
-        text: "The directory of our partners across Europe, listed by country and city."
+        text: "The directory of our partners across Europe, listed by country and city.",
+        empty: "The partner directory opens very soon."
       },
-      {
-        no: "03",
+      online: {
         name: "Online Partners",
-        text: "Partners who ship anywhere. Location does not matter."
+        text: "Partners who ship anywhere. Location does not matter.",
+        empty: "Online partners will appear here very soon."
       },
-      {
-        no: "04",
-        name: "Franchise and Partnership",
-        text: "For those who want to bring the tabla to their own city."
+      franchise: {
+        name: "Franchise",
+        text: "Partnership for those who want to bring the tabla to their own city.",
+        empty: "The conditions will be published very soon."
       }
-    ],
-
-    permissionsTitle: "Communication preferences",
-    permissionsText:
-      "You decide channel by channel. Nothing is pre-selected, and you can withdraw any consent at any time.",
-    permissions: ["Campaigns by email", "Campaigns by WhatsApp", "Push notifications", "Partner offers"],
+    },
 
     deviceTitle: "Device and notification status",
     deviceText:
@@ -237,10 +234,6 @@ const copy = {
     deviceButton: "Check notification status"
   }
 } as const;
-
-function SoonBadge({ label }: { label: string }) {
-  return <span className="club-soon">{label}</span>;
-}
 
 /** Disabled on purpose: no backend yet, so nothing may be typed or submitted. */
 function PreviewField({
@@ -266,6 +259,8 @@ function PreviewField({
 export function GoldenTablaClubPage() {
   const language = useSiteLanguage();
   const text = copy[language];
+  const [formOpen, setFormOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<TabId>("discounts");
 
   useEffect(() => {
     const previousTitle = document.title;
@@ -281,9 +276,11 @@ export function GoldenTablaClubPage() {
     };
   }, [text.metaTitle, text.metaDescription]);
 
+  const activeCopy = text.tabs[activeTab];
+
   return (
     <main className="club-page">
-      {/* Story first: nobody fills in a form before knowing what they are joining. */}
+      {/* Story first: nobody joins something they have not understood yet. */}
       <section className="club-hero">
         <div className="club-shell">
           <p className="club-kicker">{text.kicker}</p>
@@ -291,101 +288,134 @@ export function GoldenTablaClubPage() {
           <p className="club-hero__lead">{text.storyLead}</p>
           <p className="club-hero__highlight">{text.storyHighlight}</p>
           <p className="club-hero__invite">{text.storyInvite}</p>
-        </div>
-      </section>
 
-      <section className="club-join" aria-labelledby="club-join-title">
-        <div className="club-shell">
-          <div className="club-panel">
-            <div className="club-panel__head">
-              <h2 id="club-join-title">{text.joinTitle}</h2>
-              <SoonBadge label={text.soon} />
-            </div>
-            <p className="club-panel__note">{text.joinNote}</p>
-
-            <div className="club-form" aria-disabled="true">
-              <PreviewField label={text.fields.salutation} placeholder={text.fields.salutationPlaceholder} />
-              <PreviewField label={text.fields.fullName} />
-              <PreviewField label={text.fields.email} />
-              <PreviewField label={text.fields.country} placeholder={text.fields.countryPlaceholder} />
-              <PreviewField label={text.fields.city} />
-              <PreviewField label={text.fields.postalCode} />
-              <PreviewField label={text.fields.birthDate} optionalLabel={text.fields.optional} />
-              <PreviewField label={text.fields.phone} optionalLabel={text.fields.optional} />
-            </div>
-
-            <button type="button" className="club-submit" disabled>
-              {text.joinButton} · {text.soon}
+          <div className="club-cta">
+            <button
+              type="button"
+              className="club-cta__button"
+              onClick={() => setFormOpen((open) => !open)}
+              aria-expanded={formOpen}
+              aria-controls="club-form-panel"
+            >
+              {text.joinCta}
+              <span className="club-cta__chevron" aria-hidden="true">{formOpen ? "↑" : "↓"}</span>
             </button>
+            <span className="club-cta__note">{text.joinCtaNote}</span>
           </div>
         </div>
       </section>
 
-      <section className="club-search" aria-labelledby="club-search-title">
-        <div className="club-shell">
-          <div className="club-panel">
-            <div className="club-panel__head">
-              <h2 id="club-search-title">{text.searchTitle}</h2>
-              <SoonBadge label={text.soon} />
-            </div>
-            <div className="club-searchbar" aria-disabled="true">
-              <input type="text" disabled placeholder={text.searchPlaceholder} tabIndex={-1} />
-              <div className="club-searchbar__filters">
-                <button type="button" disabled>{text.filterCountry}</button>
-                <button type="button" disabled>{text.filterCity}</button>
-                <button type="button" disabled>{text.filterCategory}</button>
+      {/* Revealed only on request, not pushed at every visitor. */}
+      {formOpen && (
+        <section className="club-form-section" id="club-form-panel">
+          <div className="club-shell">
+            <div className="club-card club-card--form">
+              <div className="club-card__head">
+                <h2>{text.formTitle}</h2>
+                <span className="club-soon">{text.soon}</span>
+              </div>
+
+              <div className="club-form" aria-disabled="true">
+                <PreviewField label={text.fields.salutation} placeholder={text.fields.salutationPlaceholder} />
+                <PreviewField label={text.fields.fullName} />
+                <PreviewField label={text.fields.email} />
+                <PreviewField label={text.fields.country} placeholder={text.fields.countryPlaceholder} />
+                <PreviewField label={text.fields.city} />
+                <PreviewField label={text.fields.postalCode} />
+                <PreviewField label={text.fields.birthDate} optionalLabel={text.fields.optional} />
+                <PreviewField label={text.fields.phone} optionalLabel={text.fields.optional} />
+              </div>
+
+              <div className="club-consents">
+                <h3>{text.permissionsTitle}</h3>
+                <p>{text.permissionsNote}</p>
+                <ul>
+                  {text.permissions.map((permission) => (
+                    <li key={permission}>
+                      {/* Empty boxes on purpose: nothing may look pre-selected. */}
+                      <span className="club-consents__box" aria-hidden="true" />
+                      <span>{permission}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="club-card__actions">
+                <button type="button" className="club-button club-button--primary" disabled>
+                  {text.submit}
+                </button>
+                <button type="button" className="club-button club-button--ghost" onClick={() => setFormOpen(false)}>
+                  {text.formClose}
+                </button>
               </div>
             </div>
-            <p className="club-panel__note">{text.searchNote}</p>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      <section className="club-sections" aria-labelledby="club-sections-title">
+      {/* Four areas as tabs: the page stays short and the visitor chooses. */}
+      <section className="club-tabs-section" aria-labelledby="club-tabs-title">
         <div className="club-shell">
-          <h2 id="club-sections-title" className="club-sections__title">{text.sectionsTitle}</h2>
-          <div className="club-cards">
-            {text.sections.map((section) => (
-              <article className="club-card" key={section.no}>
-                <span className="club-card__no">{section.no}</span>
-                <div className="club-card__body">
-                  <h3>{section.name}</h3>
-                  <p>{section.text}</p>
-                </div>
-                <SoonBadge label={text.soon} />
-              </article>
+          <h2 id="club-tabs-title" className="club-section-title">{text.tabsTitle}</h2>
+
+          <div className="club-tabs" role="tablist" aria-label={text.tabsTitle}>
+            {TAB_ORDER.map((tabId, index) => (
+              <button
+                key={tabId}
+                type="button"
+                role="tab"
+                id={`club-tab-${tabId}`}
+                aria-selected={activeTab === tabId}
+                aria-controls={`club-panel-${tabId}`}
+                className={`club-tab${activeTab === tabId ? " is-active" : ""}`}
+                onClick={() => setActiveTab(tabId)}
+              >
+                <span className="club-tab__no">{String(index + 1).padStart(2, "0")}</span>
+                <span className="club-tab__name">{text.tabs[tabId].name}</span>
+              </button>
             ))}
           </div>
+
+          <div
+            className="club-panel"
+            role="tabpanel"
+            id={`club-panel-${activeTab}`}
+            aria-labelledby={`club-tab-${activeTab}`}
+          >
+            <div className="club-panel__head">
+              <h3>{activeCopy.name}</h3>
+              <span className="club-soon">{text.soon}</span>
+            </div>
+            <p className="club-panel__text">{activeCopy.text}</p>
+
+            {/* Franchise is a single enquiry, not a directory: no search there. */}
+            {activeTab !== "franchise" && (
+              <div className="club-searchbar" aria-disabled="true">
+                <input type="text" disabled placeholder={text.searchPlaceholder} tabIndex={-1} />
+                <div className="club-searchbar__filters">
+                  {activeTab !== "online" && <button type="button" disabled>{text.filterCountry}</button>}
+                  {activeTab !== "online" && <button type="button" disabled>{text.filterCity}</button>}
+                  <button type="button" disabled>{text.filterCategory}</button>
+                </div>
+              </div>
+            )}
+
+            <p className="club-panel__empty">{activeCopy.empty}</p>
+          </div>
         </div>
       </section>
 
-      <section className="club-permissions" aria-labelledby="club-permissions-title">
+      {/* Kept as a disabled control rather than removed: this is the device and
+          notification check that gets switched on with the backend. */}
+      <section className="club-device-section">
         <div className="club-shell">
-          <div className="club-panel">
-            <div className="club-panel__head">
-              <h2 id="club-permissions-title">{text.permissionsTitle}</h2>
-              <SoonBadge label={text.soon} />
-            </div>
-            <p className="club-panel__note">{text.permissionsText}</p>
-            <ul className="club-permission-list">
-              {text.permissions.map((permission) => (
-                <li key={permission}>
-                  <span className="club-permission__box" aria-hidden="true" />
-                  <span>{permission}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Kept as a disabled control rather than removed: this is the device
-              and notification check that gets switched on with the backend. */}
-          <div className="club-panel club-panel--device">
-            <div className="club-panel__head">
+          <div className="club-card club-card--device">
+            <div className="club-card__head">
               <h2>{text.deviceTitle}</h2>
-              <SoonBadge label={text.soon} />
+              <span className="club-soon">{text.soon}</span>
             </div>
-            <p className="club-panel__note">{text.deviceText}</p>
-            <button type="button" className="club-device-button" disabled>
+            <p className="club-card__text">{text.deviceText}</p>
+            <button type="button" className="club-button club-button--primary" disabled>
               {text.deviceButton}
             </button>
           </div>
