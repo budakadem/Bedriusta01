@@ -16,7 +16,7 @@ import {
   type MenuDiet
 } from "./menuData";
 import { NotificationCenter } from "./components/NotificationCenter";
-import { GoldenTablaClubPanel } from "./components/GoldenTablaClubPanel";
+import { GoldenTablaClubPage } from "./components/GoldenTablaClubPage";
 import { openCookiePreferences } from "./components/CookieNotice";
 import { ImpressumPage } from "./components/ImpressumPage";
 import { AgbPage } from "./components/AgbPage";
@@ -126,6 +126,12 @@ function getRouteMetadata(pathname: string, language: SiteLanguage = "TR"): Page
     return {
       title: "Rezervasyon | Bedri Usta Mannheim",
       description: "Bedri Usta Mannheim için kişi sayını, tarihini ve saatini seç; rezervasyonunu veya grup talebini güvenli biçimde hazırla."
+    };
+  }
+  if (pathname === "/golden-tabla-club") {
+    return {
+      title: "Golden Tabla Club | Bedri Usta",
+      description: "Bedri Usta’nın Avrupa esnaf ağı. Üyelere özel indirimler, partner fırsatları ve online kampanyalar tek yerde."
     };
   }
   if (pathname === "/jobs" || pathname.startsWith("/jobs/")) return getJobsPageMetadata(pathname, language);
@@ -523,6 +529,17 @@ function App() {
       <View style={[styles.page, styles.pageWithBottomDock]}>
         <Header isMobile={layout.isMobile} />
         <AgbPage />
+        <Footer isMobile={layout.isMobile} />
+        <BackToTopButton desktop={!layout.showBottomDock} />
+        <MobileActionDock desktop={!layout.showBottomDock} />
+      </View>
+    );
+  }
+  if (pathname.replace(/\/+$/, "") === "/golden-tabla-club") {
+    return (
+      <View style={[styles.page, styles.pageWithBottomDock]}>
+        <Header isMobile={layout.isMobile} />
+        <GoldenTablaClubPage />
         <Footer isMobile={layout.isMobile} />
         <BackToTopButton desktop={!layout.showBottomDock} />
         <MobileActionDock desktop={!layout.showBottomDock} />
@@ -1762,7 +1779,6 @@ function Header({ isMobile }: { isMobile: boolean }) {
 function HeaderUtilities({ compact = false }: { compact?: boolean }) {
   const [languageOpen, setLanguageOpen] = useState(false);
   const [notificationCenterOpen, setNotificationCenterOpen] = useState(false);
-  const [clubOpen, setClubOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] =
     useState<(typeof languageOptions)[number]["code"]>(() => getSiteLanguage());
   const languageSelectorRef = useRef<any>(null);
@@ -1797,14 +1813,13 @@ function HeaderUtilities({ compact = false }: { compact?: boolean }) {
     >
       <ShareButton compact={compact} />
       <Pressable
-        onPress={() => setClubOpen(true)}
-        accessibilityRole="button"
+        onPress={() => openNavigationTarget("/golden-tabla-club")}
+        accessibilityRole="link"
         accessibilityLabel="Golden Tabla Club"
-        accessibilityState={{ expanded: clubOpen }}
         style={({ hovered, pressed }: any) => [
           styles.headerLogin,
           compact && styles.headerLoginCompact,
-          (hovered || pressed || clubOpen) && styles.headerUtilityActive
+          (hovered || pressed) && styles.headerUtilityActive
         ]}
       >
         <Image
@@ -1886,8 +1901,6 @@ function HeaderUtilities({ compact = false }: { compact?: boolean }) {
           </View>
         )}
       </View>
-      <GoldenTablaClubPanel onClose={() => setClubOpen(false)} visible={clubOpen} />
-
       <NotificationCenter
         onClose={() => setNotificationCenterOpen(false)}
         visible={notificationCenterOpen}
