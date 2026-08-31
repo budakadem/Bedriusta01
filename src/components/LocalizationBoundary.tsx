@@ -5,6 +5,7 @@ import { translateSiteText } from "../siteTranslations";
 const textSources = new WeakMap<Text, string>();
 const lastTranslatedTexts = new WeakMap<Text, string>();
 const attributeSources = new WeakMap<Element, Map<string, string>>();
+const lastTranslatedAttributes = new WeakMap<Element, Map<string, string>>();
 const translatedAttributes = ["aria-label", "title", "placeholder", "alt"] as const;
 
 function translateTextNode(node: Text, language: ReturnType<typeof useSiteLanguage>) {
@@ -31,12 +32,26 @@ function translateElementAttributes(element: Element, language: ReturnType<typeo
     attributeSources.set(element, sources);
   }
 
+  let translations = lastTranslatedAttributes.get(element);
+  if (!translations) {
+    translations = new Map();
+    lastTranslatedAttributes.set(element, translations);
+  }
+
   for (const attribute of translatedAttributes) {
     const current = element.getAttribute(attribute);
     if (!current) continue;
-    const source = sources.get(attribute) ?? current;
-    if (!sources.has(attribute)) sources.set(attribute, source);
+    // Same rule as the text nodes: the cached source only stands while the
+    // attribute still holds what we last wrote. Anything else means the
+    // component rendered its own value for this language, and that value is
+    // the source now — otherwise we would overwrite a component that already
+    // translates itself with the stale first-render string.
+    const previousSource = sources.get(attribute);
+    const previousTranslation = translations.get(attribute);
+    const source = previousSource !== undefined && current === previousTranslation ? previousSource : current;
+    sources.set(attribute, source);
     const translated = translateSiteText(source, language);
+    translations.set(attribute, translated);
     if (current !== translated) element.setAttribute(attribute, translated);
   }
 }

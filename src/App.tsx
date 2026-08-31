@@ -131,7 +131,7 @@ function getRouteMetadata(pathname: string, language: SiteLanguage = "TR"): Page
   if (pathname === "/golden-tabla-club") {
     return {
       title: "Golden Tabla Club | Bedri Usta",
-      description: "Bedri Usta’nın Avrupa esnaf ağı. Üyelere özel indirimler, partner fırsatları ve online kampanyalar tek yerde."
+      description: "Avrupa’nın ticari fırsatlar ağı: üyelere özel kuponlar, indirimler, partner fırsatları, iş ilanları ve franchise duyuruları tek yerde."
     };
   }
   if (pathname === "/jobs" || pathname.startsWith("/jobs/")) return getJobsPageMetadata(pathname, language);

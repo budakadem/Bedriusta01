@@ -18,9 +18,9 @@ import "./golden-tabla-club.css";
  * the same purpose.
  */
 
-type TabId = "discounts" | "partners" | "online" | "jobs" | "franchise";
+type TabId = "coupons" | "discounts" | "partners" | "online" | "jobs" | "franchise";
 
-const TAB_ORDER: TabId[] = ["discounts", "partners", "online", "jobs", "franchise"];
+const TAB_ORDER: TabId[] = ["coupons", "discounts", "partners", "online", "jobs", "franchise"];
 
 const CONFETTI_PIECES = 70;
 const CONFETTI_MS = 2600;
@@ -65,17 +65,17 @@ const copy = {
   TR: {
     metaTitle: "Golden Tabla Club | Bedri Usta",
     metaDescription:
-      "Bedri Usta’nın Avrupa esnaf ağı. Üyelere özel indirimler, partner fırsatları ve online kampanyalar tek yerde.",
+      "Avrupa’nın ticari fırsatlar ağı: üyelere özel kuponlar, indirimler, partner fırsatları, iş ilanları ve franchise duyuruları tek yerde.",
     kicker: "GOLDEN TABLA CLUB",
     soon: "Yakında",
     optional: "İsteğe bağlı",
 
-    title: "Bedri Usta’nın ağına katıl.",
+    title: "Ticari fırsatlar ağına katıl.",
     story:
       "14 yaşında bir çocuk, Adana sokaklarında üç tekerlekli bir tablayla kebap satıyordu. Tablayı birinden, kömürü birinden, eti birinden, sebzeyi birinden aldı. O tabla tek başına bir tezgâh değildi — bir esnaf ağıydı.",
     highlight: "Bugün aynı ağı Avrupa’da kuruyoruz.",
     invite:
-      "Üyelere özel indirimler, Avrupa genelinde partner fırsatları ve online kampanyalar — hepsi tek yerde. Üyelik ücretsiz.",
+      "Üyelere özel kuponlar, indirimler, Avrupa genelinde partner fırsatları, iş ilanları ve franchise duyuruları — hepsi tek yerde. Üyelik ücretsiz.",
 
     joinCta: "Üye ol",
     joinNote: "Kayıtlar çok yakında açılıyor.",
@@ -108,8 +108,16 @@ const copy = {
     filterCountry: "Ülke",
     filterCity: "Şehir",
     filterCategory: "Kategori",
-    jobsButton: "Açık pozisyonlara git",
+    jobsButton: "İlanlara git",
+    jobsEntryTitle: "Bedri Usta Mannheim",
+    jobsEntryMeta: "Mannheim · Açık pozisyonlar",
+    jobsOthers: "Diğer firmaların ilanları çok yakında burada.",
     tabs: {
+      coupons: {
+        name: "Kuponlar",
+        text: "Üyelere özel kupon kodları. Bedri Usta’nın kendi kuponları her zaman en üstte.",
+        empty: "İlk kuponlar çok yakında burada."
+      },
       discounts: {
         name: "İndirimler",
         text: "Şu an geçerli olan fırsatlar. Bedri Usta’nın kendi indirimleri her zaman en üstte.",
@@ -127,13 +135,13 @@ const copy = {
       },
       jobs: {
         name: "İş İlanları",
-        text: "Bedri Usta Mannheim’daki açık pozisyonlar. Bu bölüm şimdiden aktif.",
+        text: "Ağdaki firmaların açık pozisyonları. Bedri Usta Mannheim’ın ilanları şimdiden yayında.",
         empty: ""
       },
       franchise: {
         name: "Franchise",
-        text: "Tablayı kendi şehrine taşımak isteyenler için iş ortaklığı.",
-        empty: "Başvuru koşulları çok yakında yayınlanacak."
+        text: "Avrupa genelindeki franchise fırsatları — gastronomi, market, hizmet, her sektörden. Bedri Usta’nın kendi franchise duyuruları da burada yer alır.",
+        empty: "İlk franchise ilanları çok yakında burada."
       }
     },
 
@@ -146,17 +154,17 @@ const copy = {
   DE: {
     metaTitle: "Golden Tabla Club | Bedri Usta",
     metaDescription:
-      "Das europäische Händlernetzwerk von Bedri Usta. Rabatte für Mitglieder, Partnerangebote und Online-Aktionen an einem Ort.",
+      "Das europäische Netzwerk für Geschäftschancen: Gutscheine, Rabatte, Partnerangebote, Stellenanzeigen und Franchise-Angebote an einem Ort.",
     kicker: "GOLDEN TABLA CLUB",
     soon: "Demnächst",
     optional: "Optional",
 
-    title: "Werden Sie Teil des Netzwerks von Bedri Usta.",
+    title: "Werden Sie Teil des Netzwerks für Geschäftschancen.",
     story:
       "Ein 14-jähriger Junge verkaufte in den Straßen Adanas Kebab von einem dreirädrigen Wagen, einer Tabla. Den Wagen bekam er vom einen, die Kohle vom anderen, das Fleisch vom nächsten, das Gemüse von wieder einem anderen. Diese Tabla war nicht nur ein Stand — sie war ein Netzwerk von Händlern.",
     highlight: "Heute bauen wir dasselbe Netzwerk in Europa auf.",
     invite:
-      "Rabatte nur für Mitglieder, Partnerangebote in ganz Europa und Online-Aktionen — alles an einem Ort. Die Mitgliedschaft ist kostenlos.",
+      "Gutscheine nur für Mitglieder, Rabatte, Partnerangebote in ganz Europa, Stellenanzeigen und Franchise-Angebote — alles an einem Ort. Die Mitgliedschaft ist kostenlos.",
 
     joinCta: "Mitglied werden",
     joinNote: "Die Anmeldung öffnet in Kürze.",
@@ -189,8 +197,16 @@ const copy = {
     filterCountry: "Land",
     filterCity: "Stadt",
     filterCategory: "Kategorie",
-    jobsButton: "Zu den offenen Stellen",
+    jobsButton: "Zu den Anzeigen",
+    jobsEntryTitle: "Bedri Usta Mannheim",
+    jobsEntryMeta: "Mannheim · Offene Stellen",
+    jobsOthers: "Anzeigen weiterer Betriebe erscheinen hier in Kürze.",
     tabs: {
+      coupons: {
+        name: "Gutscheine",
+        text: "Gutscheincodes nur für Mitglieder. Die Gutscheine von Bedri Usta stehen immer ganz oben.",
+        empty: "Die ersten Gutscheine erscheinen hier in Kürze."
+      },
       discounts: {
         name: "Rabatte",
         text: "Aktuell gültige Angebote. Die Angebote von Bedri Usta stehen immer ganz oben.",
@@ -208,13 +224,13 @@ const copy = {
       },
       jobs: {
         name: "Stellen",
-        text: "Offene Stellen bei Bedri Usta Mannheim. Dieser Bereich ist bereits aktiv.",
+        text: "Offene Stellen der Betriebe im Netzwerk. Die Anzeigen von Bedri Usta Mannheim sind bereits online.",
         empty: ""
       },
       franchise: {
         name: "Franchise",
-        text: "Partnerschaft für alle, die die Tabla in ihre eigene Stadt bringen möchten.",
-        empty: "Die Bedingungen werden in Kürze veröffentlicht."
+        text: "Franchise-Angebote aus ganz Europa — Gastronomie, Handel, Dienstleistung, jede Branche. Auch die Angebote von Bedri Usta stehen hier.",
+        empty: "Die ersten Franchise-Angebote erscheinen hier in Kürze."
       }
     },
 
@@ -227,17 +243,17 @@ const copy = {
   ENG: {
     metaTitle: "Golden Tabla Club | Bedri Usta",
     metaDescription:
-      "Bedri Usta's European network of traders. Member discounts, partner offers and online campaigns in one place.",
+      "Europe's network of business opportunities: member coupons, discounts, partner offers, job listings and franchise opportunities in one place.",
     kicker: "GOLDEN TABLA CLUB",
     soon: "Coming soon",
     optional: "Optional",
 
-    title: "Join Bedri Usta's network.",
+    title: "Join the network of business opportunities.",
     story:
       "A 14-year-old boy sold kebab from a three-wheeled cart — a tabla — in the streets of Adana. He got the cart from one person, the coal from another, the meat from another, the vegetables from another. That tabla was not just a stall — it was a network of traders.",
     highlight: "Today we are building that same network across Europe.",
     invite:
-      "Member-only discounts, partner offers across Europe and online campaigns — all in one place. Membership is free.",
+      "Member-only coupons, discounts, partner offers across Europe, job listings and franchise opportunities — all in one place. Membership is free.",
 
     joinCta: "Become a member",
     joinNote: "Registration opens very soon.",
@@ -270,8 +286,16 @@ const copy = {
     filterCountry: "Country",
     filterCity: "City",
     filterCategory: "Category",
-    jobsButton: "Go to open positions",
+    jobsButton: "Go to the listings",
+    jobsEntryTitle: "Bedri Usta Mannheim",
+    jobsEntryMeta: "Mannheim · Open positions",
+    jobsOthers: "Listings from other businesses will appear here very soon.",
     tabs: {
+      coupons: {
+        name: "Coupons",
+        text: "Coupon codes for members only. Bedri Usta's own coupons are always at the top.",
+        empty: "The first coupons will appear here very soon."
+      },
       discounts: {
         name: "Discounts",
         text: "Offers valid right now. Bedri Usta's own offers are always at the top.",
@@ -289,13 +313,13 @@ const copy = {
       },
       jobs: {
         name: "Jobs",
-        text: "Open positions at Bedri Usta Mannheim. This section is already live.",
+        text: "Open positions at the businesses in the network. Bedri Usta Mannheim's listings are already live.",
         empty: ""
       },
       franchise: {
         name: "Franchise",
-        text: "Partnership for those who want to bring the tabla to their own city.",
-        empty: "The conditions will be published very soon."
+        text: "Franchise opportunities across Europe — hospitality, retail, services, every sector. Bedri Usta's own listings appear here too.",
+        empty: "The first franchise listings will appear here very soon."
       }
     },
 
@@ -334,7 +358,7 @@ export function GoldenTablaClubPage() {
   // Each burst gets its own number; using it as the React key remounts the
   // pieces, which is what restarts the CSS animation on a repeat burst.
   const [burst, setBurst] = useState(() => (prefersReducedMotion() ? 0 : 1));
-  const [activeTab, setActiveTab] = useState<TabId>("discounts");
+  const [activeTab, setActiveTab] = useState<TabId>("coupons");
   const formRef = useRef<HTMLDivElement>(null);
   const confettiTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -505,26 +529,34 @@ export function GoldenTablaClubPage() {
             <p className="club-panel__text">{activeCopy.text}</p>
 
             {activeTab === "jobs" ? (
-              <button
-                type="button"
-                className="club-button club-button--primary"
-                onClick={() => navigateTo("/jobs")}
-              >
-                {text.jobsButton}
-              </button>
+              /* Jobs is a directory like the others; it just already holds one
+                 entry, ours, which links straight to the jobs page. */
+              <>
+                <div className="club-listing">
+                  <div className="club-listing__copy">
+                    <strong>{text.jobsEntryTitle}</strong>
+                    <span>{text.jobsEntryMeta}</span>
+                  </div>
+                  <button
+                    type="button"
+                    className="club-button club-button--primary"
+                    onClick={() => navigateTo("/jobs")}
+                  >
+                    {text.jobsButton}
+                  </button>
+                </div>
+                <p className="club-empty">{text.jobsOthers}</p>
+              </>
             ) : (
               <>
-                {/* Franchise is a single enquiry, not a directory: no search. */}
-                {activeTab !== "franchise" && (
-                  <div className="club-search" aria-disabled="true">
-                    <input type="text" disabled placeholder={text.searchPlaceholder} tabIndex={-1} />
-                    <div className="club-search__filters">
-                      {activeTab !== "online" && <button type="button" disabled>{text.filterCountry}</button>}
-                      {activeTab !== "online" && <button type="button" disabled>{text.filterCity}</button>}
-                      <button type="button" disabled>{text.filterCategory}</button>
-                    </div>
+                <div className="club-search" aria-disabled="true">
+                  <input type="text" disabled placeholder={text.searchPlaceholder} tabIndex={-1} />
+                  <div className="club-search__filters">
+                    {activeTab !== "online" && <button type="button" disabled>{text.filterCountry}</button>}
+                    {activeTab !== "online" && <button type="button" disabled>{text.filterCity}</button>}
+                    <button type="button" disabled>{text.filterCategory}</button>
                   </div>
-                )}
+                </div>
                 <p className="club-empty">{activeCopy.empty}</p>
               </>
             )}

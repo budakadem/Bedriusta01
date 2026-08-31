@@ -43,7 +43,7 @@ const pages = [
   {
     route: "/golden-tabla-club",
     title: "Golden Tabla Club | Bedri Usta",
-    description: "Bedri Usta’nın Avrupa esnaf ağı. Üyelere özel indirimler, partner fırsatları ve online kampanyalar tek yerde."
+    description: "Avrupa’nın ticari fırsatlar ağı: üyelere özel kuponlar, indirimler, partner fırsatları, iş ilanları ve franchise duyuruları tek yerde."
   },
   {
     route: "/rezervasyon",

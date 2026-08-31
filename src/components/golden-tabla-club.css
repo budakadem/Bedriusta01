@@ -343,3 +343,24 @@
   .club-tab { transition: none; }
   .club-confetti { display: none; }
 }
+
+/* One live directory entry (our own job listing) --------------------- */
+.club-listing {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 24px;
+  padding: 18px 20px;
+  border: 1px solid var(--club-line);
+  background: var(--club-paper);
+}
+.club-listing__copy { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.club-listing__copy strong { font-size: 17px; font-weight: 800; color: var(--club-red); }
+.club-listing__copy span { color: var(--club-muted); font-size: 13px; font-weight: 600; }
+.club-listing .club-button { min-height: 46px; }
+
+@media (max-width: 620px) {
+  .club-listing { align-items: stretch; flex-direction: column; }
+}
