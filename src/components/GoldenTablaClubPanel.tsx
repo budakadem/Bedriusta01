@@ -322,6 +322,7 @@ export function GoldenTablaClubPanel({ onClose, visible }: { onClose: () => void
   const formRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showTopButton, setShowTopButton] = useState(false);
+  const [dockHeight, setDockHeight] = useState(0);
   const confettiTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -345,6 +346,24 @@ export function GoldenTablaClubPanel({ onClose, visible }: { onClose: () => void
     },
     []
   );
+
+  // Measure the bottom action dock rather than assuming a height: it is 70px
+  // on phones but grows with the safe-area inset, and switches to a shorter
+  // floating bar above 900px. A hardcoded guess overlapped it on some sizes.
+  useEffect(() => {
+    if (!visible) return;
+
+    const measure = () => {
+      const dock = document.querySelector(".mobile-map-link")?.parentElement;
+      if (!dock) return setDockHeight(0);
+      const rect = dock.getBoundingClientRect();
+      setDockHeight(Math.max(0, Math.round(window.innerHeight - rect.top)));
+    };
+
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [visible]);
 
   // The panel scrolls inside itself, so it needs its own back-to-top rather
   // than the page one, which would be scrolling the document behind it.
@@ -394,7 +413,13 @@ export function GoldenTablaClubPanel({ onClose, visible }: { onClose: () => void
   // stacking context, where the centred logo plate (z-index 106) paints over
   // it no matter how high this overlay's own z-index is.
   return createPortal(
-    <div className="gtc-overlay" role="dialog" aria-modal="true" aria-label={text.kicker}>
+    <div
+      className="gtc-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-label={text.kicker}
+      style={{ bottom: dockHeight ? `${dockHeight}px` : undefined }}
+    >
       <button className="gtc-backdrop" type="button" onClick={onClose} aria-label={text.close} />
 
       {/* Full-viewport celebration, not a few dots on the button. */}
@@ -573,7 +598,17 @@ export function GoldenTablaClubPanel({ onClose, visible }: { onClose: () => void
             <nav>
               <a href="/impressum">Impressum</a>
               <a href="/datenschutz">Datenschutz</a>
-              <button type="button" onClick={openCookiePreferences}>{text.footerCookies}</button>
+              {/* The consent panel sits at z-index 120, below this overlay, so
+                  it would open out of sight. Close the club first. */}
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  openCookiePreferences();
+                }}
+              >
+                {text.footerCookies}
+              </button>
               <a href="/agb">AGB</a>
             </nav>
             <p>{text.footerRights}</p>

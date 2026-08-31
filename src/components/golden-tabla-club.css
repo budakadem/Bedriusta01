@@ -18,7 +18,8 @@
   padding: max(16px, env(safe-area-inset-top)) 14px 14px;
 }
 
-/* Desktop dock floats at bottom:18 and is ~68px tall. */
+/* The inline bottom set from the measured dock overrides these; they are the
+   fallback for the first paint and for when no dock is present. */
 @media (min-width: 900px) {
   .gtc-overlay { bottom: 100px; }
 }
