@@ -22,7 +22,6 @@ import { AgbPage } from "./components/AgbPage";
 import { ContactPage } from "./components/ContactPage";
 import { CustomerReviewSection } from "./components/CustomerReviewSection";
 import { getJobsPageMetadata, JobsPage, type PageMetadata } from "./components/JobsPage";
-import { GoldenTablaClubPage } from "./components/GoldenTablaClubPage";
 import { PrivacyPage } from "./components/PrivacyPage";
 import { ReservationPage } from "./components/ReservationPage";
 import { getSiteLanguage, setSiteLanguage, subscribeToSiteLanguage, type SiteLanguage, useSiteLanguage } from "./siteLanguage";
@@ -128,12 +127,6 @@ function getRouteMetadata(pathname: string, language: SiteLanguage = "TR"): Page
       description: "Bedri Usta Mannheim için kişi sayını, tarihini ve saatini seç; rezervasyonunu veya grup talebini güvenli biçimde hazırla."
     };
   }
-  if (pathname === "/golden-tabla-club") {
-    return {
-      title: "Golden Tabla Club | Bedri Usta",
-      description: "Bedri Usta’nın değerleriyle kurulan Avrupa esnaf ağı. Fırsatlar, partner indirimleri ve online kampanyalar tek çatı altında."
-    };
-  }
   if (pathname === "/jobs" || pathname.startsWith("/jobs/")) return getJobsPageMetadata(pathname, language);
   if (pathname === "/impressum") {
     return {
@@ -205,7 +198,6 @@ const navItems = [
       { label: "Politikalarımız", href: "/politikalarimiz" }
     ]
   },
-  { label: "Golden Tabla Club", href: "/golden-tabla-club" },
   { label: "İletişim", href: "/iletisim" },
   { label: "Menü", href: "/menu" },
   { label: "Rezervasyon", href: "/rezervasyon" }
@@ -220,7 +212,6 @@ const languageOptions = [
 const mobilePrimaryNavItems = [
   { label: "Anasayfa", href: "/" },
   { label: "Hakkımızda", href: "/hakkimizda" },
-  { label: "Golden Tabla Club", href: "/golden-tabla-club" },
   { label: "Jobs", href: "/jobs" },
   { label: "Politikalarımız", href: "/politikalarimiz" },
   { label: "İletişim", href: "/iletisim" },
@@ -531,17 +522,6 @@ function App() {
       <View style={[styles.page, styles.pageWithBottomDock]}>
         <Header isMobile={layout.isMobile} />
         <AgbPage />
-        <Footer isMobile={layout.isMobile} />
-        <BackToTopButton desktop={!layout.showBottomDock} />
-        <MobileActionDock desktop={!layout.showBottomDock} />
-      </View>
-    );
-  }
-  if (pathname.replace(/\/+$/, "") === "/golden-tabla-club") {
-    return (
-      <View style={[styles.page, styles.pageWithBottomDock]}>
-        <Header isMobile={layout.isMobile} />
-        <GoldenTablaClubPage />
         <Footer isMobile={layout.isMobile} />
         <BackToTopButton desktop={!layout.showBottomDock} />
         <MobileActionDock desktop={!layout.showBottomDock} />
@@ -1814,18 +1794,15 @@ function HeaderUtilities({ compact = false }: { compact?: boolean }) {
       accessibilityLabel="Paylaşım, kullanıcı ve dil seçenekleri"
     >
       <ShareButton compact={compact} />
-      {/* The member icon is the club entrance. The notification centre it used
-          to open now lives on the club page as the (still disabled) device and
-          notification check, so the component stays in place rather than being
-          removed. */}
       <Pressable
-        onPress={() => openNavigationTarget("/golden-tabla-club")}
+        onPress={() => setNotificationCenterOpen(true)}
         accessibilityRole="button"
-        accessibilityLabel="Golden Tabla Club sayfasını aç"
+        accessibilityLabel="Bildirim merkezini aç"
+        accessibilityState={{ expanded: notificationCenterOpen }}
         style={({ hovered, pressed }: any) => [
           styles.headerLogin,
           compact && styles.headerLoginCompact,
-          (hovered || pressed) && styles.headerUtilityActive
+          (hovered || pressed || notificationCenterOpen) && styles.headerUtilityActive
         ]}
       >
         <Image
