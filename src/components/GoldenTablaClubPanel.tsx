@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useSiteLanguage } from "../siteLanguage";
+import { openCookiePreferences } from "./CookieNotice";
 import "./golden-tabla-club.css";
 
 /**
@@ -112,7 +113,10 @@ const copy = {
     deviceTitle: "Cihaz ve bildirim durumu",
     deviceText:
       "Bildirimler yalnızca buradan yönetilir. Ana ekrana eklenme, bildirim izni ve cihaz kaydı durumunu buradan göreceksin.",
-    deviceButton: "Bildirim durumunu kontrol et"
+    deviceButton: "Bildirim durumunu kontrol et",
+    backToTop: "Yukarı",
+    footerCookies: "Çerez ayarları",
+    footerRights: "© 2026 Bedri Usta. Tüm hakları saklıdır."
   },
 
   DE: {
@@ -195,7 +199,10 @@ const copy = {
     deviceTitle: "Geräte- und Benachrichtigungsstatus",
     deviceText:
       "Benachrichtigungen werden ausschließlich hier verwaltet. Sie sehen Startbildschirm-Status, Berechtigung und Geräteregistrierung.",
-    deviceButton: "Benachrichtigungsstatus prüfen"
+    deviceButton: "Benachrichtigungsstatus prüfen",
+    backToTop: "Nach oben",
+    footerCookies: "Cookie-Einstellungen",
+    footerRights: "© 2026 Bedri Usta. Alle Rechte vorbehalten."
   },
 
   ENG: {
@@ -278,7 +285,10 @@ const copy = {
     deviceTitle: "Device and notification status",
     deviceText:
       "Notifications are managed here and nowhere else. You will see home-screen status, permission and device registration.",
-    deviceButton: "Check notification status"
+    deviceButton: "Check notification status",
+    backToTop: "Back to top",
+    footerCookies: "Cookie settings",
+    footerRights: "© 2026 Bedri Usta. All rights reserved."
   }
 } as const;
 
@@ -310,6 +320,8 @@ export function GoldenTablaClubPanel({ onClose, visible }: { onClose: () => void
   const [submitted, setSubmitted] = useState(false);
   const [activeTab, setActiveTab] = useState<TabId>("discounts");
   const formRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [showTopButton, setShowTopButton] = useState(false);
   const confettiTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -333,6 +345,17 @@ export function GoldenTablaClubPanel({ onClose, visible }: { onClose: () => void
     },
     []
   );
+
+  // The panel scrolls inside itself, so it needs its own back-to-top rather
+  // than the page one, which would be scrolling the document behind it.
+  useEffect(() => {
+    const scroller = scrollRef.current;
+    if (!visible || !scroller) return;
+    const onScroll = () => setShowTopButton(scroller.scrollTop > 240);
+    onScroll();
+    scroller.addEventListener("scroll", onScroll, { passive: true });
+    return () => scroller.removeEventListener("scroll", onScroll);
+  }, [visible]);
 
   // Scroll after React has committed the form, not from the click handler.
   useEffect(() => {
@@ -394,7 +417,7 @@ export function GoldenTablaClubPanel({ onClose, visible }: { onClose: () => void
       <div className="gtc-sheet">
         <div className="gtc-sheet__accent" />
 
-        <div className="gtc-sheet__scroll">
+        <div className="gtc-sheet__scroll" ref={scrollRef}>
           <div className="gtc-top">
             <img className="gtc-logo" src="/images/brand/bedri-usta-logo-rectangular.png" alt="Bedri Usta" />
             <button className="gtc-close" type="button" onClick={onClose} aria-label={text.close}>
@@ -543,7 +566,38 @@ export function GoldenTablaClubPanel({ onClose, visible }: { onClose: () => void
               {text.deviceButton}
             </button>
           </div>
+
+          {/* The site's footer links, kept inside the panel so the legal
+              pages are reachable without closing it. */}
+          <footer className="gtc-footer">
+            <nav>
+              <a href="/impressum">Impressum</a>
+              <a href="/datenschutz">Datenschutz</a>
+              <button type="button" onClick={openCookiePreferences}>{text.footerCookies}</button>
+              <a href="/agb">AGB</a>
+            </nav>
+            <p>{text.footerRights}</p>
+          </footer>
         </div>
+
+        {/* Scrolls the panel, not the page behind it. */}
+        {showTopButton && (
+          <button
+            type="button"
+            className="gtc-totop"
+            onClick={() =>
+              scrollRef.current?.scrollTo({
+                top: 0,
+                behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                  ? "auto"
+                  : "smooth"
+              })
+            }
+          >
+            <span aria-hidden="true">↑</span>
+            <span className="gtc-totop__label">{text.backToTop}</span>
+          </button>
+        )}
       </div>
     </div>,
     document.body

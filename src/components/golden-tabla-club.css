@@ -2,18 +2,25 @@
    Matches the notification centre: centred sheet, cream paper, gold accent
    line, wine type. */
 
+/* Stops above the bottom action dock (fixed, 70px tall, z-index 95) instead
+   of covering it, so Menü / Rezervasyon / Instagram / Yol Tarifi stay visible
+   and usable while the club is open. */
 .gtc-overlay {
   position: fixed;
-  inset: 0;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: calc(70px + env(safe-area-inset-bottom));
   z-index: 200;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding:
-    max(16px, env(safe-area-inset-top))
-    max(14px, env(safe-area-inset-right))
-    max(16px, env(safe-area-inset-bottom))
-    max(14px, env(safe-area-inset-left));
+  padding: max(16px, env(safe-area-inset-top)) 14px 14px;
+}
+
+/* Desktop dock floats at bottom:18 and is ~68px tall. */
+@media (min-width: 900px) {
+  .gtc-overlay { bottom: 100px; }
 }
 
 .gtc-backdrop {
@@ -375,3 +382,52 @@
   .gtc-join:hover { transform: none; }
   .gtc-confetti { display: none; }
 }
+
+/* Panel footer ------------------------------------------------------- */
+.gtc-footer {
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid #e2d7cc;
+  text-align: center;
+}
+.gtc-footer nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 18px; }
+.gtc-footer a,
+.gtc-footer button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #530e0f;
+  font: 700 12.5px/1.4 "Heebo", sans-serif;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.gtc-footer a:hover,
+.gtc-footer button:hover { color: #6c171a; }
+.gtc-footer p { margin: 14px 0 0; color: #8a7a70; font: 500 11.5px/1.5 "Heebo", sans-serif; }
+/* Clears the floating back-to-top button, which sits over this corner. */
+.gtc-footer { padding-bottom: 72px; }
+
+/* Panel back-to-top -------------------------------------------------- */
+.gtc-totop {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  width: 58px;
+  height: 62px;
+  border: 1px solid rgba(223, 191, 120, .68);
+  border-radius: 8px;
+  background: #530e0f;
+  color: #fff8ee;
+  cursor: pointer;
+  box-shadow: 0 14px 36px rgba(16, 3, 3, .34);
+}
+.gtc-totop:hover { background: #6c171a; }
+.gtc-totop span[aria-hidden] { font: 700 18px/1 "Heebo", sans-serif; }
+.gtc-totop__label { font: 800 9px/1 "Karla", sans-serif; letter-spacing: .12em; text-transform: uppercase; }
