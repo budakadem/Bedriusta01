@@ -22,71 +22,6 @@ type TabId = "coupons" | "discounts" | "partners" | "online" | "jobs" | "franchi
 
 const TAB_ORDER: TabId[] = ["coupons", "discounts", "partners", "online", "jobs", "franchise"];
 
-/**
- * The sponsor rail advertises the slots themselves, not sponsors.
- *
- * Nothing is signed yet, so a tile carries a sector, a city and "this slot is
- * free" — never an invented company name or logo. Showing made-up brands under
- * a sponsor heading would be misleading advertising (UWG § 5), and an invented
- * name that happens to resemble a real business is a trademark problem on top.
- * Advertising the empty slots is honest and does the recruiting.
- *
- * One sponsor per sector per city — hence the city on every tile.
- */
-type SponsorSlotId =
-  | "jeweller"
-  | "diamond"
-  | "nuts"
-  | "organic"
-  | "market"
-  | "travel"
-  | "bridal"
-  | "events"
-  | "photo"
-  | "barber";
-
-const SPONSOR_SLOTS: { id: SponsorSlotId; city: string; online: boolean }[] = [
-  { id: "jeweller", city: "Mannheim", online: true },
-  { id: "diamond", city: "Mannheim", online: true },
-  { id: "nuts", city: "Mannheim", online: true },
-  { id: "organic", city: "Viernheim", online: true },
-  { id: "market", city: "Mannheim", online: true },
-  { id: "travel", city: "Mannheim", online: true },
-  { id: "bridal", city: "Mannheim", online: true },
-  { id: "events", city: "Mannheim", online: false },
-  { id: "photo", city: "Mannheim", online: true },
-  { id: "barber", city: "Mannheim", online: false }
-];
-
-/** Stand-in marks: drawn here, so no real brand's logo is ever shown. */
-const SECTOR_PATHS: Record<SponsorSlotId, string> = {
-  jeweller: "M12 8.5 9.5 5h5L12 8.5Zm0 0a5 5 0 1 1 0 10 5 5 0 0 1 0-10Z",
-  diamond: "M5 9h14M9 4 5 9l7 11 7-11-4-5H9Zm0 0 3 5 3-5M5 9l7 11L19 9",
-  nuts: "M4 12h16a8 8 0 0 1-16 0Zm3.5-3.2a2.4 2.4 0 1 1 4 0m1-3a2.4 2.4 0 1 1 4 0M3 20h18",
-  organic: "M20 4c0 8-4.5 12-11 12M20 4C10 4 5 8 5 13c0 1.6.6 2.6 1.4 3.4M4 20c0-2 1-4 2.4-3.6",
-  market: "M4 8h16l-1.4 10.5a1.5 1.5 0 0 1-1.5 1.3H6.9a1.5 1.5 0 0 1-1.5-1.3L4 8Zm4.5 0V6a3.5 3.5 0 0 1 7 0v2",
-  travel: "M2.5 15.5 21 9.2a1.8 1.8 0 0 0-1.2-3.4L15.4 7 9.6 3.8 7.2 4.6l3.4 3.6-3.7 1.3-2.6-1.6-1.7.6 1.6 3-1.7 2.4 1.7 1.6ZM4 20h16",
-  bridal: "M12 3.5 9.5 7l2.5 3 2.5-3-2.5-3.5ZM12 10l-5 8.5a1 1 0 0 0 .9 1.5h8.2a1 1 0 0 0 .9-1.5L12 10Z",
-  events: "M8 21V9.5a4 4 0 0 1 8 0V21M4 21h16M9 5.5 12 3l3 2.5M6 21v-6M18 21v-6",
-  photo: "M4 8h3.2l1.4-2h6.8l1.4 2H20a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Zm8 3.2a3.3 3.3 0 1 1 0 6.6 3.3 3.3 0 0 1 0-6.6Z",
-  barber: "M7 4.5 17 17M17 4.5 7 17M6.5 20.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5Zm11 0a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5Z"
-};
-
-function SectorMark({ id }: { id: SponsorSlotId }) {
-  return (
-    <svg className="club-slot__mark" viewBox="0 0 24 24" aria-hidden="true">
-      <path
-        d={SECTOR_PATHS[id]}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 const CONFETTI_PIECES = 70;
 const CONFETTI_MS = 2600;
 
@@ -138,24 +73,6 @@ const copy = {
 
     joinCta: "Üye ol",
     joinNote: "Kayıtlar çok yakında açılıyor.",
-    sponsorsTitle: "Ana Sponsorlar",
-    sponsorsNote:
-      "Henüz sponsorumuz yok. Aşağıdaki alanların hepsi boş. Her sektörde ve her şehirde tek bir sponsor yer alacak.",
-    sponsorsFree: "Bu alan boş",
-    sponsorsOnline: "Online",
-    sponsorsCta: "Ana sponsor olmak istiyorum",
-    sectors: {
-      jeweller: "Kuyumcu & Altın",
-      diamond: "Pırlanta & Mücevher",
-      nuts: "Kuruyemiş",
-      organic: "Doğal gıda & kuruyemiş",
-      market: "Türk marketi",
-      travel: "Seyahat acentesi",
-      bridal: "Gelinlik & abiye",
-      events: "Düğün salonu & organizasyon",
-      photo: "Fotoğraf & video",
-      barber: "Kuaför & berber"
-    },
     formTitle: "Kulübe katıl",
     formClose: "Formu kapat",
     fields: {
@@ -245,24 +162,6 @@ const copy = {
 
     joinCta: "Mitglied werden",
     joinNote: "Die Anmeldung öffnet in Kürze.",
-    sponsorsTitle: "Hauptsponsoren",
-    sponsorsNote:
-      "Wir haben noch keine Sponsoren. Alle Plätze unten sind frei. Pro Branche und Stadt wird es genau einen Sponsor geben.",
-    sponsorsFree: "Platz frei",
-    sponsorsOnline: "Online",
-    sponsorsCta: "Ich möchte Hauptsponsor werden",
-    sectors: {
-      jeweller: "Juwelier & Gold",
-      diamond: "Diamanten & Schmuck",
-      nuts: "Nüsse & Trockenfrüchte",
-      organic: "Naturkost & Nüsse",
-      market: "Türkischer Supermarkt",
-      travel: "Reisebüro",
-      bridal: "Braut- & Abendmode",
-      events: "Festsaal & Eventplanung",
-      photo: "Foto & Video",
-      barber: "Friseur & Barbier"
-    },
     formTitle: "Dem Club beitreten",
     formClose: "Formular schließen",
     fields: {
@@ -352,24 +251,6 @@ const copy = {
 
     joinCta: "Become a member",
     joinNote: "Registration opens very soon.",
-    sponsorsTitle: "Main sponsors",
-    sponsorsNote:
-      "We have no sponsors yet. Every slot below is free. There will be exactly one sponsor per sector and city.",
-    sponsorsFree: "Slot free",
-    sponsorsOnline: "Online",
-    sponsorsCta: "I want to be a main sponsor",
-    sectors: {
-      jeweller: "Jeweller & gold",
-      diamond: "Diamonds & jewellery",
-      nuts: "Nuts & dried fruit",
-      organic: "Organic food & nuts",
-      market: "Turkish supermarket",
-      travel: "Travel agency",
-      bridal: "Bridal & evening wear",
-      events: "Event hall & planning",
-      photo: "Photo & video",
-      barber: "Hair & barber"
-    },
     formTitle: "Join the club",
     formClose: "Close form",
     fields: {
@@ -551,44 +432,6 @@ export function GoldenTablaClubPage() {
             </button>
             <span className="club-cta__note">{text.joinNote}</span>
           </div>
-        </div>
-      </section>
-
-      <section className="club-sponsors-section">
-        <div className="club-shell">
-          <div className="club-panel__head">
-            <h2 className="club-section-title club-section-title--tight">{text.sponsorsTitle}</h2>
-            <span className="club-soon">{text.soon}</span>
-          </div>
-          <p className="club-panel__text">{text.sponsorsNote}</p>
-
-          <div className="club-sponsors" aria-label={text.sponsorsTitle}>
-            <div className="club-sponsors__track">
-              {[0, 1].map((pass) => (
-                <ul className="club-sponsors__set" key={pass} aria-hidden={pass === 1 ? "true" : undefined}>
-                  {SPONSOR_SLOTS.map((slot) => (
-                    <li className="club-slot" key={slot.id}>
-                      <SectorMark id={slot.id} />
-                      <strong className="club-slot__sector">{text.sectors[slot.id]}</strong>
-                      <span className="club-slot__where">
-                        {slot.city}
-                        {slot.online && <em className="club-slot__online">{text.sponsorsOnline}</em>}
-                      </span>
-                      <span className="club-slot__free">{text.sponsorsFree}</span>
-                    </li>
-                  ))}
-                </ul>
-              ))}
-            </div>
-          </div>
-
-          <button
-            type="button"
-            className="club-button club-button--ghost club-sponsors__cta"
-            onClick={() => navigateTo("/iletisim")}
-          >
-            {text.sponsorsCta}
-          </button>
         </div>
       </section>
 
