@@ -63,15 +63,17 @@ const copy = {
       phone: "Telefon",
       optionalTag: "isteğe bağlı"
     },
-    consentTitle: "Onaylar",
-    consentRequired:
-      "Golden Tabla Club üyeliğini ve e-posta ile fırsat, indirim ve partner kampanyalarını almayı kabul ediyorum.",
-    consentWhatsapp: "WhatsApp ile de kampanya almak istiyorum.",
-    consentPush: "Bu cihaza push bildirimi göndermenizi istiyorum.",
+    consentTitle: "Kampanya bildirimleri",
+    consentOptional:
+      "Fırsat, indirim ve partner kampanyalarını bana e-posta, WhatsApp ve push bildirimi ile gönderin.",
+    consentFree:
+      "Bu kutu isteğe bağlıdır. İşaretlemesen de üye olabilir, fırsatları burada görebilirsin.",
     doubleOptIn:
-      "Kayıttan sonra e-posta adresine bir doğrulama bağlantısı gönderilir. Üyeliğin ancak bu bağlantıya tıkladığında başlar; tıklamazsan hiçbir mesaj gönderilmez.",
-    withdraw: "Onayını istediğin zaman geri alabilirsin.",
+      "İşaretlersen e-posta adresine bir doğrulama bağlantısı gönderilir; ancak ona tıkladığında mesaj göndermeye başlarız.",
+    withdraw: "Onayını istediğin zaman geri alabilir, kanalları tek tek kapatabilirsin.",
     submit: "Üyeliği tamamla",
+    previewTitle: "Bu bir önizleme",
+    previewText: "Kayıtlar Supabase bağlandığında açılacak. Şimdilik hiçbir bilgi kaydedilmiyor.",
 
     tabsTitle: "Kulüpte neler var?",
     searchPlaceholder: "İşletme veya kategori ara…",
@@ -144,15 +146,17 @@ const copy = {
       phone: "Telefon",
       optionalTag: "optional"
     },
-    consentTitle: "Einwilligungen",
-    consentRequired:
-      "Ich möchte Mitglied im Golden Tabla Club werden und Angebote, Rabatte und Partneraktionen per E-Mail erhalten.",
-    consentWhatsapp: "Ich möchte Aktionen zusätzlich per WhatsApp erhalten.",
-    consentPush: "Ich möchte Push-Benachrichtigungen auf diesem Gerät erhalten.",
+    consentTitle: "Aktionsbenachrichtigungen",
+    consentOptional:
+      "Senden Sie mir Angebote, Rabatte und Partneraktionen per E-Mail, WhatsApp und Push-Benachrichtigung.",
+    consentFree:
+      "Dieses Feld ist freiwillig. Auch ohne Häkchen können Sie Mitglied werden und die Angebote hier sehen.",
     doubleOptIn:
-      "Nach der Anmeldung senden wir einen Bestätigungslink an Ihre E-Mail-Adresse. Die Mitgliedschaft beginnt erst mit dem Klick auf diesen Link; ohne Bestätigung senden wir Ihnen nichts.",
-    withdraw: "Sie können Ihre Einwilligung jederzeit widerrufen.",
+      "Mit Häkchen senden wir einen Bestätigungslink an Ihre E-Mail-Adresse; erst nach dem Klick beginnen wir zu senden.",
+    withdraw: "Sie können Ihre Einwilligung jederzeit widerrufen und einzelne Kanäle abschalten.",
     submit: "Mitgliedschaft abschließen",
+    previewTitle: "Dies ist eine Vorschau",
+    previewText: "Die Anmeldung öffnet, sobald Supabase angebunden ist. Derzeit werden keine Daten gespeichert.",
 
     tabsTitle: "Was bietet der Club?",
     searchPlaceholder: "Betrieb oder Kategorie suchen…",
@@ -225,15 +229,17 @@ const copy = {
       phone: "Phone",
       optionalTag: "optional"
     },
-    consentTitle: "Consents",
-    consentRequired:
-      "I want to join the Golden Tabla Club and receive offers, discounts and partner campaigns by email.",
-    consentWhatsapp: "I would also like to receive campaigns via WhatsApp.",
-    consentPush: "I would like to receive push notifications on this device.",
+    consentTitle: "Campaign notifications",
+    consentOptional:
+      "Send me offers, discounts and partner campaigns by email, WhatsApp and push notification.",
+    consentFree:
+      "This box is optional. You can join and see the offers here without ticking it.",
     doubleOptIn:
-      "After signing up we send a confirmation link to your email address. Membership begins only when you click that link; without it we send you nothing.",
-    withdraw: "You can withdraw your consent at any time.",
+      "If you tick it we send a confirmation link to your email address; we only start sending once you click it.",
+    withdraw: "You can withdraw your consent at any time and switch off individual channels.",
     submit: "Complete membership",
+    previewTitle: "This is a preview",
+    previewText: "Registration opens once Supabase is connected. Nothing is stored for now.",
 
     tabsTitle: "What is in the club?",
     searchPlaceholder: "Search a business or category…",
@@ -296,22 +302,12 @@ function PreviewField({
   );
 }
 
-function ConsentRow({ text, tag, tone }: { text: string; tag: string; tone: "required" | "optional" }) {
-  return (
-    <li className={`gtc-consent gtc-consent--${tone}`}>
-      {/* Empty box on purpose: nothing may look pre-selected. */}
-      <span className="gtc-consent__box" aria-hidden="true" />
-      <span className="gtc-consent__text">{text}</span>
-      <span className={`gtc-tag gtc-tag--${tone}`}>{tag}</span>
-    </li>
-  );
-}
-
 export function GoldenTablaClubPanel({ onClose, visible }: { onClose: () => void; visible: boolean }) {
   const language = useSiteLanguage();
   const text = copy[language];
   const [formOpen, setFormOpen] = useState(false);
   const [confetti, setConfetti] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const [activeTab, setActiveTab] = useState<TabId>("discounts");
   const formRef = useRef<HTMLDivElement>(null);
   const confettiTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -347,12 +343,26 @@ export function GoldenTablaClubPanel({ onClose, visible }: { onClose: () => void
 
   if (!visible) return null;
 
+  const fireConfetti = () => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // Restart cleanly if it is already running, so a second press replays it.
+    setConfetti(false);
+    if (confettiTimer.current) clearTimeout(confettiTimer.current);
+    window.requestAnimationFrame(() => {
+      setConfetti(true);
+      confettiTimer.current = setTimeout(() => setConfetti(false), CONFETTI_MS);
+    });
+  };
+
   const openForm = () => {
     setFormOpen(true);
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    setConfetti(true);
-    if (confettiTimer.current) clearTimeout(confettiTimer.current);
-    confettiTimer.current = setTimeout(() => setConfetti(false), CONFETTI_MS);
+    setSubmitted(false);
+    fireConfetti();
+  };
+
+  const completeMembership = () => {
+    setSubmitted(true);
+    fireConfetti();
   };
 
   const activeCopy = text.tabs[activeTab];
@@ -386,7 +396,7 @@ export function GoldenTablaClubPanel({ onClose, visible }: { onClose: () => void
 
         <div className="gtc-sheet__scroll">
           <div className="gtc-top">
-            <span className="gtc-mark" aria-hidden="true">B</span>
+            <img className="gtc-logo" src="/images/brand/bedri-usta-logo-rectangular.png" alt="Bedri Usta" />
             <button className="gtc-close" type="button" onClick={onClose} aria-label={text.close}>
               ×
             </button>
@@ -428,25 +438,42 @@ export function GoldenTablaClubPanel({ onClose, visible }: { onClose: () => void
                 <PreviewField label={text.fields.phone} optionalLabel={text.fields.optionalTag} />
               </div>
 
+              {/* Membership itself needs no consent: showing offers inside the
+                  club is the service being delivered, so tying sign-up to a
+                  marketing tick would run into the Koppelungsverbot. This one
+                  box only covers pushing messages out, and it is optional.
+                  BGH III ZR 196/17 allows the three channels in one
+                  declaration because they serve the same purpose. */}
               <div className="gtc-consents">
                 <h4>{text.consentTitle}</h4>
-                <ul>
-                  <ConsentRow text={text.consentRequired} tag={text.required} tone="required" />
-                  <ConsentRow text={text.consentWhatsapp} tag={text.optional} tone="optional" />
-                  <ConsentRow text={text.consentPush} tag={text.optional} tone="optional" />
-                </ul>
+                <div className="gtc-consent">
+                  <span className="gtc-consent__box" aria-hidden="true" />
+                  <span className="gtc-consent__text">{text.consentOptional}</span>
+                  <span className="gtc-tag gtc-tag--optional">{text.optional}</span>
+                </div>
+                <p className="gtc-note">{text.consentFree}</p>
                 <p className="gtc-note">{text.doubleOptIn}</p>
                 <p className="gtc-note">{text.withdraw}</p>
               </div>
 
               <div className="gtc-actions">
-                <button type="button" className="gtc-button gtc-button--primary" disabled>
+                <button type="button" className="gtc-button gtc-button--primary" onClick={completeMembership}>
                   {text.submit}
                 </button>
                 <button type="button" className="gtc-button gtc-button--ghost" onClick={() => setFormOpen(false)}>
                   {text.formClose}
                 </button>
               </div>
+
+              {/* Honest about what pressing the button does today: it shows the
+                  celebration the real sign-up will end with, and says plainly
+                  that nothing was saved. */}
+              {submitted && (
+                <div className="gtc-preview-note" role="status">
+                  <strong>{text.previewTitle}</strong>
+                  <p>{text.previewText}</p>
+                </div>
+              )}
             </div>
           )}
 
