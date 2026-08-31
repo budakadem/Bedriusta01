@@ -16,6 +16,7 @@ import {
   type MenuDiet
 } from "./menuData";
 import { NotificationCenter } from "./components/NotificationCenter";
+import { GoldenTablaClubPanel } from "./components/GoldenTablaClubPanel";
 import { openCookiePreferences } from "./components/CookieNotice";
 import { ImpressumPage } from "./components/ImpressumPage";
 import { AgbPage } from "./components/AgbPage";
@@ -1761,6 +1762,7 @@ function Header({ isMobile }: { isMobile: boolean }) {
 function HeaderUtilities({ compact = false }: { compact?: boolean }) {
   const [languageOpen, setLanguageOpen] = useState(false);
   const [notificationCenterOpen, setNotificationCenterOpen] = useState(false);
+  const [clubOpen, setClubOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] =
     useState<(typeof languageOptions)[number]["code"]>(() => getSiteLanguage());
   const languageSelectorRef = useRef<any>(null);
@@ -1795,14 +1797,14 @@ function HeaderUtilities({ compact = false }: { compact?: boolean }) {
     >
       <ShareButton compact={compact} />
       <Pressable
-        onPress={() => setNotificationCenterOpen(true)}
+        onPress={() => setClubOpen(true)}
         accessibilityRole="button"
-        accessibilityLabel="Bildirim merkezini aç"
-        accessibilityState={{ expanded: notificationCenterOpen }}
+        accessibilityLabel="Golden Tabla Club"
+        accessibilityState={{ expanded: clubOpen }}
         style={({ hovered, pressed }: any) => [
           styles.headerLogin,
           compact && styles.headerLoginCompact,
-          (hovered || pressed || notificationCenterOpen) && styles.headerUtilityActive
+          (hovered || pressed || clubOpen) && styles.headerUtilityActive
         ]}
       >
         <Image
@@ -1884,6 +1886,8 @@ function HeaderUtilities({ compact = false }: { compact?: boolean }) {
           </View>
         )}
       </View>
+      <GoldenTablaClubPanel onClose={() => setClubOpen(false)} visible={clubOpen} />
+
       <NotificationCenter
         onClose={() => setNotificationCenterOpen(false)}
         visible={notificationCenterOpen}
