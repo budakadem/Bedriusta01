@@ -364,3 +364,100 @@
 @media (max-width: 620px) {
   .club-listing { align-items: stretch; flex-direction: column; }
 }
+
+/* Sponsor slot rail --------------------------------------------------
+   A CSS marquee, not a scroll container: the homepage rail is a scroller
+   with iOS gesture fixes tied to its own ids, and duplicating that here
+   would risk the vertical-scroll behaviour we fixed. Two identical sets
+   translate by one set plus one gap, which loops seamlessly. */
+.club-sponsors-section {
+  padding: clamp(40px, 5vw, 62px) 0 clamp(46px, 6vw, 72px);
+  border-bottom: 1px solid #e2d9d1;
+  background: linear-gradient(180deg, #fffaf3 0%, var(--club-paper) 100%);
+}
+.club-sponsors-section > .club-shell { padding-inline: clamp(20px, 5vw, 64px); }
+.club-section-title--tight { margin: 0; font-size: clamp(24px, 3.2vw, 38px); }
+
+.club-sponsors {
+  overflow: hidden;
+  margin: 26px 0 0;
+  /* the tiles carry their own gold frame, so fade the edges instead of
+     cutting them off mid-border */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
+.club-sponsors__track {
+  display: flex;
+  gap: 14px;
+  width: max-content;
+  animation: club-marquee 52s linear infinite;
+}
+.club-sponsors:hover .club-sponsors__track,
+.club-sponsors:focus-within .club-sponsors__track { animation-play-state: paused; }
+.club-sponsors__set { display: flex; gap: 14px; margin: 0; padding: 0; list-style: none; }
+
+@keyframes club-marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(calc(-50% - 7px), 0, 0); }
+}
+
+/* Roughly half the height of the homepage food cards. */
+.club-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  flex: 0 0 auto;
+  width: clamp(178px, 56vw, 212px);
+  min-height: 206px;
+  padding: 18px 16px;
+  border: 2px solid var(--club-gold);
+  border-radius: 8px;
+  background: #fff;
+}
+.club-slot__mark { width: 30px; height: 30px; margin-bottom: 2px; color: var(--club-red); }
+.club-slot__sector {
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -.01em;
+  color: var(--club-ink);
+}
+.club-slot__where {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  color: var(--club-muted);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.club-slot__online {
+  padding: 3px 7px;
+  border: 1px solid #cdbfb4;
+  border-radius: 3px;
+  background: var(--club-paper);
+  color: #5f504a;
+  font: 700 10px/1 "Karla", sans-serif;
+  font-style: normal;
+  letter-spacing: .06em;
+}
+.club-slot__free {
+  margin-top: auto;
+  padding-top: 8px;
+  color: #9a8b82;
+  font: 700 11px/1.3 "Karla", sans-serif;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.club-sponsors__cta { margin-top: 24px; }
+
+@media (max-width: 620px) {
+  .club-sponsors__cta { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .club-sponsors__track { animation: none; }
+  .club-sponsors { overflow-x: auto; }
+}
