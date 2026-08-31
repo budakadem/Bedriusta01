@@ -36,11 +36,11 @@
 }
 
 .club-tabla {
-  width: clamp(180px, 26vw, 260px);
-  height: auto;
   display: block;
-  margin: 0 0 26px;
-  color: var(--club-red);
+  width: clamp(240px, 34vw, 420px);
+  height: auto;
+  aspect-ratio: 1370 / 680;
+  margin: 0 0 22px;
 }
 
 .club-kicker {

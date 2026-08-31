@@ -37,27 +37,21 @@ function navigateTo(path: string) {
 /** The three-wheeled street cart Bedri Usta started with. */
 function TablaMark() {
   return (
-    <svg className="club-tabla" viewBox="0 0 260 150" role="img" aria-label="Tabla">
-      <g fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-        {/* skewers resting on the tray */}
-        <path d="M78 30h44M86 22h44M94 38h44" strokeWidth="2.4" opacity=".55" />
-        {/* the tray itself */}
-        <path d="M44 52h150a6 6 0 0 1 6 6v8H38v-8a6 6 0 0 1 6-6Z" />
-        {/* frame under the tray */}
-        <path d="M52 66l8 34M186 66l-8 34M62 84h114" strokeWidth="2.6" />
-        {/* push handle */}
-        <path d="M200 60l26-14M222 40l10 4" strokeWidth="2.6" />
-        {/* two rear wheels and the small front one */}
-        <circle cx="72" cy="118" r="20" />
-        <circle cx="72" cy="118" r="5" strokeWidth="2.4" />
-        <circle cx="168" cy="118" r="20" />
-        <circle cx="168" cy="118" r="5" strokeWidth="2.4" />
-        <circle cx="222" cy="126" r="11" strokeWidth="2.6" />
-        <path d="M212 100l6 16" strokeWidth="2.4" />
-        {/* ground */}
-        <path d="M28 140h204" strokeWidth="2" opacity=".35" />
-      </g>
-    </svg>
+    <img
+      className="club-tabla"
+      src="/images/golden-tabla-club-mark.webp"
+      srcSet={[
+        "/images/golden-tabla-club-mark-420.webp 420w",
+        "/images/golden-tabla-club-mark-640.webp 640w",
+        "/images/golden-tabla-club-mark-900.webp 900w"
+      ].join(", ")}
+      sizes="(max-width: 619px) min(80vw, 320px), 420px"
+      width={1370}
+      height={680}
+      alt=""
+      aria-hidden="true"
+      decoding="async"
+    />
   );
 }
 
