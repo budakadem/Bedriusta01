@@ -2,6 +2,8 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import { CookieNotice } from "./components/CookieNotice";
+import { AppUpdateNotice } from "./components/AppUpdateNotice";
+import { registerServiceWorker } from "./appUpdate";
 import { LocalizationBoundary } from "./components/LocalizationBoundary";
 import "./fonts.css";
 import "./styles.css";
@@ -18,11 +20,10 @@ createRoot(root).render(
       <App />
     </LocalizationBoundary>
     <CookieNotice />
+    <AppUpdateNotice />
   </StrictMode>
 );
 
-if ("serviceWorker" in navigator && import.meta.env.PROD) {
-  window.addEventListener("load", () => {
-    void navigator.serviceWorker.register("/service-worker.js", { scope: "/" });
-  });
+if (import.meta.env.PROD) {
+  window.addEventListener("load", registerServiceWorker);
 }
