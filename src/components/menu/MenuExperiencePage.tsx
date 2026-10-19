@@ -316,8 +316,11 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
     group,
     categories: Array.from(new Set(visibleItems.filter((item) => getGroup(item) === group).map((item) => item.locales[language].category)))
   })), [language, visibleItems]);
+  const navigationCategories = useMemo(() => groupOrder.reduce<Record<MenuGroup, string[]>>((result, group) => {
+    result[group] = Array.from(new Set(catalog.items.filter((item) => getGroup(item) === group).map((item) => item.locales[language].category)));
+    return result;
+  }, { food: [], drinks: [], desserts: [], cafe: [] }), [language]);
   const favoriteItems = useMemo(() => catalog.items.filter((item) => favorites.includes(item.id)), [favorites]);
-  const activeCategories = grouped.find(({ group }) => group === activeGroup)?.categories ?? [];
 
   useEffect(() => {
     window.localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
@@ -411,6 +414,12 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
     setGroupMenuOpen(false);
     window.requestAnimationFrame(() => window.requestAnimationFrame(() => scrollTo(targetId)));
   };
+  const jumpToCategory = (group: MenuGroup, category: string) => {
+    setDiet("all");
+    setActiveGroup(group);
+    setGroupMenuOpen(false);
+    window.requestAnimationFrame(() => window.requestAnimationFrame(() => scrollTo(`menu-category-${group}-${slugify(category)}`)));
+  };
   const copyValue = async (value: string) => {
     await navigator.clipboard.writeText(value);
     setCopiedValue(value);
@@ -485,17 +494,15 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
               {favoriteBurst > 0 && <span className="header-menu-favorite__confetti" key={favoriteBurst} aria-hidden="true">{Array.from({ length: 9 }, (_, index) => <i key={index} />)}</span>}
             </button>
           </div>
-          <ScrollRail className="menu-active-categories" ariaLabel={`${text.groups[activeGroup]} kategorileri`}>
-            {activeCategories.map((category) => <button type="button" key={`${activeGroup}-${category}`} onClick={() => scrollTo(`menu-category-${activeGroup}-${slugify(category)}`)}>{category}</button>)}
-            {activeGroup === "food" && groupOrder.slice(1).map((group) => (
-              <button
-                type="button"
-                className="menu-active-categories__group-jump"
-                key={`group-jump-${group}`}
-                onClick={() => jumpToGroup(group, group === "cafe")}
-              >
-                {text.groups[group]}
-              </button>
+          <ScrollRail className="menu-active-categories" ariaLabel={text.title}>
+            {navigationCategories.food.map((category) => (
+              <button type="button" key={`food-navigation-${category}`} onClick={() => jumpToCategory("food", category)}>{category}</button>
+            ))}
+            {(["drinks", "desserts"] as MenuGroup[]).map((group) => (
+              <button type="button" className="menu-active-categories__group-jump" key={`group-jump-${group}`} onClick={() => jumpToGroup(group)}>{text.groups[group]}</button>
+            ))}
+            {navigationCategories.cafe.map((category) => (
+              <button type="button" key={`cafe-navigation-${category}`} onClick={() => jumpToCategory("cafe", category)}>{category}</button>
             ))}
           </ScrollRail>
         </div>
