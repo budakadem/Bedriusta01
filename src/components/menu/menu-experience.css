@@ -72,6 +72,7 @@
 .menu-controls-favorite b { display: grid; place-items: center; min-width: 24px; height: 24px; padding: 0 5px; color: var(--menu-burgundy); background: #fff; border-radius: 999px; font-size: 12px; }
 .menu-active-categories { border-top: 1px solid rgba(101,19,22,.12); }
 .menu-active-categories .menu-scroll-rail__track { justify-content: center; gap: 7px; padding-block: 5px 2px; }
+.menu-active-categories.has-overflow .menu-scroll-rail__track { justify-content: flex-start; }
 .menu-active-categories .menu-scroll-rail__track > button { min-height: 36px; padding: 6px 14px; color: var(--menu-burgundy); background: rgba(255,255,255,.72); border-color: rgba(101,19,22,.24); font-size: 12px; }
 .menu-active-categories .menu-scroll-rail__track > .menu-active-categories__group-jump { color: #fffaf3; background: var(--menu-burgundy); border-color: var(--menu-burgundy); font-weight: 900; }
 .menu-reference-navigation { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 22px; }

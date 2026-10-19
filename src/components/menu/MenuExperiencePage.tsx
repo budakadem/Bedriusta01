@@ -205,7 +205,11 @@ function ScrollRail({ children, className = "", ariaLabel }: { children: ReactNo
     return () => { track.removeEventListener("scroll", update); observer.disconnect(); };
   }, [children]);
 
-  const move = (direction: -1 | 1) => trackRef.current?.scrollBy({ left: direction * Math.max(220, trackRef.current.clientWidth * .72), behavior: "smooth" });
+  const move = (direction: -1 | 1) => {
+    const track = trackRef.current;
+    if (!track) return;
+    track.scrollTo({ left: direction < 0 ? 0 : track.scrollWidth - track.clientWidth, behavior: "smooth" });
+  };
   const hasOverflow = canScrollLeft || canScrollRight;
   return (
     <div className={`menu-scroll-rail ${className}${hasOverflow ? " has-overflow" : ""}`}>
@@ -316,10 +320,10 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
     group,
     categories: Array.from(new Set(visibleItems.filter((item) => getGroup(item) === group).map((item) => item.locales[language].category)))
   })), [language, visibleItems]);
-  const navigationCategories = useMemo(() => groupOrder.reduce<Record<MenuGroup, string[]>>((result, group) => {
-    result[group] = Array.from(new Set(catalog.items.filter((item) => getGroup(item) === group).map((item) => item.locales[language].category)));
-    return result;
-  }, { food: [], drinks: [], desserts: [], cafe: [] }), [language]);
+  const foodNavigationCategories = useMemo(
+    () => Array.from(new Set(catalog.items.filter((item) => getGroup(item) === "food").map((item) => item.locales[language].category))),
+    [language]
+  );
   const favoriteItems = useMemo(() => catalog.items.filter((item) => favorites.includes(item.id)), [favorites]);
 
   useEffect(() => {
@@ -495,14 +499,11 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
             </button>
           </div>
           <ScrollRail className="menu-active-categories" ariaLabel={text.title}>
-            {navigationCategories.food.map((category) => (
+            {foodNavigationCategories.map((category) => (
               <button type="button" key={`food-navigation-${category}`} onClick={() => jumpToCategory("food", category)}>{category}</button>
             ))}
-            {(["drinks", "desserts"] as MenuGroup[]).map((group) => (
-              <button type="button" className="menu-active-categories__group-jump" key={`group-jump-${group}`} onClick={() => jumpToGroup(group)}>{text.groups[group]}</button>
-            ))}
-            {navigationCategories.cafe.map((category) => (
-              <button type="button" key={`cafe-navigation-${category}`} onClick={() => jumpToCategory("cafe", category)}>{category}</button>
+            {(["drinks", "desserts", "cafe"] as MenuGroup[]).map((group) => (
+              <button type="button" className="menu-active-categories__group-jump" key={`group-jump-${group}`} onClick={() => jumpToGroup(group, group === "cafe")}>{text.groups[group]}</button>
             ))}
           </ScrollRail>
         </div>
