@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import {
   Image,
   Linking,
@@ -61,6 +61,9 @@ const menuMezeImage = "/images/menu-meze-portrait.webp";
 const menuDessertImage = "/images/menu-dessert-portrait.webp";
 const menuCafeImage = "/images/menu-cafe-portrait-v1.webp";
 const menuVeganVegetarianImage = "/images/menu-vegan-vegetarisch-portrait-v1.jpg";
+const MenuExperiencePage = lazy(() =>
+  import("./components/menu/MenuExperiencePage").then((module) => ({ default: module.MenuExperiencePage }))
+);
 const craftDiningRoomImage = {
   src: "/images/bedri-usta-dining-room.webp",
   srcSet: [
@@ -86,7 +89,7 @@ const restaurantOpeningHours = [
 const defaultShareImage = "/images/mannheim-editorial-hero-v2.webp";
 
 function getRouteMetadata(pathname: string, language: SiteLanguage = "TR"): PageMetadata {
-  if (pathname === "/menu") {
+  if (pathname === "/menu" || pathname.startsWith("/menu/")) {
     return {
       title: "Menü | Bedri Usta Mannheim",
       description: "Bedri Usta Mannheim menüsünü, kebapları, taş fırın lezzetlerini, mezeleri ve tatlıları keşfet."
@@ -480,14 +483,21 @@ function App() {
       </View>
     );
   }
-  if (pathname.replace(/\/+$/, "") === "/menu") {
+  const normalizedPath = pathname.replace(/\/+$/, "") || "/";
+  if (normalizedPath === "/menu" || normalizedPath.startsWith("/menu/")) {
+    const menuSegments = normalizedPath.split("/").filter(Boolean);
+    const tableToken = menuSegments[1] === "t" ? menuSegments[2] : undefined;
+    const productSlug = tableToken ? menuSegments[3] : menuSegments[1];
+    const isTableRoute = Boolean(tableToken);
     return (
-      <View style={[styles.page, styles.pageWithBottomDock]}>
+      <View style={[styles.page, !isTableRoute && styles.pageWithBottomDock]}>
         <Header isMobile={layout.isMobile} />
-        <RestaurantMenuPage isMobile={layout.isMobile} />
-        <Footer isMobile={layout.isMobile} />
+        <Suspense fallback={<View style={{ minHeight: 720, backgroundColor: "#f7f1e7" }} />}>
+          <MenuExperiencePage tableToken={tableToken} productSlug={productSlug} />
+        </Suspense>
+        {!isTableRoute && <Footer isMobile={layout.isMobile} />}
         <BackToTopButton desktop={!layout.showBottomDock} />
-        <MobileActionDock desktop={!layout.showBottomDock} />
+        {!isTableRoute && <MobileActionDock desktop={!layout.showBottomDock} />}
       </View>
     );
   }
@@ -1782,6 +1792,7 @@ function HeaderUtilities({ compact = false }: { compact?: boolean }) {
   const [selectedLanguage, setSelectedLanguage] =
     useState<(typeof languageOptions)[number]["code"]>(() => getSiteLanguage());
   const languageSelectorRef = useRef<any>(null);
+  const isMenuPage = window.location.pathname === "/menu" || window.location.pathname.startsWith("/menu/");
 
   useEffect(() => subscribeToSiteLanguage(setSelectedLanguage), []);
 
