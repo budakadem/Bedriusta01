@@ -443,8 +443,7 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
         {invalidTable && <p className="menu-hero__notice" role="status">{text.invalidTable}</p>}
         <p className="menu-hero__statement">{text.hint}</p>
         <div className="menu-reference-navigation" aria-label={text.allergenGuide}>
-          <button type="button" onClick={() => scrollTo("menu-allergens")}>{text.allergenButton}</button>
-          <button type="button" onClick={() => scrollTo("menu-allergens")}>{text.codeButton}</button>
+          <button type="button" onClick={() => scrollTo("menu-allergens")}>{text.allergenGuide}</button>
         </div>
       </section>
 
