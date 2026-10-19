@@ -24,6 +24,13 @@ DEFAULT_WORKBOOK = Path(r"C:\Users\ademb\Desktop\menü resim eklenmis\v6 135\web
 DEFAULT_IMAGES = Path(r"C:\Users\ademb\Desktop\menü foto üretilen")
 DEFAULT_TABLES = Path(r"C:\Users\ademb\Desktop\bedri_usta_tablesv2.csv")
 
+# Preserve established Turkish product names across every locale while keeping
+# the translated qualifier that helps guests understand the variation.
+PRODUCT_NAME_OVERRIDES = {
+    "202": {"DE": "Elinazik mit Lammfleisch", "ENG": "Elinazik with Lamb"},
+    "203": {"DE": "Elinazik mit Lammhack", "ENG": "Elinazik with Minced Lamb"},
+}
+
 def clean(value):
     if value is None:
         return ""
@@ -101,6 +108,10 @@ def build_catalog(workbook_path: Path, images_dir: Path):
     for item_id, tr in localized["TR"].items():
         de = localized["DE"].get(item_id, tr)
         eng = localized["ENG"].get(item_id, tr)
+        for language, entry in (("DE", de), ("ENG", eng)):
+            override = PRODUCT_NAME_OVERRIDES.get(item_id, {}).get(language)
+            if override:
+                entry["name"] = override
         slug = slugify(tr["originalName"])
         image = None
         source = image_sources.get(item_id)
