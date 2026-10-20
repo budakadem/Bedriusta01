@@ -71,6 +71,7 @@ const copy = {
     groups: { food: "Yemekler", drinks: "Genel İçecekler", desserts: "Tatlılar", cafe: "Café" },
     cafeSpecialDrinks: "Café’ye Özel İçecekler",
     cafeGeneralDrinksHint: "Genel içeceklerden de sipariş verebilirsiniz.",
+    cafeGeneralDrinksRepeatHint: "Genel içecekler burada da listelenir; favorileriniz her iki bölümde aynıdır.",
     drinkCategories: "İçecek kategorileri",
     itemCount: "ürün",
     totalProducts: (count: number) => `TOPLAM ${count} ÜRÜN`,
@@ -113,6 +114,7 @@ const copy = {
     groups: { food: "Speisen", drinks: "Allgemeine Getränke", desserts: "Desserts", cafe: "Café" },
     cafeSpecialDrinks: "Café-Spezialgetränke",
     cafeGeneralDrinksHint: "Sie können auch aus unserem allgemeinen Getränkeangebot bestellen.",
+    cafeGeneralDrinksRepeatHint: "Allgemeine Getränke finden Sie auch hier; Ihre Favoriten bleiben in beiden Bereichen identisch.",
     drinkCategories: "Getränkekategorien",
     itemCount: "Artikel",
     totalProducts: (count: number) => `${count} PRODUKTE INSGESAMT`,
@@ -155,6 +157,7 @@ const copy = {
     groups: { food: "Food", drinks: "General Drinks", desserts: "Desserts", cafe: "Café" },
     cafeSpecialDrinks: "Café Special Drinks",
     cafeGeneralDrinksHint: "You can also order from our general drinks selection.",
+    cafeGeneralDrinksRepeatHint: "General drinks are also listed here; your favourites stay the same in both sections.",
     drinkCategories: "Drink categories",
     itemCount: "items",
     totalProducts: (count: number) => `${count} PRODUCTS IN TOTAL`,
@@ -355,6 +358,14 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
     group,
     categories: Array.from(new Set(visibleItems.filter((item) => getGroup(item) === group).map((item) => item.locales[language].category)))
   })), [language, visibleItems]);
+  const generalDrinkItems = useMemo(
+    () => visibleItems.filter((item) => getGroup(item) === "drinks"),
+    [visibleItems]
+  );
+  const generalDrinkCategories = useMemo(
+    () => Array.from(new Set(generalDrinkItems.map((item) => item.locales[language].category))),
+    [generalDrinkItems, language]
+  );
   const foodNavigationCategories = useMemo(
     () => Array.from(new Set(catalog.items.filter((item) => getGroup(item) === "food").map((item) => item.locales[language].category))),
     [language]
@@ -586,6 +597,33 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
                 </section>
               );
             })}
+            {group === "cafe" && generalDrinkItems.length > 0 && (
+              <div className="menu-cafe-general-drinks">
+                <div className="menu-category__heading menu-category__heading--feature">
+                  <div>
+                    <h3>{text.groups.drinks}</h3>
+                    <p>{text.cafeGeneralDrinksRepeatHint}</p>
+                  </div>
+                  <span>{generalDrinkItems.length} {text.itemCount}</span>
+                </div>
+                {generalDrinkCategories.map((category) => {
+                  const items = generalDrinkItems.filter((item) => item.locales[language].category === category);
+                  return (
+                    <section className="menu-category" id={`menu-category-cafe-general-${slugify(category)}`} key={`cafe-general-${category}`}>
+                      <div className="menu-category__heading">
+                        <div><h3>{category}</h3></div>
+                        <span>{items.length} {text.itemCount}</span>
+                      </div>
+                      <div className="menu-product-list">
+                        {items.map((item) => (
+                          <ProductCard key={`cafe-general-${item.id}`} item={item} language={language} active={favorites.includes(item.id)} onToggle={() => toggleFavorite(item.id)} onOpen={() => openProduct(item)} eager={false} />
+                        ))}
+                      </div>
+                    </section>
+                  );
+                })}
+              </div>
+            )}
           </section>
         ))}
       </div>
