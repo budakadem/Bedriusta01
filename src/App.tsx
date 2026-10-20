@@ -1670,6 +1670,8 @@ function PoliciesPage({ isMobile }: { isMobile: boolean }) {
 
 function Header({ isMobile }: { isMobile: boolean }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const language = useSiteLanguage();
+  const isMenuPage = window.location.pathname === "/menu" || window.location.pathname.startsWith("/menu/");
   const leftNavItems = navItems.slice(0, 2);
   const rightNavItems = navItems.slice(2, 3);
   const closeMobileMenu = () => setMobileMenuOpen(false);
@@ -1709,9 +1711,12 @@ function Header({ isMobile }: { isMobile: boolean }) {
             accessibilityState={{ expanded: mobileMenuOpen }}
             style={({ pressed }: any) => [styles.mobileMenuButton, pressed && styles.mobileMenuButtonActive]}
           >
-            <View style={styles.menuLine} />
-            <View style={styles.menuLine} />
-            <View style={styles.menuLine} />
+            <View style={styles.mobileMenuLines}>
+              <View style={styles.menuLine} />
+              <View style={styles.menuLine} />
+              <View style={styles.menuLine} />
+            </View>
+            {isMenuPage && <Text style={styles.mobileMenuCaption}>{language === "ENG" ? "MENU" : "MENÜ"}</Text>}
           </Pressable>
         )}
 
@@ -3513,14 +3518,14 @@ const styles = StyleSheet.create({
   },
   mobileMenuButton: {
     width: 44,
-    height: 40,
+    height: 48,
     borderRadius: 999,
     borderWidth: 1,
     borderColor: "rgba(255,247,223,0.26)",
     backgroundColor: "rgba(23,10,8,0.2)",
     alignItems: "center",
     justifyContent: "center",
-    gap: 5
+    gap: 3
   },
   mobileMenuButtonActive: {
     backgroundColor: "rgba(255,247,223,0.12)"
@@ -3530,6 +3535,19 @@ const styles = StyleSheet.create({
     height: 2,
     borderRadius: 999,
     backgroundColor: "#ffffff"
+  },
+  mobileMenuLines: {
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 4
+  },
+  mobileMenuCaption: {
+    color: "#ffffff",
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 9,
+    lineHeight: 10,
+    fontWeight: "900",
+    letterSpacing: 0.8
   },
   mobileMenuBackdrop: {
     position: "fixed",

@@ -75,8 +75,10 @@
 .menu-active-categories.has-overflow .menu-scroll-rail__track { justify-content: flex-start; }
 .menu-active-categories .menu-scroll-rail__track > button { min-height: 36px; padding: 6px 14px; color: var(--menu-burgundy); background: rgba(255,255,255,.72); border-color: rgba(101,19,22,.24); font-size: 12px; }
 .menu-active-categories .menu-scroll-rail__track > .menu-active-categories__group-jump { color: #fffaf3; background: var(--menu-burgundy); border-color: var(--menu-burgundy); font-weight: 900; }
-.menu-reference-navigation { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 22px; }
+.menu-reference-navigation { display: grid; grid-template-columns: 64px minmax(0, auto) 64px; align-items: center; justify-content: center; gap: 12px; margin-top: 22px; }
+.menu-reference-navigation img { display: block; width: 64px; height: 64px; object-fit: contain; border-radius: 50%; }
 .menu-reference-navigation button { min-height: 42px; padding: 9px 17px; color: var(--menu-burgundy); background: #fffaf3; border: 1px solid rgba(101,19,22,.38); border-radius: 999px; box-shadow: 0 6px 18px rgba(70,18,16,.05); font: 900 11px/1.3 inherit; letter-spacing: .1em; cursor: pointer; }
+.menu-total-products { margin: 13px 0 0; color: var(--menu-burgundy); font-size: 12px; font-weight: 900; letter-spacing: .16em; }
 
 .menu-catalog { width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 48px 0; background: #fff; }
 .menu-group { scroll-margin-top: 238px; margin-bottom: 72px; }
@@ -121,7 +123,7 @@
 .menu-product__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
 .menu-diet { color: #805d19; font-size: 10px; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; }
 .menu-diet--vegan { color: #287247; }
-.menu-product__codes { position: relative; z-index: 2; color: var(--menu-burgundy); font-size: 11px; font-weight: 900; pointer-events: auto; text-decoration: none; }
+.menu-product__allergen-labels { position: relative; z-index: 2; min-width: 0; color: var(--menu-burgundy); font-size: 11px; font-weight: 700; line-height: 1.4; overflow-wrap: anywhere; pointer-events: auto; text-decoration: none; }
 .menu-product__image-note { display: block; margin-top: 8px; color: #91857e; font-size: 9px; line-height: 1.3; }
 
 .menu-allergens { max-width: 1120px; margin: 20px auto 70px; padding: clamp(28px, 5vw, 54px); background: #fff; border: 1px solid rgba(101,19,22,.32); border-top: 3px solid var(--menu-burgundy); scroll-margin-top: 150px; }
@@ -166,7 +168,11 @@
 .menu-detail__localized-name { margin: 10px 0 0 !important; color: var(--menu-burgundy) !important; font: 500 clamp(32px, 5vw, 58px)/1.05 Georgia, serif !important; }
 .menu-detail__copy > strong { margin: 20px 0 6px; color: var(--menu-red); font-size: 26px; }
 .menu-detail__copy > p { color: var(--menu-muted); line-height: 1.6; }
-.menu-detail__allergens { margin-bottom: 4px; font-size: 13px; }
+.menu-detail__diet { margin: 2px 0 8px; color: #805d19 !important; font-size: 11px; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; }
+.menu-detail__diet--vegan { color: #287247 !important; }
+.menu-detail__allergens { display: grid; gap: 5px; margin-bottom: 16px; font-size: 13px; }
+.menu-detail__allergens strong { color: var(--menu-burgundy); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+.menu-detail__allergens span { color: var(--menu-muted); }
 .menu-detail__codes { margin: 0 0 18px; color: var(--menu-burgundy) !important; font-weight: 900; }
 .menu-detail__favorite { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 48px; padding: 10px 18px; color: var(--menu-burgundy); background: #fff; border: 1px solid rgba(101,19,22,.42); font: inherit; font-weight: 800; cursor: pointer; }
 .menu-detail__favorite span { font: 700 21px/1 Arial, sans-serif; }
@@ -194,6 +200,9 @@
 @media (max-width: 680px) {
   .menu-experience { padding-bottom: 0; }
   .menu-hero { min-height: 0; padding: 126px 16px 26px; }
+  .menu-reference-navigation { grid-template-columns: 52px minmax(0, 1fr) 52px; gap: 8px; width: min(100%, 390px); margin-inline: auto; }
+  .menu-reference-navigation img { width: 52px; height: 52px; }
+  .menu-reference-navigation button { min-width: 0; padding-inline: 10px; overflow-wrap: anywhere; letter-spacing: .05em; }
   .menu-controls__inner { padding: 5px 8px; }
   .menu-primary-controls { gap: 5px; }
   .menu-primary-controls > button, .menu-group-select > button { min-height: 44px; padding-inline: clamp(9px, 3.3vw, 15px); font-size: clamp(11px, 3.2vw, 13px); }

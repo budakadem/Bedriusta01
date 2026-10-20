@@ -71,6 +71,10 @@ const copy = {
     groups: { food: "Yemekler", drinks: "İçecekler", desserts: "Tatlılar", cafe: "Café" },
     drinkCategories: "İçecek kategorileri",
     itemCount: "ürün",
+    totalProducts: (count: number) => `TOPLAM ${count} ÜRÜN`,
+    halalLogo: "Helal işletme",
+    alcoholFreeLogo: "Alkolsüz işletme",
+    allergenDetails: "Alerjenler ve katkı maddeleri",
     imageDisclaimer: "Görsel temsilidir; sunum ve içerik farklılık gösterebilir.",
     noImage: "Görsel hazırlanıyor",
     originalName: "Orijinal adı",
@@ -107,6 +111,10 @@ const copy = {
     groups: { food: "Speisen", drinks: "Getränke", desserts: "Desserts", cafe: "Café" },
     drinkCategories: "Getränkekategorien",
     itemCount: "Artikel",
+    totalProducts: (count: number) => `${count} PRODUKTE INSGESAMT`,
+    halalLogo: "Halal-Betrieb",
+    alcoholFreeLogo: "Alkoholfreier Betrieb",
+    allergenDetails: "Allergene und Zusatzstoffe",
     imageDisclaimer: "Abbildung beispielhaft; Anrichtung und Inhalt können abweichen.",
     noImage: "Abbildung folgt",
     originalName: "Originalname",
@@ -143,6 +151,10 @@ const copy = {
     groups: { food: "Food", drinks: "Drinks", desserts: "Desserts", cafe: "Café" },
     drinkCategories: "Drink categories",
     itemCount: "items",
+    totalProducts: (count: number) => `${count} PRODUCTS IN TOTAL`,
+    halalLogo: "Halal restaurant",
+    alcoholFreeLogo: "Alcohol-free restaurant",
+    allergenDetails: "Allergens and additives",
     imageDisclaimer: "Image for reference; presentation and contents may vary.",
     noImage: "Image coming soon",
     originalName: "Original name",
@@ -178,6 +190,15 @@ function slugify(value: string) {
     .replace(/[^a-zA-Z0-9]+/g, "-")
     .replace(/^-|-$/g, "")
     .toLowerCase();
+}
+
+function getProductAllergenLabels(item: MenuItem, language: SiteLanguage) {
+  const text = copy[language];
+  const dietLabels = new Set([text.vegan, text.vegetarian].map((label) => label.toLocaleLowerCase(getIntlLocale(language))));
+  return item.locales[language].allergens
+    .split(",")
+    .map((label) => label.trim())
+    .filter((label) => label && !dietLabels.has(label.toLocaleLowerCase(getIntlLocale(language))));
 }
 
 function readFavorites() {
@@ -271,6 +292,7 @@ function ProductCard({ item, language, active, onToggle, onOpen, eager }: {
 }) {
   const text = copy[language];
   const locale = item.locales[language];
+  const allergenLabels = getProductAllergenLabels(item, language);
   const price = new Intl.NumberFormat(getIntlLocale(language), { style: "currency", currency: "EUR" }).format(item.price);
   return (
     <article className="menu-product">
@@ -290,7 +312,11 @@ function ProductCard({ item, language, active, onToggle, onOpen, eager }: {
         <div className="menu-product__meta">
           {item.vegan && <span className="menu-diet menu-diet--vegan">◆ {text.vegan}</span>}
           {!item.vegan && item.vegetarian && <span className="menu-diet">● {text.vegetarian}</span>}
-          {locale.codes && <a href="#menu-allergens" className="menu-product__codes">{locale.codes}</a>}
+          {allergenLabels.length > 0 && (
+            <a href="#menu-allergens" className="menu-product__allergen-labels" aria-label={`${text.allergenDetails}: ${allergenLabels.join(", ")}`}>
+              {allergenLabels.join(" · ")}
+            </a>
+          )}
         </div>
         {item.image && <small className="menu-product__image-note">{text.imageDisclaimer}</small>}
       </div>
@@ -446,8 +472,11 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
         {invalidTable && <p className="menu-hero__notice" role="status">{text.invalidTable}</p>}
         <p className="menu-hero__statement">{text.hint}</p>
         <div className="menu-reference-navigation" aria-label={text.allergenGuide}>
+          <img src="/images/menu/halal.webp" alt={text.halalLogo} width="512" height="512" />
           <button type="button" onClick={() => scrollTo("menu-allergens")}>{text.allergenGuide}</button>
+          <img src="/images/menu/alcohol-free.webp" alt={text.alcoholFreeLogo} width="512" height="512" />
         </div>
+        <p className="menu-total-products" aria-live="polite">{text.totalProducts(catalog.items.length)}</p>
       </section>
 
       {tableMode && (
@@ -595,8 +624,17 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
               {selectedProduct.locales[language].originalName !== selectedProduct.locales[language].name && <p className="menu-detail__localized-name">{selectedProduct.locales[language].name}</p>}
               <strong>{new Intl.NumberFormat(getIntlLocale(language), { style: "currency", currency: "EUR" }).format(selectedProduct.price)}</strong>
               <p>{selectedProduct.locales[language].description}</p>
-              <p className="menu-detail__allergens">{selectedProduct.locales[language].allergens}</p>
-              <p className="menu-detail__codes">{selectedProduct.locales[language].codes}</p>
+              {(selectedProduct.vegan || selectedProduct.vegetarian) && (
+                <p className={`menu-detail__diet${selectedProduct.vegan ? " menu-detail__diet--vegan" : ""}`}>
+                  {selectedProduct.vegan ? `◆ ${text.vegan}` : `● ${text.vegetarian}`}
+                </p>
+              )}
+              {getProductAllergenLabels(selectedProduct, language).length > 0 && (
+                <p className="menu-detail__allergens">
+                  <strong>{text.allergenDetails}</strong>
+                  <span>{getProductAllergenLabels(selectedProduct, language).join(" · ")}</span>
+                </p>
+              )}
               <button type="button" className={`menu-detail__favorite${favorites.includes(selectedProduct.id) ? " is-active" : ""}`} onClick={() => toggleFavorite(selectedProduct.id)}>
                 <span aria-hidden="true">{favorites.includes(selectedProduct.id) ? "♥" : "♡"}</span>
                 {favorites.includes(selectedProduct.id) ? text.favoriteRemove : text.favoriteAdd}
