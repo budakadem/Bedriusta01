@@ -39,6 +39,102 @@ PRODUCT_ORIGINAL_NAME_OVERRIDES = {
     "468": "Şalgam, 0,3 l",
 }
 
+PRODUCT_DESCRIPTION_OVERRIDES = {
+    "209": {
+        "TR": "Pide üzerinde bütün Adana kebap, iki yanında tablacı salatası, domates ve biber",
+        "DE": "Ein ganzer Adana Kebap auf Fladenbrot, dazu Tablacı-Salat auf beiden Seiten, Tomate und Peperoni",
+        "ENG": "A whole Adana kebap on flatbread, with Tablacı salad on both sides, tomato and pepper",
+    },
+    "210": {
+        "TR": "Beş büyük dilim kuzu eti, sivri biber ve domates",
+        "DE": "Fünf große Scheiben Lammfleisch, Peperoni und Tomate",
+        "ENG": "Five large slices of lamb, long green pepper and tomato",
+    },
+    "214": {
+        "TR": "Şişten alınarak lavaş üzerinde servis edilen kuzu eti, biber ve domates",
+        "DE": "Vom Spieß gezogenes Lammfleisch auf Fladenbrot, Paprika und Tomate",
+        "ENG": "Lamb removed from the skewers and served on flatbread, pepper and tomato",
+    },
+    "219": {
+        "TR": "Tek sıra halinde üst üste dizilmiş marine tavuk kanatları, soğan ve domates",
+        "DE": "Marinierte Hähnchenflügel, in einer langen Reihe übereinander angerichtet, mit Zwiebeln und Tomate",
+        "ENG": "Marinated chicken wings arranged overlapping in one long row, with onions and tomato",
+    },
+    "221": {
+        "TR": "Beş ızgara köfte, domates ve biber",
+        "DE": "Fünf gegrillte Köfte, Tomate und Paprika",
+        "ENG": "Five grilled köfte, tomato and pepper",
+    },
+    "240": {
+        "TR": "Beş parça dana bonfile, domates ve sivri biber",
+        "DE": "Fünf Stücke Rinderfilet, Tomate und Peperoni",
+        "ENG": "Five pieces of beef tenderloin, tomato and long green pepper",
+    },
+    "241": {
+        "TR": "Beş parça kemikli kuzu kaburga, sivri biber ve domates",
+        "DE": "Fünf Stücke Lammrippchen mit Knochen, Peperoni und Tomate",
+        "ENG": "Five pieces of lamb ribs on the bone, long green pepper and tomato",
+    },
+    "242": {
+        "TR": "Üç parça dana bonfile, sivri biber ve domates",
+        "DE": "Drei Stücke Rinderfilet, Peperoni und Tomate",
+        "ENG": "Three pieces of beef tenderloin, long green pepper and tomato",
+    },
+    "345": {
+        "TR": "1,5–2 cm küp doğranmış tavuk but, sivri biber ve domates",
+        "DE": "In 1,5–2 cm große Würfel geschnittenes Hähnchenschenkelfleisch, Peperoni und Tomate",
+        "ENG": "Chicken thigh cut into 1.5–2 cm cubes, long green pepper and tomato",
+    },
+}
+
+SERVICE_CHOICE_CATEGORIES = {"KEBAPLAR", "ETLER", "KOMBİ"}
+SERVICE_CHOICE_TEXT = {
+    "TR": "patates kızartması veya pilav ile",
+    "DE": "mit Pommes frites oder Reis",
+    "ENG": "with French fries or rice",
+}
+
+ADDITIONAL_PRODUCTS = {
+    "083": {
+        "TR": {
+            "section": "YEMEKLER",
+            "category": "ÇORBALAR",
+            "originalName": "Kelle Paça",
+            "name": "Kelle Paça",
+            "price": 8.9,
+            "description": "Kelle ve paça eti, kremalı çorba, pul biberli yağ",
+            "vegan": False,
+            "vegetarian": False,
+            "allergens": "Gluten içeren tahıllar (Buğday), Yumurta, Süt (laktoz dahil), Kereviz, Kükürt dioksit ve sülfitler",
+            "codes": "A1, C, G, L, O",
+        },
+        "DE": {
+            "section": "Speisen",
+            "category": "Suppen",
+            "originalName": "Kelle Paça",
+            "name": "Lammkopf- und Fußsuppe",
+            "price": 8.9,
+            "description": "Lammkopf- und Lammfußfleisch, cremige Suppe, Chili-Butter",
+            "vegan": False,
+            "vegetarian": False,
+            "allergens": "Glutenhaltiges Getreide (Weizen), Eier, Milch (inkl. Laktose), Sellerie, Schwefeldioxid und Sulfite",
+            "codes": "A1, C, G, L, O",
+        },
+        "ENG": {
+            "section": "Food",
+            "category": "Soups",
+            "originalName": "Kelle Paça",
+            "name": "Lamb Head and Trotter Soup",
+            "price": 8.9,
+            "description": "Lamb head and trotter meat, creamy soup, chilli butter",
+            "vegan": False,
+            "vegetarian": False,
+            "allergens": "Cereals containing gluten (wheat), Eggs, Milk (including lactose), Celery, Sulphur dioxide and sulphites",
+            "codes": "A1, C, G, L, O",
+        },
+    },
+}
+
 def clean(value):
     if value is None:
         return ""
@@ -98,6 +194,13 @@ def build_catalog(workbook_path: Path, images_dir: Path):
     workbook = load_workbook(workbook_path, data_only=True, read_only=True)
     sheets = {"TR": workbook[workbook.sheetnames[0]], "DE": workbook["Deutsch"], "ENG": workbook["English"]}
     localized = {language: rows_by_id(sheet, language) for language, sheet in sheets.items()}
+    for language, entries in localized.items():
+        merged = {}
+        for item_id, entry in entries.items():
+            merged[item_id] = entry
+            if item_id == "082":
+                merged["083"] = ADDITIONAL_PRODUCTS["083"][language].copy()
+        localized[language] = merged
 
     image_sources = {}
     if images_dir.exists():
@@ -120,6 +223,13 @@ def build_catalog(workbook_path: Path, images_dir: Path):
             override = PRODUCT_NAME_OVERRIDES.get(item_id, {}).get(language)
             if override:
                 entry["name"] = override
+        for language, entry in (("TR", tr), ("DE", de), ("ENG", eng)):
+            description_override = PRODUCT_DESCRIPTION_OVERRIDES.get(item_id, {}).get(language)
+            if description_override:
+                entry["description"] = description_override
+            service_choice = SERVICE_CHOICE_TEXT[language]
+            if tr["category"] in SERVICE_CHOICE_CATEGORIES and service_choice.lower() not in entry["description"].lower():
+                entry["description"] = f"{entry['description'].rstrip(' ,;')}, {service_choice}"
         slug = slugify(tr["originalName"])
         original_name_override = PRODUCT_ORIGINAL_NAME_OVERRIDES.get(item_id)
         if original_name_override:
