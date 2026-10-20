@@ -32,11 +32,17 @@ PRODUCT_NAME_OVERRIDES = {
     "456": {"DE": "Fanta, 0,33 l", "ENG": "Fanta, 0,33 l"},
     "457": {"DE": "Sprite, 0,33 l", "ENG": "Sprite, 0,33 l"},
     "460": {"DE": "Gazoz, 0,25 l", "ENG": "Gazoz, 0,25 l"},
+    "950": {"DE": "Hamburger mit Country Potatoes", "ENG": "Hamburger with Country Potatoes"},
+    "951": {"DE": "Cheeseburger mit Country Potatoes", "ENG": "Cheeseburger with Country Potatoes"},
+    "952": {"DE": "Crispy Chicken Burger mit Country Potatoes", "ENG": "Crispy Chicken Burger with Country Potatoes"},
 }
 
 PRODUCT_ORIGINAL_NAME_OVERRIDES = {
     "467": "Ayran, 0,3 l",
     "468": "Şalgam, 0,3 l",
+    "950": "Hamburger, Country Potatoes ile",
+    "951": "Cheeseburger, Country Potatoes ile",
+    "952": "Crispy Burger, Country Potatoes ile",
 }
 
 PRODUCT_DESCRIPTION_OVERRIDES = {
@@ -45,10 +51,25 @@ PRODUCT_DESCRIPTION_OVERRIDES = {
         "DE": "Tagesauswahl der Küche; bitte fragen Sie unser Servicepersonal nach der aktuellen Suppe",
         "ENG": "The kitchen's daily choice; please ask our service team about today's soup",
     },
+    "108": {
+        "TR": "Peynirli yufka sarımı, dört adet; marul, kırmızı lahana, yoğurt, domates ve salatalık ile",
+        "DE": "Vier Yufka-Röllchen mit Käsefüllung; mit Salat, Rotkohl, Joghurt, Tomaten und Gurken",
+        "ENG": "Four cheese-filled yufka rolls; with lettuce, red cabbage, yoghurt, tomatoes and cucumber",
+    },
     "221": {
         "TR": "Dana etiyle hazırlanan ızgara köfte, domates ve biber",
         "DE": "Gegrillte Köfte aus Rindfleisch, Tomate und Paprika",
         "ENG": "Grilled beef köfte, tomato and pepper",
+    },
+    "242": {
+        "TR": "350 g dana bonfile, Kräuter tereyağı, sivri biber, domates",
+        "DE": "350 g Rinderfilet, Kräuterbutter, Peperoni und Tomate",
+        "ENG": "350 g beef tenderloin, herb butter, long green pepper and tomato",
+    },
+    "320": {
+        "TR": "Kuzu eti, domates, soğan, sarımsak, sivri biber, pirinç pilavı ile",
+        "DE": "Lammfleisch, Tomaten, Zwiebeln, Knoblauch, Peperoni, mit Reis",
+        "ENG": "Lamb, tomato, onions, garlic, long green pepper, with rice",
     },
     "345": {
         "TR": "Tavuk eti, sivri biber ve domates",
@@ -80,6 +101,56 @@ PRODUCT_ALLERGEN_OVERRIDES = {
 
 PRODUCT_CODE_OVERRIDES = {"082": {"TR": "", "DE": "", "ENG": ""}}
 
+# Remove only the explicitly corrected allergen/additive codes. The matching
+# localized labels are removed in lockstep below, so codes and visible copy can
+# never drift apart between Turkish, German and English.
+PRODUCT_CODE_REMOVALS = {
+    "080": {"G"},
+    "083": {"C", "G", "L"},
+    "101": {"G"},
+    "102": {"G"},
+    "130": {"G"},
+    "160": {"G"},
+    "162": {"L"},
+    "180": {"H"},
+    "182": {"C", "L"},
+    "183": {"C", "O"},
+    "202": {"C"},
+    "203": {"C"},
+    "221": {"G"},
+    "320": {"G"},
+    "321": {"G"},
+    "340": {"G"},
+    "342": {"G"},
+    "343": {"G"},
+    "344": {"G"},
+    "345": {"G"},
+    "372": {"C"},
+    "373": {"C"},
+    "374": {"C"},
+    "375": {"C"},
+    "376": {"C"},
+    "377": {"C", "4"},
+    "378": {"C"},
+    "379": {"C"},
+    "380": {"C"},
+    "382": {"C"},
+    "383": {"C"},
+    "384": {"C"},
+    "387": {"C", "8"},
+    "410": {"C"},
+    "411": {"C"},
+    "412": {"C"},
+    "413": {"C"},
+    "415": {"C"},
+    "430": {"C", "8"},
+    "431": {"C", "8"},
+    "432": {"C", "8"},
+    "433": {"C", "8"},
+    "434": {"C", "8"},
+    "435": {"C", "8"},
+}
+
 ADDITIONAL_PRODUCTS = {
     "083": {
         "TR": {
@@ -88,11 +159,11 @@ ADDITIONAL_PRODUCTS = {
             "originalName": "Kelle Paça",
             "name": "Kelle Paça",
             "price": 8.9,
-            "description": "Kelle ve paça eti, kremalı çorba, pul biberli yağ",
+            "description": "Kelle ve paça eti, baharatlı çorba, pul biberli yağ",
             "vegan": False,
             "vegetarian": False,
-            "allergens": "Gluten içeren tahıllar (Buğday), Yumurta, Süt (laktoz dahil), Kereviz, Kükürt dioksit ve sülfitler",
-            "codes": "A1, C, G, L, O",
+            "allergens": "Gluten içeren tahıllar (Buğday), Kükürt dioksit ve sülfitler",
+            "codes": "A1, O",
         },
         "DE": {
             "section": "Speisen",
@@ -100,11 +171,11 @@ ADDITIONAL_PRODUCTS = {
             "originalName": "Kelle Paça",
             "name": "Lammkopf- und Fußsuppe",
             "price": 8.9,
-            "description": "Lammkopf- und Lammfußfleisch, cremige Suppe, Chili-Butter",
+            "description": "Lammkopf- und Lammfußfleisch, kräftige Gewürzsuppe, Chiliöl",
             "vegan": False,
             "vegetarian": False,
-            "allergens": "Glutenhaltiges Getreide (Weizen), Eier, Milch (inkl. Laktose), Sellerie, Schwefeldioxid und Sulfite",
-            "codes": "A1, C, G, L, O",
+            "allergens": "Glutenhaltiges Getreide (Weizen), Schwefeldioxid und Sulfite",
+            "codes": "A1, O",
         },
         "ENG": {
             "section": "Food",
@@ -112,11 +183,11 @@ ADDITIONAL_PRODUCTS = {
             "originalName": "Kelle Paça",
             "name": "Lamb Head and Trotter Soup",
             "price": 8.9,
-            "description": "Lamb head and trotter meat, creamy soup, chilli butter",
+            "description": "Lamb head and trotter meat, richly spiced soup, chilli oil",
             "vegan": False,
             "vegetarian": False,
-            "allergens": "Cereals containing gluten (wheat), Eggs, Milk (including lactose), Celery, Sulphur dioxide and sulphites",
-            "codes": "A1, C, G, L, O",
+            "allergens": "Cereals containing gluten (wheat), Sulphur dioxide and sulphites",
+            "codes": "A1, O",
         },
     },
     "950": {
@@ -124,7 +195,7 @@ ADDITIONAL_PRODUCTS = {
             "section": "YEMEKLER",
             "category": "HAMBURGER",
             "originalName": "Hamburger, patates kızartması ile",
-            "name": "Hamburger, patates kızartması ile",
+            "name": "Hamburger, Country Potatoes ile",
             "price": 14.9,
             "description": "200 g dana köftesi, domates, kornişon turşu, marul, hamburger sosu",
             "vegan": False,
@@ -136,7 +207,7 @@ ADDITIONAL_PRODUCTS = {
             "section": "Speisen",
             "category": "Burger",
             "originalName": "Hamburger, patates kızartması ile",
-            "name": "Hamburger mit Pommes",
+            "name": "Hamburger mit Country Potatoes",
             "price": 14.9,
             "description": "200-g-Rindfleisch-Patty, Tomaten, Gewürzgurken, Salatblatt, Hamburgersoße",
             "vegan": False,
@@ -148,7 +219,7 @@ ADDITIONAL_PRODUCTS = {
             "section": "Food",
             "category": "Burgers",
             "originalName": "Hamburger, patates kızartması ile",
-            "name": "Hamburger with Fries",
+            "name": "Hamburger with Country Potatoes",
             "price": 14.9,
             "description": "200 g beef patty, tomatoes, pickles, lettuce, burger sauce",
             "vegan": False,
@@ -162,7 +233,7 @@ ADDITIONAL_PRODUCTS = {
             "section": "YEMEKLER",
             "category": "HAMBURGER",
             "originalName": "Cheeseburger, patates kızartması ile",
-            "name": "Cheeseburger, patates kızartması ile",
+            "name": "Cheeseburger, Country Potatoes ile",
             "price": 15.9,
             "description": "200 g dana köftesi, cheddar, domates, karamelize soğan, kornişon turşu, marul, hamburger sosu",
             "vegan": False,
@@ -174,7 +245,7 @@ ADDITIONAL_PRODUCTS = {
             "section": "Speisen",
             "category": "Burger",
             "originalName": "Cheeseburger, patates kızartması ile",
-            "name": "Cheeseburger mit Pommes",
+            "name": "Cheeseburger mit Country Potatoes",
             "price": 15.9,
             "description": "200-g-Rindfleisch-Patty, Cheddar, Tomaten, karamellisierte Zwiebeln, Gewürzgurken, Salatblatt, Hamburgersoße",
             "vegan": False,
@@ -186,7 +257,7 @@ ADDITIONAL_PRODUCTS = {
             "section": "Food",
             "category": "Burgers",
             "originalName": "Cheeseburger, patates kızartması ile",
-            "name": "Cheeseburger with Fries",
+            "name": "Cheeseburger with Country Potatoes",
             "price": 15.9,
             "description": "200 g beef patty, cheddar, tomatoes, caramelised onions, pickles, lettuce, burger sauce",
             "vegan": False,
@@ -200,7 +271,7 @@ ADDITIONAL_PRODUCTS = {
             "section": "YEMEKLER",
             "category": "HAMBURGER",
             "originalName": "Crispy Burger, patates kızartması ile",
-            "name": "Crispy Burger, patates kızartması ile",
+            "name": "Crispy Burger, Country Potatoes ile",
             "price": 13.9,
             "description": "200 g çıtır tavuk göğsü, marul, hamburger sosu",
             "vegan": False,
@@ -212,7 +283,7 @@ ADDITIONAL_PRODUCTS = {
             "section": "Speisen",
             "category": "Burger",
             "originalName": "Crispy Burger, patates kızartması ile",
-            "name": "Crispy Chicken Burger mit Pommes",
+            "name": "Crispy Chicken Burger mit Country Potatoes",
             "price": 13.9,
             "description": "200 g knusprige Hähnchenbrust, Salatblatt, Hamburgersoße",
             "vegan": False,
@@ -224,7 +295,7 @@ ADDITIONAL_PRODUCTS = {
             "section": "Food",
             "category": "Burgers",
             "originalName": "Crispy Burger, patates kızartması ile",
-            "name": "Crispy Chicken Burger with Fries",
+            "name": "Crispy Chicken Burger with Country Potatoes",
             "price": 13.9,
             "description": "200 g crispy chicken breast, lettuce, burger sauce",
             "vegan": False,
@@ -254,6 +325,21 @@ def slugify(value: str) -> str:
     value = unicodedata.normalize("NFKD", value).encode("ascii", "ignore").decode("ascii")
     value = re.sub(r"[^a-zA-Z0-9]+", "-", value).strip("-").lower()
     return value or "urun"
+
+
+def remove_product_codes(entry, codes_to_remove):
+    """Remove codes and their parallel localized labels without rewriting copy."""
+    if not codes_to_remove:
+        return
+
+    codes = [part.strip() for part in entry["codes"].split(",") if part.strip()]
+    allergens = [part.strip() for part in entry["allergens"].split(",") if part.strip()]
+    if len(codes) != len(allergens):
+        raise ValueError(f"Allergen/code mismatch: {entry['name']} ({entry['codes']})")
+
+    kept = [(code, allergen) for code, allergen in zip(codes, allergens) if code not in codes_to_remove]
+    entry["codes"] = ", ".join(code for code, _ in kept)
+    entry["allergens"] = ", ".join(allergen for _, allergen in kept)
 
 
 def rows_by_id(sheet, language: str):
@@ -335,6 +421,7 @@ def build_catalog(workbook_path: Path, images_dir: Path):
             code_override = PRODUCT_CODE_OVERRIDES.get(item_id, {}).get(language)
             if code_override is not None:
                 entry["codes"] = code_override
+            remove_product_codes(entry, PRODUCT_CODE_REMOVALS.get(item_id))
             service_choice = SERVICE_CHOICE_TEXT[language]
             description_lower = entry["description"].lower()
             already_has_service_choice = all(marker in description_lower for marker in SERVICE_CHOICE_MARKERS[language])
