@@ -76,6 +76,11 @@ PRODUCT_DESCRIPTION_OVERRIDES = {
         "DE": "Hähnchenfleisch, Peperoni und Tomate",
         "ENG": "Chicken, long green pepper and tomato",
     },
+    "532": {
+        "TR": "Süt, çikolata, krema, kakao tozu",
+        "DE": "Milch, Schokolade, Sahne, Kakaopulver",
+        "ENG": "Milk, chocolate, cream, cocoa powder",
+    },
 }
 
 SERVICE_CHOICE_CATEGORIES = {"KEBAPLAR", "ETLER", "KOMBİ"}
@@ -168,6 +173,7 @@ PRODUCT_CODE_REMOVALS = {
     "433": {"C", "8"},
     "434": {"C", "8"},
     "435": {"C", "8"},
+    "532": {"F"},
 }
 
 ADDITIONAL_PRODUCTS = {
