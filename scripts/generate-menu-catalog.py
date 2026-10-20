@@ -31,6 +31,11 @@ PRODUCT_NAME_OVERRIDES = {
     "203": {"DE": "Elinazik mit Lammhack", "ENG": "Elinazik with Minced Lamb"},
 }
 
+PRODUCT_ORIGINAL_NAME_OVERRIDES = {
+    "467": "Ayran, 0,3 l",
+    "468": "Şalgam, 0,3 l",
+}
+
 def clean(value):
     if value is None:
         return ""
@@ -113,6 +118,11 @@ def build_catalog(workbook_path: Path, images_dir: Path):
             if override:
                 entry["name"] = override
         slug = slugify(tr["originalName"])
+        original_name_override = PRODUCT_ORIGINAL_NAME_OVERRIDES.get(item_id)
+        if original_name_override:
+            for entry in (tr, de, eng):
+                entry["originalName"] = original_name_override
+            tr["name"] = original_name_override
         image = None
         source = image_sources.get(item_id)
         if source:
