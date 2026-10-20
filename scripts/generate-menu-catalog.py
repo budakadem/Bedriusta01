@@ -40,6 +40,11 @@ PRODUCT_ORIGINAL_NAME_OVERRIDES = {
 }
 
 PRODUCT_DESCRIPTION_OVERRIDES = {
+    "082": {
+        "TR": "Günün mutfak seçimi; güncel çorba için lütfen servis personeline sorunuz",
+        "DE": "Tagesauswahl der Küche; bitte fragen Sie unser Servicepersonal nach der aktuellen Suppe",
+        "ENG": "The kitchen's daily choice; please ask our service team about today's soup",
+    },
     "209": {
         "TR": "Pide üzerinde bütün Adana kebap, iki yanında tablacı salatası, domates ve biber",
         "DE": "Ein ganzer Adana Kebap auf Fladenbrot, dazu Tablacı-Salat auf beiden Seiten, Tomate und Peperoni",
@@ -94,6 +99,16 @@ SERVICE_CHOICE_TEXT = {
     "ENG": "with French fries or rice",
 }
 
+PRODUCT_ALLERGEN_OVERRIDES = {
+    "082": {
+        "TR": "Alerjen bilgisi için lütfen servis personeline sorunuz",
+        "DE": "Bitte fragen Sie unser Servicepersonal nach den Allergenen",
+        "ENG": "Please ask our service team for allergen information",
+    },
+}
+
+PRODUCT_CODE_OVERRIDES = {"082": {"TR": "", "DE": "", "ENG": ""}}
+
 ADDITIONAL_PRODUCTS = {
     "083": {
         "TR": {
@@ -133,7 +148,123 @@ ADDITIONAL_PRODUCTS = {
             "codes": "A1, C, G, L, O",
         },
     },
+    "950": {
+        "TR": {
+            "section": "YEMEKLER",
+            "category": "HAMBURGER",
+            "originalName": "Hamburger, patates kızartması ile",
+            "name": "Hamburger, patates kızartması ile",
+            "price": 14.9,
+            "description": "200 g dana köftesi, domates, kornişon turşu, marul, hamburger sosu",
+            "vegan": False,
+            "vegetarian": False,
+            "allergens": "Gluten içeren tahıllar (Buğday)",
+            "codes": "A1",
+        },
+        "DE": {
+            "section": "Speisen",
+            "category": "Burger",
+            "originalName": "Hamburger, patates kızartması ile",
+            "name": "Hamburger mit Pommes",
+            "price": 14.9,
+            "description": "200-g-Rindfleisch-Patty, Tomaten, Gewürzgurken, Salatblatt, Hamburgersoße",
+            "vegan": False,
+            "vegetarian": False,
+            "allergens": "Glutenhaltiges Getreide (Weizen)",
+            "codes": "A1",
+        },
+        "ENG": {
+            "section": "Food",
+            "category": "Burgers",
+            "originalName": "Hamburger, patates kızartması ile",
+            "name": "Hamburger with Fries",
+            "price": 14.9,
+            "description": "200 g beef patty, tomatoes, pickles, lettuce, burger sauce",
+            "vegan": False,
+            "vegetarian": False,
+            "allergens": "Cereals containing gluten (wheat)",
+            "codes": "A1",
+        },
+    },
+    "951": {
+        "TR": {
+            "section": "YEMEKLER",
+            "category": "HAMBURGER",
+            "originalName": "Cheeseburger, patates kızartması ile",
+            "name": "Cheeseburger, patates kızartması ile",
+            "price": 15.9,
+            "description": "200 g dana köftesi, cheddar, domates, karamelize soğan, kornişon turşu, marul, hamburger sosu",
+            "vegan": False,
+            "vegetarian": False,
+            "allergens": "Gluten içeren tahıllar (Buğday), Süt (laktoz dahil)",
+            "codes": "A1, G",
+        },
+        "DE": {
+            "section": "Speisen",
+            "category": "Burger",
+            "originalName": "Cheeseburger, patates kızartması ile",
+            "name": "Cheeseburger mit Pommes",
+            "price": 15.9,
+            "description": "200-g-Rindfleisch-Patty, Cheddar, Tomaten, karamellisierte Zwiebeln, Gewürzgurken, Salatblatt, Hamburgersoße",
+            "vegan": False,
+            "vegetarian": False,
+            "allergens": "Glutenhaltiges Getreide (Weizen), Milch (inkl. Laktose)",
+            "codes": "A1, G",
+        },
+        "ENG": {
+            "section": "Food",
+            "category": "Burgers",
+            "originalName": "Cheeseburger, patates kızartması ile",
+            "name": "Cheeseburger with Fries",
+            "price": 15.9,
+            "description": "200 g beef patty, cheddar, tomatoes, caramelised onions, pickles, lettuce, burger sauce",
+            "vegan": False,
+            "vegetarian": False,
+            "allergens": "Cereals containing gluten (wheat), Milk (including lactose)",
+            "codes": "A1, G",
+        },
+    },
+    "952": {
+        "TR": {
+            "section": "YEMEKLER",
+            "category": "HAMBURGER",
+            "originalName": "Crispy Burger, patates kızartması ile",
+            "name": "Crispy Burger, patates kızartması ile",
+            "price": 13.9,
+            "description": "200 g çıtır tavuk göğsü, marul, hamburger sosu",
+            "vegan": False,
+            "vegetarian": False,
+            "allergens": "Gluten içeren tahıllar (Buğday)",
+            "codes": "A1",
+        },
+        "DE": {
+            "section": "Speisen",
+            "category": "Burger",
+            "originalName": "Crispy Burger, patates kızartması ile",
+            "name": "Crispy Chicken Burger mit Pommes",
+            "price": 13.9,
+            "description": "200 g knusprige Hähnchenbrust, Salatblatt, Hamburgersoße",
+            "vegan": False,
+            "vegetarian": False,
+            "allergens": "Glutenhaltiges Getreide (Weizen)",
+            "codes": "A1",
+        },
+        "ENG": {
+            "section": "Food",
+            "category": "Burgers",
+            "originalName": "Crispy Burger, patates kızartması ile",
+            "name": "Crispy Chicken Burger with Fries",
+            "price": 13.9,
+            "description": "200 g crispy chicken breast, lettuce, burger sauce",
+            "vegan": False,
+            "vegetarian": False,
+            "allergens": "Cereals containing gluten (wheat)",
+            "codes": "A1",
+        },
+    },
 }
+
+ADDITIONAL_PRODUCT_INSERTIONS = {"082": ("083",), "435": ("950", "951", "952")}
 
 def clean(value):
     if value is None:
@@ -198,8 +329,8 @@ def build_catalog(workbook_path: Path, images_dir: Path):
         merged = {}
         for item_id, entry in entries.items():
             merged[item_id] = entry
-            if item_id == "082":
-                merged["083"] = ADDITIONAL_PRODUCTS["083"][language].copy()
+            for additional_id in ADDITIONAL_PRODUCT_INSERTIONS.get(item_id, ()):
+                merged[additional_id] = ADDITIONAL_PRODUCTS[additional_id][language].copy()
         localized[language] = merged
 
     image_sources = {}
@@ -227,6 +358,12 @@ def build_catalog(workbook_path: Path, images_dir: Path):
             description_override = PRODUCT_DESCRIPTION_OVERRIDES.get(item_id, {}).get(language)
             if description_override:
                 entry["description"] = description_override
+            allergen_override = PRODUCT_ALLERGEN_OVERRIDES.get(item_id, {}).get(language)
+            if allergen_override:
+                entry["allergens"] = allergen_override
+            code_override = PRODUCT_CODE_OVERRIDES.get(item_id, {}).get(language)
+            if code_override is not None:
+                entry["codes"] = code_override
             service_choice = SERVICE_CHOICE_TEXT[language]
             if tr["category"] in SERVICE_CHOICE_CATEGORIES and service_choice.lower() not in entry["description"].lower():
                 entry["description"] = f"{entry['description'].rstrip(' ,;')}, {service_choice}"
