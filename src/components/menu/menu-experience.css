@@ -100,7 +100,11 @@
 .menu-scroll-rail__track > button { flex: 0 0 auto; min-height: 44px; padding: 8px 16px; color: var(--menu-ink); background: var(--menu-paper); border: 1px solid var(--menu-line); border-radius: 999px; font: 800 13px/1 inherit; cursor: pointer; }
 .menu-category { scroll-margin-top: 238px; padding-top: 24px; }
 .menu-category__heading { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 4px; }
+.menu-category__heading > div { min-width: 0; }
 .menu-category__heading h3 { margin: 0; color: var(--menu-burgundy); font: 500 clamp(24px, 3vw, 36px)/1.1 Georgia, serif; }
+.menu-category__heading--feature { align-items: end; margin-top: 18px; padding: clamp(18px, 3vw, 28px); background: var(--menu-paper); border-top: 2px solid var(--menu-burgundy); border-bottom: 1px solid var(--menu-line); }
+.menu-category__heading--feature h3 { font-size: clamp(28px, 4vw, 46px); }
+.menu-category__heading--feature p { max-width: 620px; margin: 7px 0 0; color: var(--menu-muted); font-size: clamp(13px, 1.5vw, 16px); line-height: 1.5; overflow-wrap: anywhere; }
 
 .menu-product-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .menu-product { position: relative; display: grid; grid-template-columns: 152px minmax(0, 1fr); gap: 20px; min-width: 0; padding: 14px; background: #fff; border: 1px solid rgba(101,19,22,.42); border-radius: 4px; box-shadow: 0 5px 16px rgba(55,20,14,.045); transition: transform 180ms cubic-bezier(.2,.75,.25,1), border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease; }
@@ -215,6 +219,7 @@
   .menu-group__header { grid-template-columns: auto 1fr; gap: 10px; }
   .menu-group__header p { font-size: 28px; }
   .menu-group__header span { grid-column: 2; }
+  .menu-category__heading--feature { align-items: flex-start; flex-direction: column; gap: 10px; padding: 16px; }
   .menu-category { scroll-margin-top: 234px; }
   .menu-product { grid-template-columns: 96px minmax(0, 1fr); gap: 12px; padding: 12px; }
   .menu-product__media { width: 96px; height: 102px; border-radius: 9px; }

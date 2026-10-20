@@ -68,7 +68,9 @@ const copy = {
     all: "Tümü",
     vegetarian: "Vejetaryen",
     vegan: "Vegan",
-    groups: { food: "Yemekler", drinks: "İçecekler", desserts: "Tatlılar", cafe: "Café" },
+    groups: { food: "Yemekler", drinks: "Genel İçecekler", desserts: "Tatlılar", cafe: "Café" },
+    cafeSpecialDrinks: "Café’ye Özel İçecekler",
+    cafeGeneralDrinksHint: "Genel içeceklerden de sipariş verebilirsiniz.",
     drinkCategories: "İçecek kategorileri",
     itemCount: "ürün",
     totalProducts: (count: number) => `TOPLAM ${count} ÜRÜN`,
@@ -108,7 +110,9 @@ const copy = {
     all: "Alle",
     vegetarian: "Vegetarisch",
     vegan: "Vegan",
-    groups: { food: "Speisen", drinks: "Getränke", desserts: "Desserts", cafe: "Café" },
+    groups: { food: "Speisen", drinks: "Allgemeine Getränke", desserts: "Desserts", cafe: "Café" },
+    cafeSpecialDrinks: "Café-Spezialgetränke",
+    cafeGeneralDrinksHint: "Sie können auch aus unserem allgemeinen Getränkeangebot bestellen.",
     drinkCategories: "Getränkekategorien",
     itemCount: "Artikel",
     totalProducts: (count: number) => `${count} PRODUKTE INSGESAMT`,
@@ -148,7 +152,9 @@ const copy = {
     all: "All",
     vegetarian: "Vegetarian",
     vegan: "Vegan",
-    groups: { food: "Food", drinks: "Drinks", desserts: "Desserts", cafe: "Café" },
+    groups: { food: "Food", drinks: "General Drinks", desserts: "Desserts", cafe: "Café" },
+    cafeSpecialDrinks: "Café Special Drinks",
+    cafeGeneralDrinksHint: "You can also order from our general drinks selection.",
     drinkCategories: "Drink categories",
     itemCount: "items",
     totalProducts: (count: number) => `${count} PRODUCTS IN TOTAL`,
@@ -560,9 +566,18 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
             )}
             {categories.map((category) => {
               const items = visibleItems.filter((item) => getGroup(item) === group && item.locales[language].category === category);
+              const isCafeSpecialDrinksStart = group === "cafe" && category === catalog.items.find(
+                (item) => item.id === "492"
+              )?.locales[language].category;
               return (
                 <section className="menu-category" id={`menu-category-${group}-${slugify(category)}`} key={category}>
-                  <div className="menu-category__heading"><h3>{category}</h3><span>{items.length} {text.itemCount}</span></div>
+                  <div className={`menu-category__heading${isCafeSpecialDrinksStart ? " menu-category__heading--feature" : ""}`}>
+                    <div>
+                      <h3>{isCafeSpecialDrinksStart ? text.cafeSpecialDrinks : category}</h3>
+                      {isCafeSpecialDrinksStart && <p>{text.cafeGeneralDrinksHint}</p>}
+                    </div>
+                    <span>{items.length} {text.itemCount}</span>
+                  </div>
                   <div className="menu-product-list">
                     {items.map((item, index) => (
                       <ProductCard key={item.id} item={item} language={language} active={favorites.includes(item.id)} onToggle={() => toggleFavorite(item.id)} onOpen={() => openProduct(item)} eager={groupIndex === 0 && index < 2} />
