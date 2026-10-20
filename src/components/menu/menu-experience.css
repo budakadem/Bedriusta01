@@ -84,6 +84,8 @@
 .menu-group__header p { margin: 0; color: var(--menu-red); font: 700 42px/1 Georgia, serif; }
 .menu-group__header h2 { margin: 0; font: 500 clamp(34px, 5vw, 64px)/.95 Georgia, serif; }
 .menu-group__header span, .menu-category__heading span { color: var(--menu-muted); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.menu-drink-shortcuts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 18px 4px 2px; padding: 14px; background: var(--menu-paper); border: 1px solid var(--menu-line); border-radius: 4px; }
+.menu-drink-shortcuts button { min-width: 0; min-height: 46px; padding: 9px 12px; overflow-wrap: anywhere; color: var(--menu-burgundy); background: #fff; border: 1px solid rgba(101,19,22,.28); border-radius: 3px; font: 800 12px/1.25 inherit; cursor: pointer; transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease, transform 160ms ease; }
 .menu-scroll-rail { position: relative; min-width: 0; }
 .menu-scroll-rail__track { display: flex; gap: 8px; padding: 14px 2px; overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: none; scroll-padding-inline: 52px; }
 .menu-scroll-rail__track::-webkit-scrollbar { display: none; }
@@ -177,11 +179,13 @@
   .menu-product:hover .menu-product__media img { transform: scale(1.035); }
   .menu-product:hover { z-index: 1; background: #fff8ef; border-color: rgba(101,19,22,.72); box-shadow: 0 16px 34px rgba(67,18,16,.12); transform: translateY(-3px); }
   .menu-product:hover .menu-product__title { color: var(--menu-burgundy); }
+  .menu-drink-shortcuts button:hover { color: #fff; background: var(--menu-burgundy); border-color: var(--menu-burgundy); transform: translateY(-1px); }
   .menu-socials a:hover { background: rgba(255,255,255,.14); }
 }
 
 @media (max-width: 900px) {
   .menu-product-list { grid-template-columns: 1fr; }
+  .menu-drink-shortcuts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .menu-wifi { margin-inline: 16px; }
   .menu-allergens { margin-inline: 16px; }
   .menu-controls { top: 118px; }
@@ -242,6 +246,7 @@
   .menu-product { grid-template-columns: 82px minmax(0, 1fr); gap: 10px; }
   .menu-product__media { width: 82px; height: 92px; }
   .menu-product__description { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+  .menu-drink-shortcuts { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-inline: 0; padding: 10px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -249,5 +254,6 @@
   .menu-product__media:hover img { transform: none; }
   .menu-experience { scroll-behavior: auto; }
   .menu-product { transition: none; }
+  .menu-drink-shortcuts button { transition: none; }
   .header-menu-favorite__confetti { display: none; }
 }

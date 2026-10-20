@@ -69,6 +69,7 @@ const copy = {
     vegetarian: "Vejetaryen",
     vegan: "Vegan",
     groups: { food: "Yemekler", drinks: "İçecekler", desserts: "Tatlılar", cafe: "Café" },
+    drinkCategories: "İçecek kategorileri",
     itemCount: "ürün",
     imageDisclaimer: "Görsel temsilidir; sunum ve içerik farklılık gösterebilir.",
     noImage: "Görsel hazırlanıyor",
@@ -104,6 +105,7 @@ const copy = {
     vegetarian: "Vegetarisch",
     vegan: "Vegan",
     groups: { food: "Speisen", drinks: "Getränke", desserts: "Desserts", cafe: "Café" },
+    drinkCategories: "Getränkekategorien",
     itemCount: "Artikel",
     imageDisclaimer: "Abbildung beispielhaft; Anrichtung und Inhalt können abweichen.",
     noImage: "Abbildung folgt",
@@ -139,6 +141,7 @@ const copy = {
     vegetarian: "Vegetarian",
     vegan: "Vegan",
     groups: { food: "Food", drinks: "Drinks", desserts: "Desserts", cafe: "Café" },
+    drinkCategories: "Drink categories",
     itemCount: "items",
     imageDisclaimer: "Image for reference; presentation and contents may vary.",
     noImage: "Image coming soon",
@@ -516,6 +519,15 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
               <h2>{text.groups[group]}</h2>
               <span>{visibleItems.filter((item) => getGroup(item) === group).length} {text.itemCount}</span>
             </header>
+            {group === "drinks" && categories.length > 0 && (
+              <nav className="menu-drink-shortcuts" aria-label={text.drinkCategories}>
+                {categories.map((category) => (
+                  <button type="button" key={`drink-shortcut-${category}`} onClick={() => jumpToCategory("drinks", category)}>
+                    {category}
+                  </button>
+                ))}
+              </nav>
+            )}
             {categories.map((category) => {
               const items = visibleItems.filter((item) => getGroup(item) === group && item.locales[language].category === category);
               return (
