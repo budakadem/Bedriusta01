@@ -91,6 +91,22 @@ SERVICE_CHOICE_MARKERS = {
     "ENG": ("fries", "rice"),
 }
 
+# Keep the core restaurant drinks in the Drinks section. Café-style drinks
+# retain their existing categories but appear after Snacks at the end of Café.
+CAFE_DRINK_PRODUCT_IDS = {
+    "492", "493", "494", "495", "496", "497", "498",
+    "550", "551",
+    "570", "571", "572",
+    "590", "591", "592", "593", "594",
+    "610", "611", "612", "613", "614", "615", "616",
+    "640", "641", "642",
+    "660", "661", "662",
+    "680", "681", "682", "683", "684", "685",
+    "700", "701", "702", "703",
+}
+
+CAFE_SECTION_NAMES = {"TR": "CAFÉ", "DE": "Café", "ENG": "Café"}
+
 PRODUCT_ALLERGEN_OVERRIDES = {
     "082": {
         "TR": "Alerjen bilgisi için lütfen servis personeline sorunuz",
@@ -105,8 +121,11 @@ PRODUCT_CODE_OVERRIDES = {"082": {"TR": "", "DE": "", "ENG": ""}}
 # localized labels are removed in lockstep below, so codes and visible copy can
 # never drift apart between Turkish, German and English.
 PRODUCT_CODE_REMOVALS = {
+    "019": {"H3", "H7"},
+    "024": {"H7"},
     "080": {"G"},
-    "083": {"C", "G", "L"},
+    "081": {"O"},
+    "083": {"C", "G", "L", "O"},
     "101": {"G"},
     "102": {"G"},
     "130": {"G"},
@@ -412,6 +431,8 @@ def build_catalog(workbook_path: Path, images_dir: Path):
             if override:
                 entry["name"] = override
         for language, entry in (("TR", tr), ("DE", de), ("ENG", eng)):
+            if item_id in CAFE_DRINK_PRODUCT_IDS:
+                entry["section"] = CAFE_SECTION_NAMES[language]
             description_override = PRODUCT_DESCRIPTION_OVERRIDES.get(item_id, {}).get(language)
             if description_override:
                 entry["description"] = description_override
@@ -470,6 +491,9 @@ def build_catalog(workbook_path: Path, images_dir: Path):
                 for language, entry in (("TR", tr), ("DE", de), ("ENG", eng))
             },
         })
+
+    cafe_drinks = [item for item in items if item["id"] in CAFE_DRINK_PRODUCT_IDS]
+    items = [item for item in items if item["id"] not in CAFE_DRINK_PRODUCT_IDS] + cafe_drinks
 
     for old_image in image_output.glob("*.webp"):
         if old_image.name not in keep:
