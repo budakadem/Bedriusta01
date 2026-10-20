@@ -1670,8 +1670,6 @@ function PoliciesPage({ isMobile }: { isMobile: boolean }) {
 
 function Header({ isMobile }: { isMobile: boolean }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const language = useSiteLanguage();
-  const isMenuPage = window.location.pathname === "/menu" || window.location.pathname.startsWith("/menu/");
   const leftNavItems = navItems.slice(0, 2);
   const rightNavItems = navItems.slice(2, 3);
   const closeMobileMenu = () => setMobileMenuOpen(false);
@@ -1716,7 +1714,6 @@ function Header({ isMobile }: { isMobile: boolean }) {
               <View style={styles.menuLine} />
               <View style={styles.menuLine} />
             </View>
-            {isMenuPage && <Text style={styles.mobileMenuCaption}>{language === "ENG" ? "MENU" : "MENÜ"}</Text>}
           </Pressable>
         )}
 
@@ -3540,14 +3537,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 4
-  },
-  mobileMenuCaption: {
-    color: "#ffffff",
-    fontFamily: "Heebo, sans-serif",
-    fontSize: 9,
-    lineHeight: 10,
-    fontWeight: "900",
-    letterSpacing: 0.8
   },
   mobileMenuBackdrop: {
     position: "fixed",

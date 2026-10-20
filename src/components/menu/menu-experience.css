@@ -16,7 +16,8 @@
 .menu-experience button:focus-visible, .menu-experience a:focus-visible { outline: 3px solid #d6a129; outline-offset: 3px; }
 .menu-visually-hidden { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important; }
 
-.menu-hero { min-height: 0; padding: clamp(132px, 12vw, 158px) 20px 34px; text-align: center; background: #fff; border-bottom: 1px solid var(--menu-line); }
+.menu-hero { position: relative; min-height: 0; padding: clamp(132px, 12vw, 158px) 20px 34px; text-align: center; background: #fff; border-bottom: 1px solid var(--menu-line); }
+.menu-hero__page-label { position: absolute; top: clamp(132px, 12vw, 158px); left: clamp(24px, 7vw, 112px); margin: 0; color: var(--menu-burgundy); font-size: 13px; font-weight: 900; letter-spacing: .22em; line-height: 1.25; }
 .menu-hero__eyebrow, .menu-section-kicker { margin: 0 0 14px; color: var(--menu-burgundy); font-size: 12px; font-weight: 900; letter-spacing: .22em; }
 .menu-hero__table { display: inline-flex; margin: 0 0 20px; padding: 9px 15px; color: #fff; background: var(--menu-burgundy); font-weight: 900; letter-spacing: .12em; border-radius: 999px; }
 .menu-hero h1 { max-width: 900px; margin: 0 auto; color: var(--menu-burgundy); font-family: Georgia, "Times New Roman", serif; font-size: clamp(40px, 6vw, 76px); font-weight: 500; line-height: 1; text-wrap: balance; }
@@ -200,6 +201,7 @@
 @media (max-width: 680px) {
   .menu-experience { padding-bottom: 0; }
   .menu-hero { min-height: 0; padding: 126px 16px 26px; }
+  .menu-hero__page-label { top: 96px; left: 16px; font-size: 11px; }
   .menu-reference-navigation { grid-template-columns: 52px minmax(0, 1fr) 52px; gap: 8px; width: min(100%, 390px); margin-inline: auto; }
   .menu-reference-navigation img { width: 52px; height: 52px; }
   .menu-reference-navigation button { min-width: 0; padding-inline: 10px; overflow-wrap: anywhere; letter-spacing: .05em; }
