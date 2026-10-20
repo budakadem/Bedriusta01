@@ -469,7 +469,7 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
 
       <section className="menu-hero" aria-labelledby="menu-title">
         <h1 id="menu-title" className="menu-visually-hidden">{text.title}</h1>
-        <p className="menu-hero__page-label" aria-hidden="true">{language === "ENG" ? "MENU" : "MENÜ"}</p>
+        <p className="menu-hero__page-label" aria-hidden="true">Bedri Usta Menü</p>
         {invalidTable && <p className="menu-hero__notice" role="status">{text.invalidTable}</p>}
         <p className="menu-hero__statement">{text.hint}</p>
         <div className="menu-reference-navigation" aria-label={text.allergenGuide}>
