@@ -69,9 +69,8 @@ const copy = {
     vegetarian: "Vejetaryen",
     vegan: "Vegan",
     groups: { food: "Yemekler", drinks: "Genel İçecekler", desserts: "Tatlılar", cafe: "Café" },
-    cafeSpecialDrinks: "Café’ye Özel İçecekler",
-    cafeGeneralDrinksHint: "Genel içeceklerden de sipariş verebilirsiniz.",
-    cafeGeneralDrinksRepeatHint: "Genel içecekler burada da listelenir; favorileriniz her iki bölümde aynıdır.",
+    cafeAllDrinks: "Tüm İçecekler",
+    cafeAllDrinksHint: "Genel ve Café içecekleri numara sırasıyla burada da listelenir; favorileriniz her iki bölümde aynıdır.",
     drinkCategories: "İçecek kategorileri",
     itemCount: "ürün",
     totalProducts: (count: number) => `TOPLAM ${count} ÜRÜN`,
@@ -112,9 +111,8 @@ const copy = {
     vegetarian: "Vegetarisch",
     vegan: "Vegan",
     groups: { food: "Speisen", drinks: "Allgemeine Getränke", desserts: "Desserts", cafe: "Café" },
-    cafeSpecialDrinks: "Café-Spezialgetränke",
-    cafeGeneralDrinksHint: "Sie können auch aus unserem allgemeinen Getränkeangebot bestellen.",
-    cafeGeneralDrinksRepeatHint: "Allgemeine Getränke finden Sie auch hier; Ihre Favoriten bleiben in beiden Bereichen identisch.",
+    cafeAllDrinks: "Alle Getränke",
+    cafeAllDrinksHint: "Allgemeine und Café-Getränke sind hier nach Artikelnummer sortiert; Ihre Favoriten bleiben in beiden Bereichen identisch.",
     drinkCategories: "Getränkekategorien",
     itemCount: "Artikel",
     totalProducts: (count: number) => `${count} PRODUKTE INSGESAMT`,
@@ -155,9 +153,8 @@ const copy = {
     vegetarian: "Vegetarian",
     vegan: "Vegan",
     groups: { food: "Food", drinks: "General Drinks", desserts: "Desserts", cafe: "Café" },
-    cafeSpecialDrinks: "Café Special Drinks",
-    cafeGeneralDrinksHint: "You can also order from our general drinks selection.",
-    cafeGeneralDrinksRepeatHint: "General drinks are also listed here; your favourites stay the same in both sections.",
+    cafeAllDrinks: "All Drinks",
+    cafeAllDrinksHint: "General and Café drinks are listed here by item number; your favourites stay the same in both sections.",
     drinkCategories: "Drink categories",
     itemCount: "items",
     totalProducts: (count: number) => `${count} PRODUCTS IN TOTAL`,
@@ -190,6 +187,20 @@ const groupOrder: MenuGroup[] = ["food", "drinks", "desserts", "cafe"];
 
 function getGroup(item: MenuItem): MenuGroup {
   return sectionToGroup[item.locales.TR.section] ?? "food";
+}
+
+const cafeCategoryOrder = Array.from(new Set(
+  catalog.items.filter((item) => getGroup(item) === "cafe").map((item) => item.locales.TR.category)
+));
+const cafeSnacksIndex = cafeCategoryOrder.indexOf("ÇEREZLER");
+const cafeCoreCategories = new Set(cafeCategoryOrder.slice(0, cafeSnacksIndex + 1));
+
+function isCafeDrink(item: MenuItem) {
+  return getGroup(item) === "drinks" || (getGroup(item) === "cafe" && !cafeCoreCategories.has(item.locales.TR.category));
+}
+
+function compareItemNumbers(left: MenuItem, right: MenuItem) {
+  return Number.parseInt(left.id, 10) - Number.parseInt(right.id, 10);
 }
 
 function slugify(value: string) {
@@ -356,15 +367,17 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
   );
   const grouped = useMemo(() => groupOrder.map((group) => ({
     group,
-    categories: Array.from(new Set(visibleItems.filter((item) => getGroup(item) === group).map((item) => item.locales[language].category)))
+    categories: Array.from(new Set(visibleItems
+      .filter((item) => getGroup(item) === group && (group !== "cafe" || cafeCoreCategories.has(item.locales.TR.category)))
+      .map((item) => item.locales[language].category)))
   })), [language, visibleItems]);
-  const generalDrinkItems = useMemo(
-    () => visibleItems.filter((item) => getGroup(item) === "drinks"),
+  const cafeDrinkItems = useMemo(
+    () => visibleItems.filter(isCafeDrink).sort(compareItemNumbers),
     [visibleItems]
   );
-  const generalDrinkCategories = useMemo(
-    () => Array.from(new Set(generalDrinkItems.map((item) => item.locales[language].category))),
-    [generalDrinkItems, language]
+  const cafeDrinkCategories = useMemo(
+    () => Array.from(new Set(cafeDrinkItems.map((item) => item.locales[language].category))),
+    [cafeDrinkItems, language]
   );
   const foodNavigationCategories = useMemo(
     () => Array.from(new Set(catalog.items.filter((item) => getGroup(item) === "food").map((item) => item.locales[language].category))),
@@ -564,7 +577,9 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
             <header className="menu-group__header">
               <p>0{groupIndex + 1}</p>
               <h2>{text.groups[group]}</h2>
-              <span>{visibleItems.filter((item) => getGroup(item) === group).length} {text.itemCount}</span>
+              <span>{group === "cafe"
+                ? visibleItems.filter((item) => getGroup(item) === "cafe" && cafeCoreCategories.has(item.locales.TR.category)).length + cafeDrinkItems.length
+                : visibleItems.filter((item) => getGroup(item) === group).length} {text.itemCount}</span>
             </header>
             {group === "drinks" && categories.length > 0 && (
               <nav className="menu-drink-shortcuts" aria-label={text.drinkCategories}>
@@ -577,16 +592,10 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
             )}
             {categories.map((category) => {
               const items = visibleItems.filter((item) => getGroup(item) === group && item.locales[language].category === category);
-              const isCafeSpecialDrinksStart = group === "cafe" && category === catalog.items.find(
-                (item) => item.id === "492"
-              )?.locales[language].category;
               return (
                 <section className="menu-category" id={`menu-category-${group}-${slugify(category)}`} key={category}>
-                  <div className={`menu-category__heading${isCafeSpecialDrinksStart ? " menu-category__heading--feature" : ""}`}>
-                    <div>
-                      <h3>{isCafeSpecialDrinksStart ? text.cafeSpecialDrinks : category}</h3>
-                      {isCafeSpecialDrinksStart && <p>{text.cafeGeneralDrinksHint}</p>}
-                    </div>
+                  <div className="menu-category__heading">
+                    <div><h3>{category}</h3></div>
                     <span>{items.length} {text.itemCount}</span>
                   </div>
                   <div className="menu-product-list">
@@ -597,26 +606,26 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
                 </section>
               );
             })}
-            {group === "cafe" && generalDrinkItems.length > 0 && (
-              <div className="menu-cafe-general-drinks">
+            {group === "cafe" && cafeDrinkItems.length > 0 && (
+              <div className="menu-cafe-all-drinks">
                 <div className="menu-category__heading menu-category__heading--feature">
                   <div>
-                    <h3>{text.groups.drinks}</h3>
-                    <p>{text.cafeGeneralDrinksRepeatHint}</p>
+                    <h3>{text.cafeAllDrinks}</h3>
+                    <p>{text.cafeAllDrinksHint}</p>
                   </div>
-                  <span>{generalDrinkItems.length} {text.itemCount}</span>
+                  <span>{cafeDrinkItems.length} {text.itemCount}</span>
                 </div>
-                {generalDrinkCategories.map((category) => {
-                  const items = generalDrinkItems.filter((item) => item.locales[language].category === category);
+                {cafeDrinkCategories.map((category) => {
+                  const items = cafeDrinkItems.filter((item) => item.locales[language].category === category);
                   return (
-                    <section className="menu-category" id={`menu-category-cafe-general-${slugify(category)}`} key={`cafe-general-${category}`}>
+                    <section className="menu-category" id={`menu-category-cafe-drinks-${slugify(category)}`} key={`cafe-drinks-${category}`}>
                       <div className="menu-category__heading">
                         <div><h3>{category}</h3></div>
                         <span>{items.length} {text.itemCount}</span>
                       </div>
                       <div className="menu-product-list">
                         {items.map((item) => (
-                          <ProductCard key={`cafe-general-${item.id}`} item={item} language={language} active={favorites.includes(item.id)} onToggle={() => toggleFavorite(item.id)} onOpen={() => openProduct(item)} eager={false} />
+                          <ProductCard key={`cafe-drinks-${item.id}`} item={item} language={language} active={favorites.includes(item.id)} onToggle={() => toggleFavorite(item.id)} onOpen={() => openProduct(item)} eager={false} />
                         ))}
                       </div>
                     </section>
