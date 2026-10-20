@@ -29,6 +29,9 @@ DEFAULT_TABLES = Path(r"C:\Users\ademb\Desktop\bedri_usta_tablesv2.csv")
 PRODUCT_NAME_OVERRIDES = {
     "202": {"DE": "Elinazik mit Lammfleisch", "ENG": "Elinazik with Lamb"},
     "203": {"DE": "Elinazik mit Lammhack", "ENG": "Elinazik with Minced Lamb"},
+    "456": {"DE": "Fanta, 0,33 l", "ENG": "Fanta, 0,33 l"},
+    "457": {"DE": "Sprite, 0,33 l", "ENG": "Sprite, 0,33 l"},
+    "460": {"DE": "Gazoz, 0,25 l", "ENG": "Gazoz, 0,25 l"},
 }
 
 PRODUCT_ORIGINAL_NAME_OVERRIDES = {
