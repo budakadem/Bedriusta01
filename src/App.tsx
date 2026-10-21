@@ -2748,6 +2748,7 @@ function MobileActionDock({ desktop }: { desktop: boolean }) {
 
   return (
     <View
+      nativeID="site-action-dock"
       style={[styles.mobileActionDock, desktop && styles.desktopActionDock]}
       accessibilityLabel="Hızlı erişim"
     >
@@ -2832,6 +2833,7 @@ function BackToTopButton({ desktop }: { desktop: boolean }) {
 
   return (
     <Pressable
+      nativeID="site-back-to-top"
       onPress={scrollToTop}
       pointerEvents={visible ? "auto" : "none"}
       accessibilityRole="button"

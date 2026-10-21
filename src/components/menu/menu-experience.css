@@ -10,7 +10,7 @@
   --menu-line: rgba(83, 14, 15, .16);
 }
 
-.menu-experience { background: #fff; color: var(--menu-ink); min-height: 100vh; padding-bottom: 72px; }
+.menu-experience { width: 100%; max-width: 100%; overflow-x: clip; background: #fff; color: var(--menu-ink); min-height: 100vh; padding-bottom: 72px; }
 .menu-experience * { box-sizing: border-box; }
 .menu-experience button, .menu-experience a { -webkit-tap-highlight-color: transparent; }
 .menu-experience button:focus-visible, .menu-experience a:focus-visible { outline: 3px solid #d6a129; outline-offset: 3px; }
