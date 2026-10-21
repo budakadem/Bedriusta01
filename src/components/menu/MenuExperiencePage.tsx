@@ -27,6 +27,7 @@ type MenuItem = {
   id: string;
   slug: string;
   price: number;
+  availability: MenuAvailability;
   vegan: boolean;
   vegetarian: boolean;
   image: MenuImage | null;
@@ -41,6 +42,8 @@ type MenuCatalog = {
 };
 
 type MenuGroup = "food" | "drinks" | "desserts" | "cafe";
+type MenuMode = "restaurant" | "cafe";
+type MenuAvailability = MenuMode | "both";
 type DietFilter = "all" | "vegetarian" | "vegan";
 
 const catalog = catalogSource as MenuCatalog;
@@ -68,7 +71,7 @@ const copy = {
     all: "Tümü",
     vegetarian: "Vejetaryen",
     vegan: "Vegan",
-    groups: { food: "Yemekler", drinks: "Genel İçecekler", desserts: "Tatlılar", cafe: "Café" },
+    groups: { food: "Yemekler", drinks: "İçecekler", desserts: "Tatlılar", cafe: "Nargile" },
     cafeDrinks: "Café İçecekler",
     cafeAllDrinksHint: "Genel ve Café içecekleri numara sırasıyla burada da listelenir; favorileriniz her iki bölümde aynıdır.",
     drinkCategories: "İçecek kategorileri",
@@ -95,7 +98,17 @@ const copy = {
     detail: "Ürün ayrıntısı",
     backToMenu: "Menüye dön",
     favoriteAdd: "Favorilere ekle",
-    favoriteRemove: "Favorilerden çıkar"
+    favoriteRemove: "Favorilerden çıkar",
+    restaurant: "Restaurant",
+    cafeMode: "Café",
+    venueMenu: "Menü bölümü",
+    cafeOnlyFavorites: "Yalnızca Café’den sipariş verilebilir",
+    restaurantOnlyFavorites: "Yalnızca Restaurant’tan sipariş verilebilir",
+    wifiOpen: "WLAN bilgileri",
+    wifiClose: "WLAN bilgilerini kapat",
+    copyPassword: "Şifreyi kopyala",
+    wifiNotice: "Şifre yalnızca QR veya NFC masa menüsünden giriş yapan misafirlerimize gösterilir.",
+    cafeAgeNotice: "Nargile servisi yalnızca 18 yaş ve üzeri misafirler içindir. Yaş doğrulaması istenebilir."
   },
   DE: {
     title: "SPEISEKARTE · MANNHEIM",
@@ -110,7 +123,7 @@ const copy = {
     all: "Alle",
     vegetarian: "Vegetarisch",
     vegan: "Vegan",
-    groups: { food: "Speisen", drinks: "Allgemeine Getränke", desserts: "Desserts", cafe: "Café" },
+    groups: { food: "Speisen", drinks: "Getränke", desserts: "Desserts", cafe: "Shisha" },
     cafeDrinks: "Café-Getränke",
     cafeAllDrinksHint: "Allgemeine und Café-Getränke sind hier nach Artikelnummer sortiert; Ihre Favoriten bleiben in beiden Bereichen identisch.",
     drinkCategories: "Getränkekategorien",
@@ -137,7 +150,17 @@ const copy = {
     detail: "Produktdetails",
     backToMenu: "Zurück zur Karte",
     favoriteAdd: "Zu Favoriten",
-    favoriteRemove: "Aus Favoriten entfernen"
+    favoriteRemove: "Aus Favoriten entfernen",
+    restaurant: "Restaurant",
+    cafeMode: "Café",
+    venueMenu: "Menübereich",
+    cafeOnlyFavorites: "Nur im Café bestellbar",
+    restaurantOnlyFavorites: "Nur im Restaurant bestellbar",
+    wifiOpen: "WLAN-Daten",
+    wifiClose: "WLAN-Daten schließen",
+    copyPassword: "Passwort kopieren",
+    wifiNotice: "Das Passwort wird nur Gästen angezeigt, die das Tischmenü per QR-Code oder NFC geöffnet haben.",
+    cafeAgeNotice: "Shisha-Service nur für Gäste ab 18 Jahren. Ein Altersnachweis kann verlangt werden."
   },
   ENG: {
     title: "MENU · MANNHEIM",
@@ -152,7 +175,7 @@ const copy = {
     all: "All",
     vegetarian: "Vegetarian",
     vegan: "Vegan",
-    groups: { food: "Food", drinks: "General Drinks", desserts: "Desserts", cafe: "Café" },
+    groups: { food: "Food", drinks: "Drinks", desserts: "Desserts", cafe: "Hookah" },
     cafeDrinks: "Café Drinks",
     cafeAllDrinksHint: "General and Café drinks are listed here by item number; your favourites stay the same in both sections.",
     drinkCategories: "Drink categories",
@@ -179,28 +202,29 @@ const copy = {
     detail: "Product details",
     backToMenu: "Back to menu",
     favoriteAdd: "Add to favourites",
-    favoriteRemove: "Remove from favourites"
+    favoriteRemove: "Remove from favourites",
+    restaurant: "Restaurant",
+    cafeMode: "Café",
+    venueMenu: "Menu area",
+    cafeOnlyFavorites: "Available to order only in the Café",
+    restaurantOnlyFavorites: "Available to order only in the Restaurant",
+    wifiOpen: "Wi-Fi details",
+    wifiClose: "Close Wi-Fi details",
+    copyPassword: "Copy password",
+    wifiNotice: "The password is shown only to guests who open the table menu via QR code or NFC.",
+    cafeAgeNotice: "Hookah service is available only to guests aged 18 and over. Proof of age may be requested."
   }
 } as const;
 
-const groupOrder: MenuGroup[] = ["food", "drinks", "desserts", "cafe"];
+const restaurantGroupOrder: MenuGroup[] = ["food", "drinks", "desserts"];
+const cafeGroupOrder: MenuGroup[] = ["drinks", "desserts", "cafe", "food"];
 
 function getGroup(item: MenuItem): MenuGroup {
   return sectionToGroup[item.locales.TR.section] ?? "food";
 }
 
-const cafeCategoryOrder = Array.from(new Set(
-  catalog.items.filter((item) => getGroup(item) === "cafe").map((item) => item.locales.TR.category)
-));
-const cafeSnacksIndex = cafeCategoryOrder.indexOf("ÇEREZLER");
-const cafeCoreCategories = new Set(cafeCategoryOrder.slice(0, cafeSnacksIndex + 1));
-
-function isCafeDrink(item: MenuItem) {
-  return getGroup(item) === "drinks" || (getGroup(item) === "cafe" && !cafeCoreCategories.has(item.locales.TR.category));
-}
-
-function compareItemNumbers(left: MenuItem, right: MenuItem) {
-  return Number.parseInt(left.id, 10) - Number.parseInt(right.id, 10);
+function isAvailableInMode(item: MenuItem, mode: MenuMode) {
+  return item.availability === "both" || item.availability === mode;
 }
 
 function slugify(value: string) {
@@ -252,7 +276,15 @@ function ScrollRail({ children, className = "", ariaLabel }: { children: ReactNo
   const move = (direction: -1 | 1) => {
     const track = trackRef.current;
     if (!track) return;
-    track.scrollTo({ left: direction < 0 ? 0 : track.scrollWidth - track.clientWidth, behavior: "smooth" });
+    const buttons = Array.from(track.querySelectorAll<HTMLElement>(":scope > button"));
+    if (!buttons.length) return;
+    const leadingPadding = Number.parseFloat(window.getComputedStyle(track).paddingInlineStart) || 0;
+    const leadingEdge = track.scrollLeft + leadingPadding + 2;
+    const firstVisibleIndex = Math.max(0, buttons.findIndex((button) => button.offsetLeft + button.offsetWidth > leadingEdge));
+    const targetIndex = Math.min(buttons.length - 1, Math.max(0, firstVisibleIndex + direction));
+    const maxScrollLeft = track.scrollWidth - track.clientWidth;
+    const targetLeft = Math.min(maxScrollLeft, Math.max(0, buttons[targetIndex].offsetLeft - leadingPadding));
+    track.scrollTo({ left: targetLeft, behavior: "smooth" });
   };
   const hasOverflow = canScrollLeft || canScrollRight;
   return (
@@ -347,43 +379,47 @@ function ProductCard({ item, language, active, onToggle, onOpen, eager }: {
 export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: string; productSlug?: string }) {
   const language = useSiteLanguage();
   const text = copy[language];
-  const [diet, setDiet] = useState<DietFilter>("all");
-  const [activeGroup, setActiveGroup] = useState<MenuGroup>("food");
-  const [favorites, setFavorites] = useState<string[]>(readFavorites);
-  const [favoritesOpen, setFavoritesOpen] = useState(false);
-  const [groupMenuOpen, setGroupMenuOpen] = useState(false);
-  const [favoriteBurst, setFavoriteBurst] = useState(0);
-  const [copiedValue, setCopiedValue] = useState("");
   const tableNumber = tableToken ? tableMap[tableToken] : undefined;
   const tableMode = Boolean(tableNumber);
   const invalidTable = Boolean(tableToken && !tableNumber);
+  const initialMenuMode: MenuMode = tableNumber && tableNumber >= 300 && tableNumber <= 399 ? "cafe" : "restaurant";
+  const [menuMode, setMenuMode] = useState<MenuMode>(initialMenuMode);
+  const [diet, setDiet] = useState<DietFilter>("all");
+  const [activeGroup, setActiveGroup] = useState<MenuGroup>(initialMenuMode === "cafe" ? "drinks" : "food");
+  const [favorites, setFavorites] = useState<string[]>(readFavorites);
+  const [favoritesOpen, setFavoritesOpen] = useState(false);
+  const [groupMenuOpen, setGroupMenuOpen] = useState(false);
+  const [wifiOpen, setWifiOpen] = useState(false);
+  const [favoriteBurst, setFavoriteBurst] = useState(0);
+  const [copiedValue, setCopiedValue] = useState("");
   const selectedProduct = productSlug ? catalog.items.find((item) => item.slug === productSlug) : undefined;
   const dialogReturnFocus = useRef<HTMLElement | null>(null);
   const groupMenuRef = useRef<HTMLDivElement>(null);
+  const wifiRef = useRef<HTMLDivElement>(null);
+  const viewGroupOrder = menuMode === "cafe" ? cafeGroupOrder : restaurantGroupOrder;
 
   const visibleItems = useMemo(
-    () => catalog.items.filter((item) => diet === "all" || (diet === "vegan" ? item.vegan : item.vegetarian || item.vegan)),
-    [diet]
+    () => catalog.items.filter((item) => isAvailableInMode(item, menuMode) && (diet === "all" || (diet === "vegan" ? item.vegan : item.vegetarian || item.vegan))),
+    [diet, menuMode]
   );
-  const grouped = useMemo(() => groupOrder.map((group) => ({
+  const grouped = useMemo(() => viewGroupOrder.map((group) => ({
     group,
     categories: Array.from(new Set(visibleItems
-      .filter((item) => getGroup(item) === group && (group !== "cafe" || cafeCoreCategories.has(item.locales.TR.category)))
+      .filter((item) => getGroup(item) === group)
       .map((item) => item.locales[language].category)))
-  })), [language, visibleItems]);
-  const cafeDrinkItems = useMemo(
-    () => visibleItems.filter(isCafeDrink).sort(compareItemNumbers),
-    [visibleItems]
-  );
-  const cafeDrinkCategories = useMemo(
-    () => Array.from(new Set(cafeDrinkItems.map((item) => item.locales[language].category))),
-    [cafeDrinkItems, language]
-  );
+  })).filter(({ categories }) => categories.length > 0), [language, viewGroupOrder, visibleItems]);
   const foodNavigationCategories = useMemo(
-    () => Array.from(new Set(catalog.items.filter((item) => getGroup(item) === "food").map((item) => item.locales[language].category))),
-    [language]
+    () => Array.from(new Set(visibleItems.filter((item) => getGroup(item) === "food").map((item) => item.locales[language].category))),
+    [language, visibleItems]
   );
+  const navigationGroups = useMemo(() => {
+    const order: MenuGroup[] = menuMode === "cafe" ? ["drinks", "desserts", "cafe"] : ["drinks", "desserts"];
+    return order.filter((group) => visibleItems.some((item) => getGroup(item) === group));
+  }, [menuMode, visibleItems]);
   const favoriteItems = useMemo(() => catalog.items.filter((item) => favorites.includes(item.id)), [favorites]);
+  const sharedFavoriteItems = useMemo(() => favoriteItems.filter((item) => item.availability === "both"), [favoriteItems]);
+  const cafeFavoriteItems = useMemo(() => favoriteItems.filter((item) => item.availability === "cafe"), [favoriteItems]);
+  const restaurantFavoriteItems = useMemo(() => favoriteItems.filter((item) => item.availability === "restaurant"), [favoriteItems]);
 
   useEffect(() => {
     window.localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
@@ -406,14 +442,30 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
   }, [groupMenuOpen]);
 
   useEffect(() => {
+    if (!wifiOpen) return;
+    const closeOnOutsideClick = (event: PointerEvent) => {
+      if (!wifiRef.current?.contains(event.target as Node)) setWifiOpen(false);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setWifiOpen(false);
+    };
+    document.addEventListener("pointerdown", closeOnOutsideClick);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeOnOutsideClick);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [wifiOpen]);
+
+  useEffect(() => {
     let frame = 0;
     const updateActiveGroup = () => {
       frame = 0;
       const guideLine = window.innerWidth <= 900 ? 320 : 360;
-      const sections = groupOrder.map((group) => ({ group, bounds: document.getElementById(`menu-group-${group}`)?.getBoundingClientRect() }));
+      const sections = viewGroupOrder.map((group) => ({ group, bounds: document.getElementById(`menu-group-${group}`)?.getBoundingClientRect() }));
       const current = sections.find(({ bounds }) => bounds && bounds.top <= guideLine && bounds.bottom > guideLine)?.group;
       const nearest = [...sections].reverse().find(({ bounds }) => bounds && bounds.top <= guideLine)?.group;
-      setActiveGroup(current ?? nearest ?? groupOrder[0]);
+      setActiveGroup(current ?? nearest ?? viewGroupOrder[0]);
     };
     const handleScroll = () => {
       if (!frame) frame = window.requestAnimationFrame(updateActiveGroup);
@@ -426,7 +478,7 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
       window.removeEventListener("resize", handleScroll);
       if (frame) window.cancelAnimationFrame(frame);
     };
-  }, []);
+  }, [menuMode]);
 
   useEffect(() => {
     if (!selectedProduct && !favoritesOpen) return;
@@ -467,7 +519,7 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
 
   const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   const jumpToGroup = (group: MenuGroup, firstCategory = false) => {
-    const firstCategoryName = catalog.items.find((item) => getGroup(item) === group)?.locales[language].category;
+    const firstCategoryName = visibleItems.find((item) => getGroup(item) === group)?.locales[language].category;
     const targetId = firstCategory && firstCategoryName
       ? `menu-category-${group}-${slugify(firstCategoryName)}`
       : `menu-group-${group}`;
@@ -483,17 +535,12 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
     setGroupMenuOpen(false);
     window.requestAnimationFrame(() => window.requestAnimationFrame(() => scrollTo(`menu-category-${group}-${slugify(category)}`)));
   };
-  const jumpToCafeDrinks = () => {
-    setDiet("all");
-    setActiveGroup("cafe");
+  const changeMenuMode = (nextMode: MenuMode) => {
+    const firstGroup: MenuGroup = nextMode === "cafe" ? "drinks" : "food";
+    setMenuMode(nextMode);
+    setActiveGroup(firstGroup);
     setGroupMenuOpen(false);
-    window.requestAnimationFrame(() => window.requestAnimationFrame(() => scrollTo("menu-cafe-drinks")));
-  };
-  const jumpToCafeDrinkCategory = (category: string) => {
-    setDiet("all");
-    setActiveGroup("cafe");
-    setGroupMenuOpen(false);
-    window.requestAnimationFrame(() => window.requestAnimationFrame(() => scrollTo(`menu-category-cafe-drinks-${slugify(category)}`)));
+    window.requestAnimationFrame(() => window.requestAnimationFrame(() => scrollTo(`menu-group-${firstGroup}`)));
   };
   const copyValue = async (value: string) => {
     await navigator.clipboard.writeText(value);
@@ -503,15 +550,39 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
 
   return (
     <main className="menu-experience">
-      {tableMode && (
-        <div className="menu-header-actions menu-header-actions--table">
-          <div className="menu-table-badge" aria-label={`${text.table} ${tableNumber}`}><small>{text.table}</small><strong>{tableNumber}</strong></div>
+      <div className="menu-header-context menu-header-context--table">
+        <div className="menu-table-badge" aria-label={tableNumber ? `${text.table} ${tableNumber}` : text.table}>
+          <small>{text.table}</small><strong>{tableNumber ?? "…"}</strong>
         </div>
-      )}
+      </div>
 
       <section className="menu-hero" aria-labelledby="menu-title">
         <h1 id="menu-title" className="menu-visually-hidden">{text.title}</h1>
         <p className="menu-hero__page-label" aria-hidden="true">Bedri Usta Menü</p>
+        {tableMode && (
+          <div className="menu-hero__wifi" ref={wifiRef}>
+            <button
+              type="button"
+              className={`menu-wifi-trigger${wifiOpen ? " is-open" : ""}`}
+              onClick={() => setWifiOpen((open) => !open)}
+              aria-label={wifiOpen ? text.wifiClose : text.wifiOpen}
+              aria-expanded={wifiOpen}
+            >
+              <span aria-hidden="true">⌁</span><small>WLAN</small>
+            </button>
+            {wifiOpen && (
+              <div className="menu-wifi-popover" role="dialog" aria-label={text.wifiOpen}>
+                <small>{text.wifi}</small>
+                <div className="menu-wifi-popover__network"><span>{text.network}</span><strong>Bedri Usta Gast</strong></div>
+                <p className="menu-wifi-popover__notice">{text.wifiNotice}</p>
+                <div><span>{text.password}</span><b>•••••••••</b></div>
+                <div className="menu-wifi-popover__actions">
+                  <button type="button" onClick={() => copyValue("Bedri2026")}>{copiedValue === "Bedri2026" ? text.copied : text.copyPassword}</button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
         {invalidTable && <p className="menu-hero__notice" role="status">{text.invalidTable}</p>}
         <p className="menu-hero__statement">{text.hint}</p>
         <div className="menu-reference-navigation" aria-label={text.allergenGuide}>
@@ -522,33 +593,36 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
         <p className="menu-total-products" aria-live="polite">{text.totalProducts(catalog.items.length)}</p>
       </section>
 
-      {tableMode && (
-        <section className="menu-wifi" aria-labelledby="menu-wifi-title">
-          <div><small>{text.wifi}</small><h2 id="menu-wifi-title">Bedri Usta Gast</h2></div>
-          <dl>
-            <div><dt>{text.network}</dt><dd>Bedri Usta Gast</dd><button type="button" onClick={() => copyValue("Bedri Usta Gast")}>{copiedValue === "Bedri Usta Gast" ? text.copied : text.copy}</button></div>
-            <div><dt>{text.password}</dt><dd>Bedri2026</dd><button type="button" onClick={() => copyValue("Bedri2026")}>{copiedValue === "Bedri2026" ? text.copied : text.copy}</button></div>
-          </dl>
-        </section>
-      )}
-
       <nav className="menu-controls" aria-label={text.title}>
         <div className="menu-controls__inner">
           <div className="menu-primary-controls">
-            <div className="menu-group-select" ref={groupMenuRef}>
-              <button
-                type="button"
-                className={`menu-diet-filter menu-diet-filter--all${diet === "all" ? " is-active" : ""}`}
-                onClick={() => { setDiet("all"); setGroupMenuOpen((open) => !open); }}
-                aria-pressed={diet === "all"}
-                aria-expanded={groupMenuOpen}
-                aria-haspopup="menu"
-              >
-                <span>{text.all}</span><span className="menu-group-select__chevron" aria-hidden="true">⌄</span>
-              </button>
+            <div className="menu-mode-select" ref={groupMenuRef} aria-label={text.venueMenu}>
+              <div className="menu-mode-switch">
+                {(["restaurant", "cafe"] as MenuMode[]).map((mode) => (
+                  <button
+                    type="button"
+                    key={mode}
+                    className={menuMode === mode ? "is-active" : ""}
+                    onClick={() => changeMenuMode(mode)}
+                    aria-pressed={menuMode === mode}
+                  >
+                    {mode === "restaurant" ? text.restaurant : text.cafeMode}
+                  </button>
+                ))}
+                <button
+                  type="button"
+                  className="menu-mode-switch__menu"
+                  onClick={() => setGroupMenuOpen((open) => !open)}
+                  aria-expanded={groupMenuOpen}
+                  aria-haspopup="menu"
+                  aria-label={text.venueMenu}
+                >
+                  <span aria-hidden="true">⌄</span>
+                </button>
+              </div>
               {groupMenuOpen && (
                 <div className="menu-group-dropdown" role="menu">
-                  {groupOrder.map((group) => (
+                  {(["drinks", "desserts"] as MenuGroup[]).map((group) => (
                     <button
                       type="button"
                       role="menuitem"
@@ -559,14 +633,11 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
                       {text.groups[group]}
                     </button>
                   ))}
-                  <button type="button" role="menuitem" className="menu-group-dropdown__subitem" onClick={jumpToCafeDrinks}>
-                    {text.cafeDrinks}
-                  </button>
                 </div>
               )}
             </div>
             {(["vegetarian", "vegan"] as DietFilter[]).map((filter) => (
-              <button type="button" key={filter} className={`menu-diet-filter menu-diet-filter--${filter}${diet === filter ? " is-active" : ""}`} onClick={() => { setDiet(filter); setGroupMenuOpen(false); }} aria-pressed={diet === filter}>
+              <button type="button" key={filter} className={`menu-diet-filter menu-diet-filter--${filter}${diet === filter ? " is-active" : ""}`} onClick={() => { setDiet((current) => current === filter ? "all" : filter); setGroupMenuOpen(false); }} aria-pressed={diet === filter}>
                 {filter === "vegetarian" ? text.vegetarian : text.vegan}
               </button>
             ))}
@@ -576,13 +647,12 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
             </button>
           </div>
           <ScrollRail className="menu-active-categories" ariaLabel={text.title}>
+            {navigationGroups.map((group) => (
+              <button type="button" className="menu-active-categories__group-jump" key={`group-jump-${group}`} onClick={() => jumpToGroup(group)}>{text.groups[group]}</button>
+            ))}
             {foodNavigationCategories.map((category) => (
               <button type="button" key={`food-navigation-${category}`} onClick={() => jumpToCategory("food", category)}>{category}</button>
             ))}
-            {(["drinks", "desserts", "cafe"] as MenuGroup[]).map((group) => (
-              <button type="button" className="menu-active-categories__group-jump" key={`group-jump-${group}`} onClick={() => jumpToGroup(group, group === "cafe")}>{text.groups[group]}</button>
-            ))}
-            <button type="button" className="menu-active-categories__group-jump" onClick={jumpToCafeDrinks}>{text.cafeDrinks}</button>
           </ScrollRail>
         </div>
       </nav>
@@ -593,10 +663,11 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
             <header className="menu-group__header">
               <p>0{groupIndex + 1}</p>
               <h2>{text.groups[group]}</h2>
-              <span>{group === "cafe"
-                ? visibleItems.filter((item) => getGroup(item) === "cafe" && cafeCoreCategories.has(item.locales.TR.category)).length + cafeDrinkItems.length
-                : visibleItems.filter((item) => getGroup(item) === group).length} {text.itemCount}</span>
+              <span>{visibleItems.filter((item) => getGroup(item) === group).length} {text.itemCount}</span>
             </header>
+            {group === "cafe" && (
+              <p className="menu-cafe-age-notice"><strong>18+</strong><span>{text.cafeAgeNotice}</span></p>
+            )}
             {group === "drinks" && categories.length > 0 && (
               <nav className="menu-drink-shortcuts" aria-label={text.drinkCategories}>
                 {categories.map((category) => (
@@ -622,40 +693,6 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
                 </section>
               );
             })}
-            {group === "cafe" && cafeDrinkItems.length > 0 && (
-              <div className="menu-cafe-all-drinks" id="menu-cafe-drinks">
-                <div className="menu-category__heading menu-category__heading--feature">
-                  <div>
-                    <h3>{text.cafeDrinks}</h3>
-                    <p>{text.cafeAllDrinksHint}</p>
-                  </div>
-                  <span>{cafeDrinkItems.length} {text.itemCount}</span>
-                </div>
-                <nav className="menu-drink-shortcuts menu-cafe-drink-shortcuts" aria-label={text.cafeDrinks}>
-                  {cafeDrinkCategories.map((category) => (
-                    <button type="button" key={`cafe-drink-shortcut-${category}`} onClick={() => jumpToCafeDrinkCategory(category)}>
-                      {category}
-                    </button>
-                  ))}
-                </nav>
-                {cafeDrinkCategories.map((category) => {
-                  const items = cafeDrinkItems.filter((item) => item.locales[language].category === category);
-                  return (
-                    <section className="menu-category" id={`menu-category-cafe-drinks-${slugify(category)}`} key={`cafe-drinks-${category}`}>
-                      <div className="menu-category__heading">
-                        <div><h3>{category}</h3></div>
-                        <span>{items.length} {text.itemCount}</span>
-                      </div>
-                      <div className="menu-product-list">
-                        {items.map((item) => (
-                          <ProductCard key={`cafe-drinks-${item.id}`} item={item} language={language} active={favorites.includes(item.id)} onToggle={() => toggleFavorite(item.id)} onOpen={() => openProduct(item)} eager={false} />
-                        ))}
-                      </div>
-                    </section>
-                  );
-                })}
-              </div>
-            )}
           </section>
         ))}
       </div>
@@ -694,7 +731,23 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
             <header><div><p>{favorites.length} {text.itemCount}</p><h2 id="menu-favorites-title">{text.favorites}</h2></div><button type="button" onClick={() => setFavoritesOpen(false)} aria-label={text.close}>×</button></header>
             <button type="button" className="menu-favorites-panel__back" onClick={() => setFavoritesOpen(false)}>← {text.backToMenu}</button>
             <p className="menu-favorites-panel__help">{text.favoritesHelp}</p>
-            {favoriteItems.length === 0 ? <p className="menu-favorites-panel__empty">{text.favoritesEmpty}</p> : favoriteItems.map((item) => <ProductCard key={item.id} item={item} language={language} active onToggle={() => toggleFavorite(item.id)} onOpen={() => { setFavoritesOpen(false); openProduct(item); }} eager={false} />)}
+            {favoriteItems.length === 0 ? <p className="menu-favorites-panel__empty">{text.favoritesEmpty}</p> : (
+              <div className="menu-favorites-panel__groups">
+                {sharedFavoriteItems.map((item) => <ProductCard key={item.id} item={item} language={language} active onToggle={() => toggleFavorite(item.id)} onOpen={() => { setFavoritesOpen(false); openProduct(item); }} eager={false} />)}
+                {cafeFavoriteItems.length > 0 && (
+                  <section className="menu-favorites-panel__exclusive">
+                    <h3>{text.cafeOnlyFavorites}</h3>
+                    {cafeFavoriteItems.map((item) => <ProductCard key={item.id} item={item} language={language} active onToggle={() => toggleFavorite(item.id)} onOpen={() => { setFavoritesOpen(false); openProduct(item); }} eager={false} />)}
+                  </section>
+                )}
+                {restaurantFavoriteItems.length > 0 && (
+                  <section className="menu-favorites-panel__exclusive">
+                    <h3>{text.restaurantOnlyFavorites}</h3>
+                    {restaurantFavoriteItems.map((item) => <ProductCard key={item.id} item={item} language={language} active onToggle={() => toggleFavorite(item.id)} onOpen={() => { setFavoritesOpen(false); openProduct(item); }} eager={false} />)}
+                  </section>
+                )}
+              </div>
+            )}
           </aside>
         </div>
       )}

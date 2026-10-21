@@ -20,7 +20,7 @@ from PIL import Image
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_WORKBOOK = Path(r"C:\Users\ademb\Desktop\menü resim eklenmis\v6 135\webmenü version 135.xlsx")
+DEFAULT_WORKBOOK = ROOT / "deliverables" / "bedri-usta-webmenu-version-138-tr-de-en.xlsx"
 DEFAULT_IMAGES = Path(r"C:\Users\ademb\Desktop\menü foto üretilen")
 DEFAULT_TABLES = Path(r"C:\Users\ademb\Desktop\bedri_usta_tablesv2.csv")
 
@@ -96,9 +96,9 @@ SERVICE_CHOICE_MARKERS = {
     "ENG": ("fries", "rice"),
 }
 
-# Keep the core restaurant drinks in the Drinks section. Café-style drinks
-# retain their existing categories but appear after Snacks at the end of Café.
-CAFE_DRINK_PRODUCT_IDS = {
+# Availability is an independent menu dimension. Products keep their real
+# section/category and are filtered for Restaurant or Café at runtime.
+CAFE_ONLY_DRINK_PRODUCT_IDS = {
     "492", "493", "494", "495", "496", "497", "498",
     "550", "551",
     "570", "571", "572",
@@ -110,7 +110,14 @@ CAFE_DRINK_PRODUCT_IDS = {
     "700", "701", "702", "703",
 }
 
-CAFE_SECTION_NAMES = {"TR": "CAFÉ", "DE": "Café", "ENG": "Café"}
+CAFE_ONLY_PRODUCT_IDS = CAFE_ONLY_DRINK_PRODUCT_IDS | {
+    "770", "771", "772",
+    "790", "791", "792", "793", "794", "795", "796", "797", "798", "799", "800", "801", "802",
+    "820", "821", "822", "823", "824", "825", "826", "827", "828",
+    "850", "851",
+}
+
+VALID_AVAILABILITY = {"restaurant", "cafe", "both"}
 
 PRODUCT_ALLERGEN_OVERRIDES = {
     "082": {
@@ -386,6 +393,7 @@ def rows_by_id(sheet, language: str):
                 "vegetarian": clean(row[7]).lower() == "evet",
                 "allergens": clean(row[8]),
                 "codes": clean(row[9]),
+                "availability": clean(row[10]).lower() if len(row) > 10 else "",
             }
         else:
             result[item_id] = {
@@ -399,6 +407,7 @@ def rows_by_id(sheet, language: str):
                 "vegetarian": clean(row[8]).lower() in {"ja", "yes"},
                 "allergens": clean(row[9]),
                 "codes": clean(row[10]),
+                "availability": clean(row[11]).lower() if len(row) > 11 else "",
             }
     return result
 
@@ -432,13 +441,22 @@ def build_catalog(workbook_path: Path, images_dir: Path):
     for item_id, tr in localized["TR"].items():
         de = localized["DE"].get(item_id, tr)
         eng = localized["ENG"].get(item_id, tr)
+        declared_availability = {
+            entry["availability"]
+            for entry in (tr, de, eng)
+            if entry.get("availability")
+        }
+        invalid_availability = declared_availability - VALID_AVAILABILITY
+        if invalid_availability:
+            raise ValueError(f"Invalid Show value for {item_id}: {sorted(invalid_availability)}")
+        if len(declared_availability) > 1:
+            raise ValueError(f"Show mismatch between language sheets for {item_id}: {sorted(declared_availability)}")
+        availability = next(iter(declared_availability), "cafe" if item_id in CAFE_ONLY_PRODUCT_IDS else "both")
         for language, entry in (("DE", de), ("ENG", eng)):
             override = PRODUCT_NAME_OVERRIDES.get(item_id, {}).get(language)
             if override:
                 entry["name"] = override
         for language, entry in (("TR", tr), ("DE", de), ("ENG", eng)):
-            if item_id in CAFE_DRINK_PRODUCT_IDS:
-                entry["section"] = CAFE_SECTION_NAMES[language]
             description_override = PRODUCT_DESCRIPTION_OVERRIDES.get(item_id, {}).get(language)
             if description_override:
                 entry["description"] = description_override
@@ -481,6 +499,7 @@ def build_catalog(workbook_path: Path, images_dir: Path):
             "id": item_id,
             "slug": f"{item_id}-{slug}",
             "price": tr["price"],
+            "availability": availability,
             "vegan": tr["vegan"],
             "vegetarian": tr["vegetarian"],
             "image": image,
@@ -497,9 +516,6 @@ def build_catalog(workbook_path: Path, images_dir: Path):
                 for language, entry in (("TR", tr), ("DE", de), ("ENG", eng))
             },
         })
-
-    cafe_drinks = [item for item in items if item["id"] in CAFE_DRINK_PRODUCT_IDS]
-    items = [item for item in items if item["id"] not in CAFE_DRINK_PRODUCT_IDS] + cafe_drinks
 
     for old_image in image_output.glob("*.webp"):
         if old_image.name not in keep:
@@ -519,7 +535,7 @@ def build_catalog(workbook_path: Path, images_dir: Path):
                 entries.append({"code": first, "label": second})
         legends[language] = entries
 
-    version_match = re.search(r"version\s*(\d+)", workbook_path.stem, flags=re.IGNORECASE)
+    version_match = re.search(r"version[\s_-]*(\d+)", workbook_path.stem, flags=re.IGNORECASE)
     version = int(version_match.group(1)) if version_match else 1
     return {"version": version, "count": len(items), "legends": legends, "items": items}
 
