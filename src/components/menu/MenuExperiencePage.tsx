@@ -69,7 +69,7 @@ const copy = {
     vegetarian: "Vejetaryen",
     vegan: "Vegan",
     groups: { food: "Yemekler", drinks: "Genel İçecekler", desserts: "Tatlılar", cafe: "Café" },
-    cafeAllDrinks: "Tüm İçecekler",
+    cafeDrinks: "Café İçecekler",
     cafeAllDrinksHint: "Genel ve Café içecekleri numara sırasıyla burada da listelenir; favorileriniz her iki bölümde aynıdır.",
     drinkCategories: "İçecek kategorileri",
     itemCount: "ürün",
@@ -111,7 +111,7 @@ const copy = {
     vegetarian: "Vegetarisch",
     vegan: "Vegan",
     groups: { food: "Speisen", drinks: "Allgemeine Getränke", desserts: "Desserts", cafe: "Café" },
-    cafeAllDrinks: "Alle Getränke",
+    cafeDrinks: "Café-Getränke",
     cafeAllDrinksHint: "Allgemeine und Café-Getränke sind hier nach Artikelnummer sortiert; Ihre Favoriten bleiben in beiden Bereichen identisch.",
     drinkCategories: "Getränkekategorien",
     itemCount: "Artikel",
@@ -153,7 +153,7 @@ const copy = {
     vegetarian: "Vegetarian",
     vegan: "Vegan",
     groups: { food: "Food", drinks: "General Drinks", desserts: "Desserts", cafe: "Café" },
-    cafeAllDrinks: "All Drinks",
+    cafeDrinks: "Café Drinks",
     cafeAllDrinksHint: "General and Café drinks are listed here by item number; your favourites stay the same in both sections.",
     drinkCategories: "Drink categories",
     itemCount: "items",
@@ -483,6 +483,18 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
     setGroupMenuOpen(false);
     window.requestAnimationFrame(() => window.requestAnimationFrame(() => scrollTo(`menu-category-${group}-${slugify(category)}`)));
   };
+  const jumpToCafeDrinks = () => {
+    setDiet("all");
+    setActiveGroup("cafe");
+    setGroupMenuOpen(false);
+    window.requestAnimationFrame(() => window.requestAnimationFrame(() => scrollTo("menu-cafe-drinks")));
+  };
+  const jumpToCafeDrinkCategory = (category: string) => {
+    setDiet("all");
+    setActiveGroup("cafe");
+    setGroupMenuOpen(false);
+    window.requestAnimationFrame(() => window.requestAnimationFrame(() => scrollTo(`menu-category-cafe-drinks-${slugify(category)}`)));
+  };
   const copyValue = async (value: string) => {
     await navigator.clipboard.writeText(value);
     setCopiedValue(value);
@@ -547,6 +559,9 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
                       {text.groups[group]}
                     </button>
                   ))}
+                  <button type="button" role="menuitem" className="menu-group-dropdown__subitem" onClick={jumpToCafeDrinks}>
+                    {text.cafeDrinks}
+                  </button>
                 </div>
               )}
             </div>
@@ -567,6 +582,7 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
             {(["drinks", "desserts", "cafe"] as MenuGroup[]).map((group) => (
               <button type="button" className="menu-active-categories__group-jump" key={`group-jump-${group}`} onClick={() => jumpToGroup(group, group === "cafe")}>{text.groups[group]}</button>
             ))}
+            <button type="button" className="menu-active-categories__group-jump" onClick={jumpToCafeDrinks}>{text.cafeDrinks}</button>
           </ScrollRail>
         </div>
       </nav>
@@ -607,14 +623,21 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
               );
             })}
             {group === "cafe" && cafeDrinkItems.length > 0 && (
-              <div className="menu-cafe-all-drinks">
+              <div className="menu-cafe-all-drinks" id="menu-cafe-drinks">
                 <div className="menu-category__heading menu-category__heading--feature">
                   <div>
-                    <h3>{text.cafeAllDrinks}</h3>
+                    <h3>{text.cafeDrinks}</h3>
                     <p>{text.cafeAllDrinksHint}</p>
                   </div>
                   <span>{cafeDrinkItems.length} {text.itemCount}</span>
                 </div>
+                <nav className="menu-drink-shortcuts menu-cafe-drink-shortcuts" aria-label={text.cafeDrinks}>
+                  {cafeDrinkCategories.map((category) => (
+                    <button type="button" key={`cafe-drink-shortcut-${category}`} onClick={() => jumpToCafeDrinkCategory(category)}>
+                      {category}
+                    </button>
+                  ))}
+                </nav>
                 {cafeDrinkCategories.map((category) => {
                   const items = cafeDrinkItems.filter((item) => item.locales[language].category === category);
                   return (
