@@ -2,6 +2,7 @@ import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { CustomerReviewSection } from "../CustomerReviewSection";
 import { openCookiePreferences } from "../CookieNotice";
 import { getIntlLocale, useSiteLanguage, type SiteLanguage } from "../../siteLanguage";
+import { contactLinks } from "../../config/contact";
 import catalogSource from "../../menu/generated/menu-catalog.json";
 import tableTokens from "../../menu/generated/table-tokens.json";
 import "./menu-experience.css";
@@ -755,10 +756,10 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
             <p className="menu-section-kicker">{text.tableServices}</p>
             <h2 id="menu-socials-title">{text.socials}</h2>
             <div>
-              <a href="https://www.instagram.com/mannheim_bedriusta" target="_blank" rel="noreferrer"><img src="/icons/ui/instagram-outline.svg" alt="" />Instagram</a>
-              <span aria-disabled="true"><img src="/icons/ui/tiktok-outline.svg" alt="" />TikTok <small>{text.comingSoon}</small></span>
-              <a href="https://www.youtube.com/c/BedriUsta" target="_blank" rel="noreferrer"><img src="/icons/ui/youtube-outline.svg" alt="" />YouTube</a>
-              <span aria-disabled="true"><img src="/icons/ui/facebook-outline.svg" alt="" />Facebook <small>{text.comingSoon}</small></span>
+              <a href={contactLinks.instagram} target="_blank" rel="noreferrer"><img src="/icons/ui/instagram-outline.svg" alt="" />Instagram</a>
+              <a href={contactLinks.tiktok} target="_blank" rel="noreferrer"><img src="/icons/ui/tiktok-outline.svg" alt="" />TikTok</a>
+              <a href={contactLinks.youtube} target="_blank" rel="noreferrer"><img src="/icons/ui/youtube-outline.svg" alt="" />YouTube</a>
+              <a href={contactLinks.facebook} target="_blank" rel="noreferrer"><img src="/icons/ui/facebook-outline.svg" alt="" />Facebook</a>
             </div>
           </section>
           <nav className="menu-legal" aria-label="Legal">

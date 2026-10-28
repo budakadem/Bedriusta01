@@ -25,6 +25,7 @@ import { CustomerReviewSection } from "./components/CustomerReviewSection";
 import { getJobsPageMetadata, JobsPage, type PageMetadata } from "./components/JobsPage";
 import { PrivacyPage } from "./components/PrivacyPage";
 import { ReservationPage } from "./components/ReservationPage";
+import { contactLinks, contactPhoneLabels, openingHoursByVenue } from "./config/contact";
 import { getSiteLanguage, setSiteLanguage, subscribeToSiteLanguage, type SiteLanguage, useSiteLanguage } from "./siteLanguage";
 import { translateSiteText } from "./siteTranslations";
 
@@ -46,7 +47,6 @@ const quickActionIcons = {
   youtube: "/icons/ui/youtube-outline.svg",
   contact: "/icons/ui/contact.svg",
   phone: "/icons/ui/phone.svg",
-  whatsapp: "/icons/ui/whatsapp.svg",
   facebook: "/icons/ui/facebook-outline.svg",
   tiktok: "/icons/ui/tiktok-outline.svg",
   twitter: "/icons/ui/x.svg"
@@ -82,10 +82,6 @@ const craftDiningRoomImage = {
 const restaurantAddress = "K1 1-4, 68159 Mannheim, Almanya";
 const restaurantAddressWithName = "Bedri Usta K1 1-4, 68159 Mannheim, Deutschland";
 const googleMapsPlaceLink = "https://maps.app.goo.gl/NZHsiEJmyTg9nVgRA";
-const restaurantOpeningHours = [
-  { days: "Pazar — Perşembe", time: "08:00 — 24:00" },
-  { days: "Cuma — Cumartesi", time: "08:00 — 01:00" }
-] as const;
 const defaultShareImage = "/images/mannheim-editorial-hero-v2.webp";
 
 function getRouteMetadata(pathname: string, language: SiteLanguage = "TR"): PageMetadata {
@@ -843,10 +839,15 @@ function App() {
             </Text>
 
             <View style={[styles.contactDetails, layout.isMobile && styles.contactDetailsMobile]}>
-              {restaurantOpeningHours.map((hours) => (
-                <View key={hours.days} style={styles.contactDetail}>
-                  <Text style={styles.contactDetailLabel}>{hours.days}</Text>
-                  <Text style={styles.contactDetailValue}>{hours.time}</Text>
+              {openingHoursByVenue.map((venue) => (
+                <View key={venue.venue} style={[styles.contactDetail, styles.contactHoursGroup]}>
+                  <Text style={styles.contactDetailLabel}>{venue.venue}</Text>
+                  {venue.hours.map((hours) => (
+                    <View key={hours.days} style={styles.contactHoursRow}>
+                      <Text style={styles.contactHoursDays}>{hours.days}</Text>
+                      <Text style={styles.contactDetailValue}>{hours.time}</Text>
+                    </View>
+                  ))}
                 </View>
               ))}
               <View style={styles.contactDetail}>
@@ -2599,16 +2600,26 @@ function QuickActionsSection({ compact, tablet }: { compact: boolean; tablet: bo
       label: "Instagram",
       detail: "@mannheim_bedriusta",
       icon: "instagram",
-      action: () => Linking.openURL("https://www.instagram.com/mannheim_bedriusta")
+      action: () => Linking.openURL(contactLinks.instagram)
     },
-    { label: "TikTok", detail: "Yakında", icon: "tiktok" },
+    {
+      label: "TikTok",
+      detail: "@mannheim_bedriusta",
+      icon: "tiktok",
+      action: () => Linking.openURL(contactLinks.tiktok)
+    },
     {
       label: "YouTube",
       detail: "Videoları izle",
       icon: "youtube",
-      action: () => Linking.openURL("https://www.youtube.com/c/BedriUsta")
+      action: () => Linking.openURL(contactLinks.youtube)
     },
-    { label: "Facebook", detail: "Yakında", icon: "facebook" }
+    {
+      label: "Facebook",
+      detail: "Bedri Usta Mannheim",
+      icon: "facebook",
+      action: () => Linking.openURL(contactLinks.facebook)
+    }
   ];
 
   const contactActions: QuickActionItem[] = [
@@ -2622,10 +2633,20 @@ function QuickActionsSection({ compact, tablet }: { compact: boolean; tablet: bo
       label: "E-posta",
       detail: "info@bedriusta.de",
       icon: "email",
-      action: () => Linking.openURL("mailto:info@bedriusta.de")
+      action: () => Linking.openURL(contactLinks.email)
     },
-    { label: "WhatsApp", detail: "Numara yakında", icon: "whatsapp" },
-    { label: "Telefon", detail: "Numara yakında", icon: "phone" }
+    {
+      label: "Restaurant Telefon",
+      detail: contactPhoneLabels.restaurant,
+      icon: "phone",
+      action: () => Linking.openURL(contactLinks.restaurantPhone)
+    },
+    {
+      label: "Café Telefon",
+      detail: contactPhoneLabels.cafe,
+      icon: "phone",
+      action: () => Linking.openURL(contactLinks.cafePhone)
+    }
   ];
 
   const renderActionCard = (item: QuickActionItem, contact = false) => {
@@ -2741,7 +2762,7 @@ function MobileActionDock({ desktop }: { desktop: boolean }) {
     {
       label: "Instagram",
       icon: "instagramDock",
-      action: () => Linking.openURL("https://www.instagram.com/mannheim_bedriusta")
+      action: () => Linking.openURL(contactLinks.instagram)
     },
     { label: "Yol Tarifi", icon: "directions", action: openMapForAddress }
   ];
@@ -2877,9 +2898,13 @@ function Footer({ isMobile }: { isMobile: boolean }) {
     { label: "Jobs", href: "/jobs" }
   ];
   const socialLinks = [
-    { label: "Instagram", href: "https://www.instagram.com/mannheim_bedriusta" },
-    { label: "YouTube", href: "https://www.youtube.com/c/BedriUsta" },
-    { label: "E-posta", href: "mailto:info@bedriusta.de" }
+    { label: "Instagram", href: contactLinks.instagram },
+    { label: "TikTok", href: contactLinks.tiktok },
+    { label: "YouTube", href: contactLinks.youtube },
+    { label: "Facebook", href: contactLinks.facebook },
+    { label: `Restaurant · ${contactPhoneLabels.restaurant}`, href: contactLinks.restaurantPhone },
+    { label: `Café · ${contactPhoneLabels.cafe}`, href: contactLinks.cafePhone },
+    { label: "E-posta", href: contactLinks.email }
   ];
   const legalLinks: Array<{ label: string; href?: string; disabled?: boolean; action?: () => void }> = [
     { label: "Impressum", href: "/impressum" },
@@ -2956,10 +2981,15 @@ function Footer({ isMobile }: { isMobile: boolean }) {
           <View style={styles.footerColumn}>
             <Text style={styles.footerColumnNumber}>01</Text>
             <Text style={styles.footerColumnTitle}>Ziyaret</Text>
-            {restaurantOpeningHours.map((hours, index) => (
-              <View key={hours.days} style={index > 0 ? styles.footerHoursSecondary : undefined}>
-                <Text style={styles.footerColumnMuted}>{hours.days}</Text>
-                <Text style={styles.footerColumnStrong}>{hours.time}</Text>
+            {openingHoursByVenue.map((venue, venueIndex) => (
+              <View key={venue.venue} style={venueIndex > 0 ? styles.footerVenueSecondary : undefined}>
+                <Text style={styles.footerVenueTitle}>{venue.venue}</Text>
+                {venue.hours.map((hours, hoursIndex) => (
+                  <View key={hours.days} style={hoursIndex > 0 ? styles.footerHoursSecondary : undefined}>
+                    <Text style={styles.footerColumnMuted}>{hours.days}</Text>
+                    <Text style={styles.footerColumnStrong}>{hours.time}</Text>
+                  </View>
+                ))}
               </View>
             ))}
             <Pressable
@@ -5831,6 +5861,20 @@ const styles = StyleSheet.create({
     borderTopColor: "#d7c8bd",
     paddingTop: 12
   },
+  contactHoursGroup: {
+    flexGrow: 1,
+    flexBasis: 230,
+    maxWidth: 300
+  },
+  contactHoursRow: {
+    marginTop: 10
+  },
+  contactHoursDays: {
+    color: "#6f625b",
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 13,
+    lineHeight: 19
+  },
   contactDetailLabel: {
     color: "#a7191e",
     fontFamily: "Karla, sans-serif",
@@ -6525,6 +6569,22 @@ const styles = StyleSheet.create({
   footerHoursSecondary: {
     marginTop: 12
   },
+  footerVenueSecondary: {
+    marginTop: 24,
+    paddingTop: 20,
+    borderTopWidth: 1,
+    borderTopColor: "rgba(223,191,120,.18)"
+  },
+  footerVenueTitle: {
+    color: "#dfbf78",
+    fontFamily: "Karla, sans-serif",
+    fontSize: 10,
+    lineHeight: 15,
+    letterSpacing: 1.8,
+    fontWeight: "800",
+    textTransform: "uppercase",
+    marginBottom: 9
+  } as any,
   footerColumnStrong: {
     color: "#fffaf2",
     fontFamily: "Heebo, sans-serif",

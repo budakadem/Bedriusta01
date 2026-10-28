@@ -2,16 +2,12 @@ import { type FormEvent, useEffect, useState } from "react";
 import "./reservation-page.css";
 import "./contact-page.css";
 import { useSiteLanguage } from "../siteLanguage";
+import { contactLinks, contactPhoneLabels, openingHoursByVenue } from "../config/contact";
 import { translateSiteText } from "../siteTranslations";
 
 const restaurantAddress = "K1 1-4, 68159 Mannheim, Almanya";
 const restaurantAddressWithName = "Bedri Usta K1 1-4, 68159 Mannheim, Deutschland";
 const googleMapsPlaceLink = "https://maps.app.goo.gl/NZHsiEJmyTg9nVgRA";
-const openingHours = [
-  { days: "Pazar — Perşembe", time: "08:00 — 24:00" },
-  { days: "Cuma — Cumartesi", time: "08:00 — 01:00" }
-] as const;
-
 type ContactForm = {
   firstName: string;
   lastName: string;
@@ -110,10 +106,17 @@ export function ContactPage() {
 
                 <div className="reservation-section__body">
                   <div className="reservation-grid reservation-grid--two">
-                    {openingHours.map((hours) => (
-                      <div key={hours.days} className="reservation-field">
-                        <span>{t(hours.days)}</span>
-                        <p style={{ margin: 0 }}>{hours.time}</p>
+                    {openingHoursByVenue.map((venue) => (
+                      <div key={venue.venue} className="reservation-field contact-hours-card">
+                        <span className="contact-hours-card__title">{venue.venue}</span>
+                        <div className="contact-hours-card__rows">
+                          {venue.hours.map((hours) => (
+                            <div key={hours.days} className="contact-hours-card__row">
+                              <span>{t(hours.days)}</span>
+                              <strong>{hours.time}</strong>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -142,7 +145,7 @@ export function ContactPage() {
                   <div className="reservation-section__body">
                     <p className="reservation-verified reservation-verified--panel">
                       {t("Teşekkürler,")} {form.firstName}{t("! Bu form altyapısı yakında tamamen aktif olacak; şimdilik mesajını not aldık. Acil konular için bize doğrudan yazabilirsin:")}{" "}
-                      <a href="mailto:info@bedriusta.de">info@bedriusta.de</a>
+                      <a href={contactLinks.email}>info@bedriusta.de</a>
                     </p>
                   </div>
                 </section>
@@ -198,21 +201,41 @@ export function ContactPage() {
               <span className="contact-tile__label">{t("İletişim Formu")}</span>
               <span className="contact-tile__value">{t("Mesaj gönder")}</span>
             </button>
-            <a className="contact-tile" href="mailto:info@bedriusta.de">
+            <a className="contact-tile" href={contactLinks.email}>
               <span className="contact-tile__icon"><img src="/icons/ui/email.svg" alt="" /></span>
               <span className="contact-tile__label">{t("E-posta")}</span>
               <span className="contact-tile__value">info@bedriusta.de</span>
             </a>
-            <div className="contact-tile contact-tile--muted">
-              <span className="contact-tile__icon"><img src="/icons/ui/whatsapp.svg" alt="" /></span>
-              <span className="contact-tile__label">WhatsApp</span>
-              <span className="contact-tile__value">{t("Numara yakında")}</span>
-            </div>
-            <div className="contact-tile contact-tile--muted">
+            <a className="contact-tile" href={contactLinks.restaurantPhone}>
               <span className="contact-tile__icon"><img src="/icons/ui/phone.svg" alt="" /></span>
-              <span className="contact-tile__label">{t("Telefon")}</span>
-              <span className="contact-tile__value">{t("Numara yakında")}</span>
-            </div>
+              <span className="contact-tile__label">{t("Restaurant Telefon")}</span>
+              <span className="contact-tile__value">{contactPhoneLabels.restaurant}</span>
+            </a>
+            <a className="contact-tile" href={contactLinks.cafePhone}>
+              <span className="contact-tile__icon"><img src="/icons/ui/phone.svg" alt="" /></span>
+              <span className="contact-tile__label">{t("Café Telefon")}</span>
+              <span className="contact-tile__value">{contactPhoneLabels.cafe}</span>
+            </a>
+            <a className="contact-tile" href={contactLinks.instagram} target="_blank" rel="noreferrer">
+              <span className="contact-tile__icon"><img src="/icons/ui/instagram-outline.svg" alt="" /></span>
+              <span className="contact-tile__label">Instagram</span>
+              <span className="contact-tile__value">@mannheim_bedriusta</span>
+            </a>
+            <a className="contact-tile" href={contactLinks.tiktok} target="_blank" rel="noreferrer">
+              <span className="contact-tile__icon"><img src="/icons/ui/tiktok-outline.svg" alt="" /></span>
+              <span className="contact-tile__label">TikTok</span>
+              <span className="contact-tile__value">@mannheim_bedriusta</span>
+            </a>
+            <a className="contact-tile" href={contactLinks.youtube} target="_blank" rel="noreferrer">
+              <span className="contact-tile__icon"><img src="/icons/ui/youtube-outline.svg" alt="" /></span>
+              <span className="contact-tile__label">YouTube</span>
+              <span className="contact-tile__value">@bedriustamannheim</span>
+            </a>
+            <a className="contact-tile" href={contactLinks.facebook} target="_blank" rel="noreferrer">
+              <span className="contact-tile__icon"><img src="/icons/ui/facebook-outline.svg" alt="" /></span>
+              <span className="contact-tile__label">Facebook</span>
+              <span className="contact-tile__value">Bedri Usta Mannheim</span>
+            </a>
           </div>
         </div>
       </section>

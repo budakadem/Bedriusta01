@@ -4,6 +4,39 @@
   gap: 16px;
 }
 
+.contact-hours-card {
+  padding: clamp(14px, 2vw, 18px);
+}
+.contact-hours-card__title {
+  display: block;
+  margin-bottom: 12px;
+  color: #530e0f;
+  font-family: "Heebo", sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+}
+.contact-hours-card__rows {
+  display: grid;
+  gap: 9px;
+}
+.contact-hours-card__row {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 12px;
+  color: #3b2623;
+}
+.contact-hours-card__row span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.contact-hours-card__row strong {
+  color: #530e0f;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
 .contact-tiles {
   margin: 36px 0 0;
   display: grid;
@@ -80,4 +113,5 @@
 
 @media (max-width: 460px) {
   .contact-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .contact-hours-card__row { grid-template-columns: 1fr; gap: 2px; }
 }
