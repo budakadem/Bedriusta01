@@ -27,17 +27,21 @@ DEFAULT_TABLES = Path(r"C:\Users\ademb\Desktop\bedri_usta_tablesv2.csv")
 # Preserve established Turkish product names across every locale while keeping
 # the translated qualifier that helps guests understand the variation.
 PRODUCT_NAME_OVERRIDES = {
+    "200": {"TR": "Adana", "DE": "Adana", "ENG": "Adana"},
     "202": {"DE": "Elinazik mit Lammfleisch", "ENG": "Elinazik with Lamb"},
     "203": {"DE": "Elinazik mit Lammhack", "ENG": "Elinazik with Minced Lamb"},
     "456": {"DE": "Fanta, 0,33 l", "ENG": "Fanta, 0,33 l"},
     "457": {"DE": "Sprite, 0,33 l", "ENG": "Sprite, 0,33 l"},
     "460": {"DE": "Gazoz, 0,25 l", "ENG": "Gazoz, 0,25 l"},
+    "370": {"TR": "Lahmacun", "DE": "Lahmacun", "ENG": "Lahmacun"},
     "950": {"DE": "Hamburger mit Country Potatoes", "ENG": "Hamburger with Country Potatoes"},
     "951": {"DE": "Cheeseburger mit Country Potatoes", "ENG": "Cheeseburger with Country Potatoes"},
     "952": {"DE": "Crispy Chicken Burger mit Country Potatoes", "ENG": "Crispy Chicken Burger with Country Potatoes"},
 }
 
 PRODUCT_ORIGINAL_NAME_OVERRIDES = {
+    "200": "Adana",
+    "370": "Lahmacun",
     "467": "Ayran, 0,3 l",
     "468": "Şalgam, 0,3 l",
     "950": "Hamburger, Country Potatoes ile",
@@ -66,10 +70,15 @@ PRODUCT_DESCRIPTION_OVERRIDES = {
         "DE": "350 g Rinderfilet, Kräuterbutter, Peperoni und Tomate",
         "ENG": "350 g beef tenderloin, herb butter, long green pepper and tomato",
     },
+    "207": {
+        "TR": "Adana, kuzu şiş, tavuk şiş, pirzola",
+        "DE": "Adana, Lammspieß, Hähnchenspieß, Lammkotelett",
+        "ENG": "Adana, lamb skewer, chicken skewer, lamb chop",
+    },
     "320": {
-        "TR": "Kuzu eti, domates, soğan, sarımsak, sivri biber, pirinç pilavı ile",
-        "DE": "Lammfleisch, Tomaten, Zwiebeln, Knoblauch, Peperoni, mit Reis",
-        "ENG": "Lamb, tomato, onions, garlic, long green pepper, with rice",
+        "TR": "Kuzu eti, domates, soğan, sarımsak, sivri biber",
+        "DE": "Lammfleisch, Tomaten, Zwiebeln, Knoblauch, Peperoni",
+        "ENG": "Lamb, tomato, onions, garlic, long green pepper",
     },
     "345": {
         "TR": "Tavuk eti, sivri biber ve domates",
@@ -83,7 +92,8 @@ PRODUCT_DESCRIPTION_OVERRIDES = {
     },
 }
 
-SERVICE_CHOICE_CATEGORIES = {"KEBAPLAR", "ETLER", "KOMBİ"}
+SERVICE_CHOICE_CATEGORIES = {"KOMBİ"}
+SERVICE_CHOICE_REMOVAL_CATEGORIES = {"KEBAPLAR", "ETLER"}
 SERVICE_CHOICE_TEXT = {
     "TR": "patates kızartması veya pilav ile",
     "DE": "mit Pommes frites oder Reis",
@@ -118,6 +128,20 @@ CAFE_ONLY_PRODUCT_IDS = CAFE_ONLY_DRINK_PRODUCT_IDS | {
 }
 
 VALID_AVAILABILITY = {"restaurant", "cafe", "both"}
+
+# Visibility is intentionally separate from the workbook's Show/availability
+# value. This keeps every product in the catalog and preserves favourite IDs,
+# while allowing each venue view to be changed without deleting menu data.
+RESTAURANT_HIDDEN_PRODUCT_IDS = {
+    "002", "008", "009", "011", "017", "019", "021", "024", "026", "029", "030", "034",
+    "082", "104", "180", "183", "184", "201", "202", "205", "208", "214", "220", "240",
+    "243", "244", "340", "341", "371", "373", "375", "377", "379", "380", "381", "382",
+    "383", "384", "386", "414", "435", "453", "521", "522", "527", "528", "529", "530",
+    "531", "532",
+}
+RESTAURANT_HIDDEN_CATEGORIES = {"STEAKLER", "KOMBİ", "DÜRÜMLER", "MAKARNALAR", "HAMBURGER"}
+CAFE_VISIBLE_SECTIONS = {"İÇECEKLER", "TATLILAR", "CAFÉ"}
+HIDDEN_EVERYWHERE_PRODUCT_IDS = {"453"}
 
 PRODUCT_ALLERGEN_OVERRIDES = {
     "082": {
@@ -374,6 +398,15 @@ def remove_product_codes(entry, codes_to_remove):
     entry["allergens"] = ", ".join(allergen for _, allergen in kept)
 
 
+def remove_service_choice(description: str, language: str) -> str:
+    patterns = {
+        "TR": r"\s*[,;]?\s*patates kızartması veya (?:pirinç )?pilav(?:ı)? ile\s*$",
+        "DE": r"\s*[,;]?\s*mit pommes(?: frites)? oder reis\s*$",
+        "ENG": r"\s*[,;]?\s*with (?:french )?fries or rice\s*$",
+    }
+    return re.sub(patterns[language], "", description, flags=re.IGNORECASE).rstrip(" ,;")
+
+
 def rows_by_id(sheet, language: str):
     result = {}
     for row in sheet.iter_rows(min_row=4, values_only=True):
@@ -452,7 +485,7 @@ def build_catalog(workbook_path: Path, images_dir: Path):
         if len(declared_availability) > 1:
             raise ValueError(f"Show mismatch between language sheets for {item_id}: {sorted(declared_availability)}")
         availability = next(iter(declared_availability), "cafe" if item_id in CAFE_ONLY_PRODUCT_IDS else "both")
-        for language, entry in (("DE", de), ("ENG", eng)):
+        for language, entry in (("TR", tr), ("DE", de), ("ENG", eng)):
             override = PRODUCT_NAME_OVERRIDES.get(item_id, {}).get(language)
             if override:
                 entry["name"] = override
@@ -467,6 +500,8 @@ def build_catalog(workbook_path: Path, images_dir: Path):
             if code_override is not None:
                 entry["codes"] = code_override
             remove_product_codes(entry, PRODUCT_CODE_REMOVALS.get(item_id))
+            if tr["category"] in SERVICE_CHOICE_REMOVAL_CATEGORIES:
+                entry["description"] = remove_service_choice(entry["description"], language)
             service_choice = SERVICE_CHOICE_TEXT[language]
             description_lower = entry["description"].lower()
             already_has_service_choice = all(marker in description_lower for marker in SERVICE_CHOICE_MARKERS[language])
@@ -478,6 +513,16 @@ def build_catalog(workbook_path: Path, images_dir: Path):
             for entry in (tr, de, eng):
                 entry["originalName"] = original_name_override
             tr["name"] = original_name_override
+        restaurant_visible = (
+            availability in {"restaurant", "both"}
+            and item_id not in RESTAURANT_HIDDEN_PRODUCT_IDS
+            and tr["category"] not in RESTAURANT_HIDDEN_CATEGORIES
+            and item_id not in HIDDEN_EVERYWHERE_PRODUCT_IDS
+        )
+        cafe_visible = (
+            tr["section"] in CAFE_VISIBLE_SECTIONS
+            and item_id not in HIDDEN_EVERYWHERE_PRODUCT_IDS
+        )
         image = None
         source = image_sources.get(item_id)
         if source:
@@ -500,6 +545,10 @@ def build_catalog(workbook_path: Path, images_dir: Path):
             "slug": f"{item_id}-{slug}",
             "price": tr["price"],
             "availability": availability,
+            "visibility": {
+                "restaurant": restaurant_visible,
+                "cafe": cafe_visible,
+            },
             "vegan": tr["vegan"],
             "vegetarian": tr["vegetarian"],
             "image": image,

@@ -28,6 +28,10 @@ type MenuItem = {
   slug: string;
   price: number;
   availability: MenuAvailability;
+  visibility?: {
+    restaurant: boolean;
+    cafe: boolean;
+  };
   vegan: boolean;
   vegetarian: boolean;
   image: MenuImage | null;
@@ -224,6 +228,7 @@ function getGroup(item: MenuItem): MenuGroup {
 }
 
 function isAvailableInMode(item: MenuItem, mode: MenuMode) {
+  if (item.visibility) return item.visibility[mode];
   return item.availability === "both" || item.availability === mode;
 }
 
@@ -412,16 +417,25 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
   const wifiRef = useRef<HTMLDivElement>(null);
   const viewGroupOrder = menuMode === "cafe" ? cafeGroupOrder : restaurantGroupOrder;
 
-  const visibleItems = useMemo(
-    () => catalog.items.filter((item) => isAvailableInMode(item, menuMode) && (diet === "all" || (diet === "vegan" ? item.vegan : item.vegetarian || item.vegan))),
-    [diet, menuMode]
+  const modeVisibleItems = useMemo(
+    () => catalog.items.filter((item) => isAvailableInMode(item, menuMode)),
+    [menuMode]
   );
-  const grouped = useMemo(() => viewGroupOrder.map((group) => ({
+
+  const visibleItems = useMemo(
+    () => modeVisibleItems.filter((item) => diet === "all" || (diet === "vegan" ? item.vegan : item.vegetarian || item.vegan)),
+    [diet, modeVisibleItems]
+  );
+  const availableGroupOrder = useMemo(
+    () => viewGroupOrder.filter((group) => visibleItems.some((item) => getGroup(item) === group)),
+    [viewGroupOrder, visibleItems]
+  );
+  const grouped = useMemo(() => availableGroupOrder.map((group) => ({
     group,
     categories: Array.from(new Set(visibleItems
       .filter((item) => getGroup(item) === group)
       .map((item) => item.locales[language].category)))
-  })).filter(({ categories }) => categories.length > 0), [language, viewGroupOrder, visibleItems]);
+  })).filter(({ categories }) => categories.length > 0), [availableGroupOrder, language, visibleItems]);
   const foodNavigationCategories = useMemo(
     () => Array.from(new Set(visibleItems.filter((item) => getGroup(item) === "food").map((item) => item.locales[language].category))),
     [language, visibleItems]
@@ -430,10 +444,22 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
     const order: MenuGroup[] = menuMode === "cafe" ? ["drinks", "desserts", "cafe"] : ["drinks", "desserts"];
     return order.filter((group) => visibleItems.some((item) => getGroup(item) === group));
   }, [menuMode, visibleItems]);
-  const favoriteItems = useMemo(() => catalog.items.filter((item) => favorites.includes(item.id)), [favorites]);
-  const sharedFavoriteItems = useMemo(() => favoriteItems.filter((item) => item.availability === "both"), [favoriteItems]);
-  const cafeFavoriteItems = useMemo(() => favoriteItems.filter((item) => item.availability === "cafe"), [favoriteItems]);
-  const restaurantFavoriteItems = useMemo(() => favoriteItems.filter((item) => item.availability === "restaurant"), [favoriteItems]);
+  const favoriteItems = useMemo(
+    () => catalog.items.filter((item) => favorites.includes(item.id) && isAvailableInMode(item, menuMode)),
+    [favorites, menuMode]
+  );
+  const sharedFavoriteItems = useMemo(
+    () => favoriteItems.filter((item) => isAvailableInMode(item, "restaurant") && isAvailableInMode(item, "cafe")),
+    [favoriteItems]
+  );
+  const cafeFavoriteItems = useMemo(
+    () => favoriteItems.filter((item) => !isAvailableInMode(item, "restaurant") && isAvailableInMode(item, "cafe")),
+    [favoriteItems]
+  );
+  const restaurantFavoriteItems = useMemo(
+    () => favoriteItems.filter((item) => isAvailableInMode(item, "restaurant") && !isAvailableInMode(item, "cafe")),
+    [favoriteItems]
+  );
 
   useEffect(() => {
     window.localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
@@ -476,10 +502,10 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
     const updateActiveGroup = () => {
       frame = 0;
       const guideLine = window.innerWidth <= 900 ? 320 : 360;
-      const sections = viewGroupOrder.map((group) => ({ group, bounds: document.getElementById(`menu-group-${group}`)?.getBoundingClientRect() }));
+      const sections = availableGroupOrder.map((group) => ({ group, bounds: document.getElementById(`menu-group-${group}`)?.getBoundingClientRect() }));
       const current = sections.find(({ bounds }) => bounds && bounds.top <= guideLine && bounds.bottom > guideLine)?.group;
       const nearest = [...sections].reverse().find(({ bounds }) => bounds && bounds.top <= guideLine)?.group;
-      setActiveGroup(current ?? nearest ?? viewGroupOrder[0]);
+      setActiveGroup(current ?? nearest ?? availableGroupOrder[0] ?? "food");
     };
     const handleScroll = () => {
       if (!frame) frame = window.requestAnimationFrame(updateActiveGroup);
@@ -492,7 +518,7 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
       window.removeEventListener("resize", handleScroll);
       if (frame) window.cancelAnimationFrame(frame);
     };
-  }, [menuMode]);
+  }, [availableGroupOrder]);
 
   useEffect(() => {
     if (!selectedProduct && !favoritesOpen) return;
@@ -604,7 +630,7 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
           <button type="button" onClick={() => scrollTo("menu-allergens")}>{text.allergenGuide}</button>
           <img src="/images/menu/alcohol-free.webp" alt={text.alcoholFreeLogo} width="512" height="512" />
         </div>
-        <p className="menu-total-products" aria-live="polite">{text.totalProducts(catalog.items.length)}</p>
+        <p className="menu-total-products" aria-live="polite">{text.totalProducts(modeVisibleItems.length)}</p>
       </section>
 
       <nav className="menu-controls" aria-label={text.title}>
@@ -636,7 +662,7 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
               </div>
               {groupMenuOpen && (
                 <div className="menu-group-dropdown" role="menu">
-                  {(["drinks", "desserts"] as MenuGroup[]).map((group) => (
+                  {(["drinks", "desserts"] as MenuGroup[]).filter((group) => navigationGroups.includes(group)).map((group) => (
                     <button
                       type="button"
                       role="menuitem"
@@ -655,8 +681,8 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
                 {filter === "vegetarian" ? text.vegetarian : text.vegan}
               </button>
             ))}
-            <button type="button" className="menu-controls-favorite" onClick={() => { setGroupMenuOpen(false); setFavoritesOpen(true); }} aria-label={`${text.favorites}: ${favorites.length}`}>
-              <span aria-hidden="true">♥</span><span className="menu-controls-favorite__label">{text.favorites}</span><b>{favorites.length}</b>
+            <button type="button" className="menu-controls-favorite" onClick={() => { setGroupMenuOpen(false); setFavoritesOpen(true); }} aria-label={`${text.favorites}: ${favoriteItems.length}`}>
+              <span aria-hidden="true">♥</span><span className="menu-controls-favorite__label">{text.favorites}</span><b>{favoriteItems.length}</b>
               {favoriteBurst > 0 && <span className="header-menu-favorite__confetti" key={favoriteBurst} aria-hidden="true">{Array.from({ length: 9 }, (_, index) => <i key={index} />)}</span>}
             </button>
           </div>
@@ -742,7 +768,7 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
       {favoritesOpen && (
         <div className="menu-overlay" role="presentation" onMouseDown={(event) => { if (event.currentTarget === event.target) setFavoritesOpen(false); }}>
           <aside className="menu-favorites-panel" role="dialog" aria-modal="true" aria-labelledby="menu-favorites-title">
-            <header><div><p>{favorites.length} {text.itemCount}</p><h2 id="menu-favorites-title">{text.favorites}</h2></div><button type="button" onClick={() => setFavoritesOpen(false)} aria-label={text.close}>×</button></header>
+            <header><div><p>{favoriteItems.length} {text.itemCount}</p><h2 id="menu-favorites-title">{text.favorites}</h2></div><button type="button" onClick={() => setFavoritesOpen(false)} aria-label={text.close}>×</button></header>
             <button type="button" className="menu-favorites-panel__back" onClick={() => setFavoritesOpen(false)}>← {text.backToMenu}</button>
             <p className="menu-favorites-panel__help">{text.favoritesHelp}</p>
             {favoriteItems.length === 0 ? <p className="menu-favorites-panel__empty">{text.favoritesEmpty}</p> : (
