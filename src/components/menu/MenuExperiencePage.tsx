@@ -296,19 +296,33 @@ function ScrollRail({ children, className = "", ariaLabel }: { children: ReactNo
   );
 }
 
+const menuImageVersionByItemId: Readonly<Partial<Record<MenuItem["id"], string>>> = {
+  "207": "20261028-2",
+  "208": "20261028-2",
+};
+
+function getMenuImageUrl(item: MenuItem, size: "320" | "640" | "1200") {
+  const url = item.image?.[size] ?? "";
+  const version = menuImageVersionByItemId[item.id];
+  return version ? `${url}?v=${version}` : url;
+}
+
 function ProductImage({ item, language, eager = false, full = false }: { item: MenuItem; language: SiteLanguage; eager?: boolean; full?: boolean }) {
   if (!item.image) {
     return <div className="menu-product__placeholder"><span>BU</span><small>{copy[language].noImage}</small></div>;
   }
+  const image320 = getMenuImageUrl(item, "320");
+  const image640 = getMenuImageUrl(item, "640");
+  const image1200 = getMenuImageUrl(item, "1200");
   return (
     <picture>
       <source
         type="image/webp"
-        srcSet={`${item.image["320"]} 320w, ${item.image["640"]} 640w, ${item.image["1200"]} 1200w`}
+        srcSet={`${image320} 320w, ${image640} 640w, ${image1200} 1200w`}
         sizes={full ? "(max-width: 680px) calc(100vw - 60px), 480px" : "(max-width: 560px) 96px, 152px"}
       />
       <img
-        src={full ? item.image["1200"] : item.image["640"]}
+        src={full ? image1200 : image640}
         alt={item.image.alt[language]}
         width="640"
         height="426"
