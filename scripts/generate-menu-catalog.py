@@ -140,6 +140,7 @@ RESTAURANT_HIDDEN_PRODUCT_IDS = {
     "531", "532", "210", "242", "321", "345",
 }
 RESTAURANT_HIDDEN_CATEGORIES = {"STEAKLER", "KOMBİ", "MAKARNALAR", "HAMBURGER"}
+RESTAURANT_VISIBLE_PRODUCT_IDS = {"300", "301", "302"}
 CAFE_VISIBLE_SECTIONS = {"İÇECEKLER", "TATLILAR", "CAFÉ"}
 HIDDEN_EVERYWHERE_PRODUCT_IDS = {"453"}
 
@@ -516,7 +517,7 @@ def build_catalog(workbook_path: Path, images_dir: Path):
         restaurant_visible = (
             availability in {"restaurant", "both"}
             and item_id not in RESTAURANT_HIDDEN_PRODUCT_IDS
-            and tr["category"] not in RESTAURANT_HIDDEN_CATEGORIES
+            and (tr["category"] not in RESTAURANT_HIDDEN_CATEGORIES or item_id in RESTAURANT_VISIBLE_PRODUCT_IDS)
             and item_id not in HIDDEN_EVERYWHERE_PRODUCT_IDS
         )
         cafe_visible = (
