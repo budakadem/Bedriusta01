@@ -304,6 +304,8 @@ function ScrollRail({ children, className = "", ariaLabel }: { children: ReactNo
 const menuImageVersionByItemId: Readonly<Partial<Record<MenuItem["id"], string>>> = {
   "207": "20261028-2",
   "208": "20261028-2",
+  "241": "20261028-1",
+  "245": "20261028-1",
 };
 
 function getMenuImageUrl(item: MenuItem, size: "320" | "640" | "1200") {
