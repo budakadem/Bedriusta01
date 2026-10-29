@@ -763,7 +763,7 @@ export function MenuExperiencePage({ tableToken, productSlug }: { tableToken?: s
             </div>
           </section>
           <nav className="menu-legal" aria-label="Legal">
-            <a href="/impressum">Impressum</a><a href="/datenschutz">Datenschutz</a><button type="button" onClick={openCookiePreferences}>Cookie-Einstellungen</button><a href="/agb">AGB</a>
+            <a href="/impressum">Impressum</a><a href="/datenschutz">Datenschutz</a><button type="button" onClick={openCookiePreferences}>Cookie-Einstellungen</button><a href="/agb">AGB</a><a href="/faq">FAQ</a>
           </nav>
         </div>
       )}

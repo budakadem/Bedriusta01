@@ -64,6 +64,11 @@ const pages = [
     route: "/agb",
     title: "AGB | Bedri Usta Mannheim",
     description: "Bedri Usta Mannheim rezervasyon ve restoran ziyareti için geçerli genel işlem şartları."
+  },
+  {
+    route: "/faq",
+    title: "FAQ | Bedri Usta Mannheim",
+    description: "Bedri Usta Mannheim hakkında helal ürünler ve alkolsüz servis konusunda sık sorulan soruların kısa cevapları."
   }
 ];
 

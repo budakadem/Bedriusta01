@@ -1,0 +1,131 @@
+.faq-page {
+  min-width: 0;
+  overflow-x: clip;
+  background: #f8f1e7;
+  color: #211614;
+}
+
+.faq-shell {
+  width: min(100% - 36px, 1080px);
+  margin-inline: auto;
+}
+
+.faq-hero {
+  padding: clamp(56px, 8vw, 104px) 0;
+  border-bottom: 1px solid #d7b36b;
+  background:
+    radial-gradient(circle at 88% 18%, rgba(223, 191, 120, 0.18), transparent 32%),
+    linear-gradient(145deg, #721619 0%, #4f0d10 100%);
+  color: #fff8ec;
+}
+
+.faq-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #e6c77e;
+  font: 700 15px/1.4 "Karla", sans-serif;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
+
+.faq-back:focus-visible {
+  outline: 2px solid #fff8ec;
+  outline-offset: 6px;
+}
+
+.faq-kicker {
+  margin: clamp(34px, 6vw, 64px) 0 14px;
+  color: #e6c77e;
+  font: 800 12px/1.5 "Karla", sans-serif;
+  letter-spacing: 0.28em;
+}
+
+.faq-hero h1 {
+  max-width: 780px;
+  margin: 0;
+  font: 800 clamp(38px, 7vw, 72px)/1.02 "Heebo", sans-serif;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+.faq-lead {
+  max-width: 660px;
+  margin: 22px 0 0;
+  color: rgba(255, 248, 236, 0.78);
+  font: 400 clamp(17px, 2vw, 21px)/1.55 "Heebo", sans-serif;
+}
+
+.faq-content {
+  padding: clamp(52px, 8vw, 96px) 0 clamp(72px, 10vw, 120px);
+}
+
+.faq-content h2 {
+  margin: 0 0 28px;
+  color: #6c181b;
+  font: 800 clamp(28px, 4vw, 42px)/1.15 "Heebo", sans-serif;
+  letter-spacing: -0.025em;
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.faq-card {
+  min-width: 0;
+  padding: clamp(24px, 4vw, 38px);
+  border: 1px solid #dac8b9;
+  border-top: 3px solid #d7b36b;
+  border-radius: 8px;
+  background: #fffaf3;
+  box-shadow: 0 18px 42px rgba(72, 25, 20, 0.07);
+}
+
+.faq-card__number {
+  display: block;
+  margin-bottom: 20px;
+  color: #a7191e;
+  font: 800 12px/1 "Karla", sans-serif;
+  letter-spacing: 0.18em;
+}
+
+.faq-card h3 {
+  margin: 0;
+  color: #3a1917;
+  font: 800 clamp(19px, 2.5vw, 24px)/1.25 "Heebo", sans-serif;
+}
+
+.faq-card p {
+  margin: 12px 0 0;
+  color: #63534d;
+  font: 400 16px/1.6 "Heebo", sans-serif;
+}
+
+@media (max-width: 680px) {
+  .faq-shell {
+    width: min(100% - 32px, 1080px);
+  }
+
+  .faq-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .faq-content h2 {
+    margin-bottom: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-page *,
+  .faq-page *::before,
+  .faq-page *::after {
+    scroll-behavior: auto !important;
+  }
+}
