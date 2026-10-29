@@ -163,7 +163,26 @@ img {
 }
 
 @media (max-width: 759px) {
+  html,
   body {
-    background: #170a08;
+    background: #fffaf3;
+  }
+
+  /* Keep the Android/iOS system navigation area visually separate from the
+     burgundy action dock. The dock sits above the safe area while its
+     minimum touch-target padding remains unchanged. */
+  #site-action-dock {
+    bottom: env(safe-area-inset-bottom) !important;
+    padding-bottom: 7px !important;
+  }
+
+  #site-action-dock::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 100%;
+    height: env(safe-area-inset-bottom);
+    background: #fffaf3;
+    pointer-events: none;
   }
 }
