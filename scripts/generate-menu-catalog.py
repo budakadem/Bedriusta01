@@ -34,6 +34,7 @@ PRODUCT_NAME_OVERRIDES = {
     "457": {"DE": "Sprite, 0,33 l", "ENG": "Sprite, 0,33 l"},
     "460": {"DE": "Gazoz, 0,25 l", "ENG": "Gazoz, 0,25 l"},
     "370": {"TR": "Lahmacun", "DE": "Lahmacun", "ENG": "Lahmacun"},
+    "261": {"TR": "Adana Dürüm", "DE": "Adana-Wrap", "ENG": "Adana Wrap"},
     "950": {"DE": "Hamburger mit Country Potatoes", "ENG": "Hamburger with Country Potatoes"},
     "951": {"DE": "Cheeseburger mit Country Potatoes", "ENG": "Cheeseburger with Country Potatoes"},
     "952": {"DE": "Crispy Chicken Burger mit Country Potatoes", "ENG": "Crispy Chicken Burger with Country Potatoes"},
@@ -42,6 +43,7 @@ PRODUCT_NAME_OVERRIDES = {
 PRODUCT_ORIGINAL_NAME_OVERRIDES = {
     "200": "Adana",
     "370": "Lahmacun",
+    "261": "Adana Dürüm",
     "467": "Ayran, 0,3 l",
     "468": "Şalgam, 0,3 l",
     "950": "Hamburger, Country Potatoes ile",
@@ -137,7 +139,7 @@ RESTAURANT_HIDDEN_PRODUCT_IDS = {
     "082", "104", "180", "183", "184", "201", "202", "205", "208", "214", "220", "240",
     "243", "244", "340", "341", "371", "373", "375", "377", "379", "380", "381", "382",
     "383", "384", "386", "414", "435", "453", "521", "522", "527", "528", "529", "530",
-    "531", "532", "210", "242", "321", "345",
+    "531", "532", "210", "242", "260", "321", "345",
 }
 RESTAURANT_HIDDEN_CATEGORIES = {"STEAKLER", "KOMBİ", "MAKARNALAR", "HAMBURGER"}
 RESTAURANT_VISIBLE_PRODUCT_IDS = {"300", "301", "302"}
