@@ -221,7 +221,7 @@ const mobilePrimaryNavItems = [
   { label: "Jobs", href: "/jobs" },
   { label: "Politikalarımız", href: "/politikalarimiz" },
   { label: "İletişim", href: "/iletisim" },
-  { label: "FAQ", href: "/#contact" }
+  { label: "FAQ", href: "/#faq" }
 ];
 
 const mobileLegalNavItems: Array<{ label: string; href?: string; disabled?: boolean; action?: () => void }> = [
@@ -2743,6 +2743,22 @@ function QuickActionsSection({ compact, tablet }: { compact: boolean; tablet: bo
           </View>
         </ScrollReveal>
       </View>
+
+      <View nativeID="faq" style={styles.faqSection}>
+        <ScrollReveal style={styles.faqInner}>
+          <Text accessibilityRole="header" style={styles.faqTitle}>Sık Sorulan Sorular</Text>
+          <View style={[styles.faqGrid, compact && styles.faqGridCompact]}>
+            <View style={styles.faqCard}>
+              <Text style={styles.faqQuestion}>Ürünleriniz helal mi?</Text>
+              <Text style={styles.faqAnswer}>Evet. Et ürünlerimiz helal standartlarına uygundur.</Text>
+            </View>
+            <View style={styles.faqCard}>
+              <Text style={styles.faqQuestion}>Alkollü içecek servis ediyor musunuz?</Text>
+              <Text style={styles.faqAnswer}>Hayır. İşletmemizde alkollü içecek servisi yapılmaz.</Text>
+            </View>
+          </View>
+        </ScrollReveal>
+      </View>
     </>
   );
 }
@@ -2911,7 +2927,7 @@ function Footer({ isMobile }: { isMobile: boolean }) {
     { label: "Datenschutz", href: "/datenschutz" },
     { label: "Cookie-Einstellungen", href: "/datenschutz#cookies", action: openCookiePreferences },
     { label: "AGB", href: "/agb" },
-    { label: "FAQ", href: "/#contact" }
+    { label: "FAQ", href: "/#faq" }
   ];
 
   useEffect(() => {
@@ -6087,6 +6103,66 @@ const styles = StyleSheet.create({
     width: "100%",
     maxWidth: 1180,
     marginHorizontal: "auto"
+  },
+  faqSection: {
+    width: "100%",
+    backgroundColor: colors.paper,
+    paddingVertical: "clamp(52px, 7vw, 76px)",
+    paddingHorizontal: "clamp(18px, 4vw, 32px)",
+    borderTopWidth: 1,
+    borderTopColor: "#d7c7ba",
+    scrollMarginTop: 88
+  } as any,
+  faqInner: {
+    width: "100%",
+    maxWidth: 940,
+    marginHorizontal: "auto"
+  },
+  faqTitle: {
+    color: colors.menuInk,
+    fontFamily: "Heebo, sans-serif",
+    fontSize: "clamp(28px, 4vw, 40px)",
+    lineHeight: "clamp(34px, 4.8vw, 48px)",
+    fontWeight: "800",
+    textAlign: "center",
+    marginBottom: 28
+  } as any,
+  faqGrid: {
+    width: "100%",
+    minWidth: 0,
+    display: "grid",
+    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+    gap: 16
+  } as any,
+  faqGridCompact: {
+    gridTemplateColumns: "minmax(0, 1fr)",
+    gap: 12
+  } as any,
+  faqCard: {
+    width: "100%",
+    minWidth: 0,
+    borderWidth: 1,
+    borderColor: "#d8c5b7",
+    borderTopWidth: 3,
+    borderTopColor: "#dfbf78",
+    borderRadius: 8,
+    backgroundColor: "#fffaf3",
+    paddingVertical: "clamp(20px, 3vw, 26px)",
+    paddingHorizontal: "clamp(18px, 3vw, 26px)"
+  } as any,
+  faqQuestion: {
+    color: colors.menuInk,
+    fontFamily: "Heebo, sans-serif",
+    fontSize: "clamp(17px, 2vw, 20px)",
+    lineHeight: "clamp(23px, 2.6vw, 28px)",
+    fontWeight: "800"
+  } as any,
+  faqAnswer: {
+    color: "#5f514b",
+    fontFamily: "Heebo, sans-serif",
+    fontSize: 15,
+    lineHeight: 23,
+    marginTop: 8
   },
   quickActionsGroupEyebrow: {
     color: colors.red,
