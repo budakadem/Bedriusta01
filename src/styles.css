@@ -186,3 +186,16 @@ img {
     pointer-events: none;
   }
 }
+
+/* Android standalone PWAs can report a zero bottom safe-area while drawing
+   the three-button system navigation transparently inside the viewport. Keep
+   that OS-only strip light without adding space in a normal browser tab. */
+@media (max-width: 759px) and (display-mode: standalone) {
+  #site-action-dock {
+    bottom: max(env(safe-area-inset-bottom), 36px) !important;
+  }
+
+  #site-action-dock::after {
+    height: max(env(safe-area-inset-bottom), 36px);
+  }
+}
