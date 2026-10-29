@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { LEGAL_COMPANY } from "../legalCompany";
 import { LegalPending } from "./LegalPending";
 import "./privacy-page.css";
 
@@ -67,11 +68,11 @@ export function ImpressumPage() {
               <div className="legal-fields">
                 <div className="legal-field">
                   <span className="legal-field-label">İşletme adı (marka):</span>
-                  <span className="legal-field-value">Bedri Usta Mannheim</span>
+                  <span className="legal-field-value">{LEGAL_COMPANY.brandName}</span>
                 </div>
                 <div className="legal-field">
-                  <span className="legal-field-label">Tam yasal unvan ve işletme sahibi:</span>
-                  <span className="legal-field-value"><LegalPending /></span>
+                  <span className="legal-field-label">Tam yasal şirket unvanı:</span>
+                  <span className="legal-field-value">{LEGAL_COMPANY.legalName}</span>
                 </div>
                 <div className="legal-field">
                   <span className="legal-field-label">Adres:</span>
@@ -79,17 +80,18 @@ export function ImpressumPage() {
                 </div>
                 <div className="legal-field">
                   <span className="legal-field-label">E-posta:</span>
-                  <span className="legal-field-value"><a href="mailto:info@bedriusta.de">info@bedriusta.de</a></span>
+                  <span className="legal-field-value">
+                    <a href={`mailto:${LEGAL_COMPANY.email}`}>{LEGAL_COMPANY.email}</a>
+                  </span>
                 </div>
                 <div className="legal-field">
                   <span className="legal-field-label">Telefon:</span>
-                  <span className="legal-field-value"><LegalPending /></span>
+                  <span className="legal-field-value">
+                    Restaurant: <a href={LEGAL_COMPANY.restaurantPhone.href}>{LEGAL_COMPANY.restaurantPhone.display}</a>
+                    <br />
+                    Café: <a href={LEGAL_COMPANY.cafePhone.href}>{LEGAL_COMPANY.cafePhone.display}</a>
+                  </span>
                 </div>
-              </div>
-              <div className="legal-intro-note">
-                Kırmızı etiketli alanlar, işletmenin yasal türü ve iletişim numarası netleştiğinde
-                doldurulacak. Yanlış veya uydurma bilgiyle yayınlanmadı; bu bölüm gerçek veriler
-                sağlanana kadar bilinçli olarak boş bırakılmıştır.
               </div>
             </section>
 
@@ -101,7 +103,7 @@ export function ImpressumPage() {
                 İşletmeyi temsile yetkili kişi ya da kişiler (şahıs işletmesinde işletme sahibi,
                 sermaye şirketinde Geschäftsführer):
               </p>
-              <p><LegalPending /></p>
+              <p><strong>Geschäftsführer:</strong> {LEGAL_COMPANY.managingDirector}</p>
             </section>
 
             <section id="sicil">
@@ -122,6 +124,10 @@ export function ImpressumPage() {
                   <span className="legal-field-value"><LegalPending /></span>
                 </div>
               </div>
+              <div className="legal-intro-note">
+                Sicil mahkemesi, HRB numarası ve varsa USt-IdNr. doğrulanmış biçimde sağlandığında
+                bu alanlar tamamlanacaktır.
+              </div>
             </section>
 
             <section id="icerik-sorumlusu">
@@ -131,7 +137,10 @@ export function ImpressumPage() {
               <p>
                 Gazetecilik-editöryal nitelikte içerik için sorumlu kişi (adres yukarıdaki gibidir):
               </p>
-              <p><LegalPending /></p>
+              <p>
+                <strong>{LEGAL_COMPANY.managingDirector}</strong><br />
+                K1 1–4, 68159 Mannheim, Almanya
+              </p>
             </section>
 
             <section id="sorumluluk">
@@ -192,8 +201,8 @@ export function ImpressumPage() {
             </section>
 
             <footer className="privacy-updated">
-              <span>VERSİYON 0.1 · TASLAK</span>
-              <strong>Son güncelleme: 28 Ağustos 2026</strong>
+              <span>VERSİYON 1.0</span>
+              <strong>Son güncelleme: 29 Ekim 2026</strong>
             </footer>
           </article>
         </div>

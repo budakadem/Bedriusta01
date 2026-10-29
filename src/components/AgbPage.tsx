@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { LEGAL_COMPANY } from "../legalCompany";
 import { LegalPending } from "./LegalPending";
 import "./privacy-page.css";
 
@@ -66,8 +67,8 @@ export function AgbPage() {
               <p className="privacy-section__kicker">GELTUNGSBEREICH</p>
               <h2>Kapsam</h2>
               <p>
-                Bu şartlar, Bedri Usta Mannheim adı altında faaliyet gösteren işletme (tam yasal
-                unvan: <LegalPending />) tarafından K1 1–4, 68159 Mannheim, Almanya adresinden
+                Bu şartlar, Bedri Usta Mannheim adı altında faaliyet gösteren {LEGAL_COMPANY.legalName}
+                tarafından K1 1–4, 68159 Mannheim, Almanya adresinden
                 işletilen bedriusta.de web sitesi üzerinden yapılan masa rezervasyonu ve grup talebi
                 işlemleri için geçerlidir. Farklı yazılı bir anlaşma olmadıkça yalnızca bu şartlar
                 uygulanır; misafirin genel işlem şartları kabul edilmez.
@@ -180,8 +181,8 @@ export function AgbPage() {
             </section>
 
             <footer className="privacy-updated">
-              <span>VERSİYON 0.1 · TASLAK</span>
-              <strong>Son güncelleme: 28 Ağustos 2026</strong>
+              <span>VERSİYON 1.0</span>
+              <strong>Son güncelleme: 29 Ekim 2026</strong>
             </footer>
           </article>
         </div>

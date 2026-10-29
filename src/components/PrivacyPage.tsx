@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { LEGAL_COMPANY } from "../legalCompany";
 import { openCookiePreferences } from "./CookieNotice";
 import "./privacy-page.css";
 
@@ -72,12 +73,14 @@ export function PrivacyPage() {
               <h2>Veri sorumlusu</h2>
               <p>Bu web sitesi ve burada açıklanan veri işlemlerinden sorumlu işletme:</p>
               <address>
-                <strong>Bedri Usta Mannheim</strong><br />
+                <strong>{LEGAL_COMPANY.legalName}</strong><br />
+                Geschäftsführer: {LEGAL_COMPANY.managingDirector}<br />
                 K1 1–4, 68159 Mannheim, Almanya<br />
-                E-posta: <a href="mailto:info@bedriusta.de">info@bedriusta.de</a>
+                E-posta: <a href={`mailto:${LEGAL_COMPANY.email}`}>{LEGAL_COMPANY.email}</a>
               </address>
               <div className="privacy-note">
-                Ticari işletmecinin tam yasal unvanı ve temsil bilgileri Impressum’da belirtilir.
+                Bedri Usta Mannheim, Kebap Diyari GmbH tarafından işletilen markadır. Ayrıntılı şirket
+                ve temsil bilgileri Impressum’da belirtilir.
               </div>
             </section>
 
@@ -298,7 +301,7 @@ export function PrivacyPage() {
 
             <footer className="privacy-updated">
               <span>VERSİYON 1.0</span>
-              <strong>Son güncelleme: 13 Ağustos 2026</strong>
+              <strong>Son güncelleme: 29 Ekim 2026</strong>
             </footer>
           </article>
         </div>
